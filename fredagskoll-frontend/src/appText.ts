@@ -4,7 +4,7 @@ export const ordinaryThemeDayTitleEndingsByLocale: Record<Locale, string[]> = {
   sv: [
     'Det får väl bära dagen då.',
     'Det är åtminstone något att skylla på.',
-    'Kontoret får helt enkelt acceptera saken.',
+    'Ingen i organisationen var stark nog att stoppa det.',
     'Det är mer än kalendern brukar erbjuda.',
     'Det blir inte bättre än så här idag.',
     'Det får duga som dagens professionella ursäkt.',
@@ -14,7 +14,7 @@ export const ordinaryThemeDayTitleEndingsByLocale: Record<Locale, string[]> = {
   en: [
     'That will have to carry the day, then.',
     "At least it's something to blame it on.",
-    'The office will simply have to accept it.',
+    'Nobody in the organization was strong enough to stop it.',
     "It's more than the calendar usually offers.",
     "This is about as good as today's getting.",
     "It'll do as today's professional excuse.",
@@ -24,7 +24,7 @@ export const ordinaryThemeDayTitleEndingsByLocale: Record<Locale, string[]> = {
   'pt-BR': [
     'Vai ter que sustentar o dia, então.',
     'Pelo menos já existe algo em que pôr a culpa.',
-    'O escritório vai simplesmente ter que aceitar.',
+    'Ninguém na organização teve força para impedir.',
     'É mais do que o calendário costuma oferecer.',
     'Hoje não vai ficar melhor do que isso.',
     'Serve como desculpa profissional do dia.',
