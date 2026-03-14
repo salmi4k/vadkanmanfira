@@ -258,3 +258,29 @@ test('rerolls the excuse when clicking Ny ursäkt', async () => {
 
   randomSpy.mockRestore();
 });
+
+test('steps between days from the center navigation buttons', async () => {
+  await renderAppAt(new Date(2026, 2, 25));
+
+  expect(
+    screen.getByRole('heading', { level: 2, name: /Våffeldagen har tagit över/i })
+  ).toBeInTheDocument();
+
+  fireEvent.click(screen.getByRole('button', { name: /Föregående dag/i }));
+
+  await waitFor(() =>
+    expect(screen.getByDisplayValue('2026-03-24')).toBeInTheDocument()
+  );
+  expect(
+    screen.queryByRole('heading', { level: 2, name: /Våffeldagen har tagit över/i })
+  ).not.toBeInTheDocument();
+
+  fireEvent.click(screen.getByRole('button', { name: /Nästa dag/i }));
+
+  await waitFor(() =>
+    expect(screen.getByDisplayValue('2026-03-25')).toBeInTheDocument()
+  );
+  expect(
+    screen.getByRole('heading', { level: 2, name: /Våffeldagen har tagit över/i })
+  ).toBeInTheDocument();
+});

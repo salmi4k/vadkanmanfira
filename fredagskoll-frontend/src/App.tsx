@@ -72,6 +72,12 @@ function getDaysUntil(date: Date, target: Date): number {
   return Math.round((target.getTime() - date.getTime()) / millisecondsPerDay);
 }
 
+function addDays(date: Date, days: number): Date {
+  const result = new Date(date);
+  result.setDate(result.getDate() + days);
+  return result;
+}
+
 function getUpcomingHolidayBlurb(holidayName: string, daysUntil: number): string {
   if (daysUntil <= 1) {
     return `${holidayName} väntar imorgon, så veckan är i praktiken redan perforerad.`;
@@ -226,6 +232,10 @@ function App({ initialDate = new Date() }: AppProps) {
     };
   }, [dayStatus.dateLabel]);
 
+  function stepSelectedDate(days: number): void {
+    setSelectedDate(formatForInput(addDays(selectedDateObject, days)));
+  }
+
   return (
     <div className={`App ${darkMode ? 'dark' : ''} theme-${theme}`}>
       <div className="app-backdrop" aria-hidden="true" />
@@ -342,6 +352,22 @@ function App({ initialDate = new Date() }: AppProps) {
         </header>
 
         <main className="app-panel celebration-card">
+          <div className="card-nav" aria-label="Datumnavigering">
+            <button
+              type="button"
+              className="card-nav-button"
+              onClick={() => stepSelectedDate(-1)}
+            >
+              Föregående dag
+            </button>
+            <button
+              type="button"
+              className="card-nav-button"
+              onClick={() => stepSelectedDate(1)}
+            >
+              Nästa dag
+            </button>
+          </div>
           <p className="eyebrow">{kicker}</p>
           <h2 className="celebration-title">{formatTitle(mainTitle)}</h2>
           <div className="blurb-row">
