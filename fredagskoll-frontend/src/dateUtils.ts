@@ -1,3 +1,5 @@
+import { getIntlLocale, Locale } from './locale';
+
 export function formatForInput(date: Date): string {
   const year = date.getFullYear();
   const month = `${date.getMonth() + 1}`.padStart(2, '0');
@@ -5,8 +7,8 @@ export function formatForInput(date: Date): string {
   return `${year}-${month}-${day}`;
 }
 
-export function formatForHumans(date: Date): string {
-  return new Intl.DateTimeFormat('sv-SE', {
+export function formatForHumans(date: Date, locale: Locale = 'sv'): string {
+  return new Intl.DateTimeFormat(getIntlLocale(locale), {
     weekday: 'long',
     day: 'numeric',
     month: 'long',
@@ -14,8 +16,8 @@ export function formatForHumans(date: Date): string {
   }).format(date);
 }
 
-export function formatShortSwedishDate(date: Date): string {
-  return new Intl.DateTimeFormat('sv-SE', {
+export function formatShortSwedishDate(date: Date, locale: Locale = 'sv'): string {
+  return new Intl.DateTimeFormat(getIntlLocale(locale), {
     weekday: 'long',
     day: 'numeric',
     month: 'long',
@@ -33,15 +35,28 @@ function getSwedishOrdinalDay(day: number): string {
   return `${day}:e`;
 }
 
-export function formatCenterDate(date: Date): string {
-  const weekday = new Intl.DateTimeFormat('sv-SE', {
+function getEnglishOrdinalDay(day: number): string {
+  const mod10 = day % 10;
+  const mod100 = day % 100;
+
+  if (mod10 === 1 && mod100 !== 11) return `${day}st`;
+  if (mod10 === 2 && mod100 !== 12) return `${day}nd`;
+  if (mod10 === 3 && mod100 !== 13) return `${day}rd`;
+  return `${day}th`;
+}
+
+export function formatCenterDate(date: Date, locale: Locale = 'sv'): string {
+  const intlLocale = getIntlLocale(locale);
+  const weekday = new Intl.DateTimeFormat(intlLocale, {
     weekday: 'long',
   }).format(date);
-  const month = new Intl.DateTimeFormat('sv-SE', {
+  const month = new Intl.DateTimeFormat(intlLocale, {
     month: 'long',
   }).format(date);
+  const day =
+    locale === 'sv' ? getSwedishOrdinalDay(date.getDate()) : getEnglishOrdinalDay(date.getDate());
 
-  return `${weekday} ${getSwedishOrdinalDay(date.getDate())} ${month}`;
+  return locale === 'sv' ? `${weekday} ${day} ${month}` : `${weekday}, ${month} ${day}`;
 }
 
 export function getDaysUntil(date: Date, target: Date): number {

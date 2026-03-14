@@ -1,16 +1,5 @@
 import { DayType } from './dayLogic';
 
-export const ordinaryThemeDayTitleEndings = [
-  'Det får väl bära dagen då.',
-  'Det är åtminstone något att skylla på.',
-  'Kontoret får helt enkelt acceptera saken.',
-  'Det är mer än kalendern brukar erbjuda.',
-  'Det blir inte bättre än så här idag.',
-  'Det får duga som dagens professionella ursäkt.',
-  'Vi tar det och går vidare.',
-  'Det är i alla fall bättre än ren tomhet.',
-];
-
 export function formatTitle(title: string): string {
   return title.replaceAll('. ', '.\n');
 }

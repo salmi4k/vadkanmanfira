@@ -1,3 +1,5 @@
+import { Locale } from './locale';
+
 export interface ImageCredit {
   slug: string;
   label: string;
@@ -9,6 +11,23 @@ export interface ImageCredit {
   note?: string;
 }
 
+const COMMONS_DOWNSCALED_NOTE = 'Nedskalad från Wikimedia Commons-originalet.';
+
+export function getImageCreditNote(
+  note: string | undefined,
+  locale: Locale
+): string | undefined {
+  if (!note) {
+    return undefined;
+  }
+
+  if (locale === 'en' && note === COMMONS_DOWNSCALED_NOTE) {
+    return 'Downscaled from the original Wikimedia Commons file.';
+  }
+
+  return note;
+}
+
 export const imageCredits: ImageCredit[] = [
   {
     slug: 'vaffeldagen',
@@ -18,7 +37,7 @@ export const imageCredits: ImageCredit[] = [
     sourceUrl: 'https://commons.wikimedia.org/wiki/File:Waffles.jpg',
     licenseName: 'CC BY-SA 4.0',
     licenseUrl: 'https://creativecommons.org/licenses/by-sa/4.0/',
-    note: 'Nedskalad från Wikimedia Commons-originalet.',
+    note: COMMONS_DOWNSCALED_NOTE,
   },
   {
     slug: 'valborg',
@@ -27,7 +46,7 @@ export const imageCredits: ImageCredit[] = [
     creatorUrl: 'https://commons.wikimedia.org/wiki/User:Nordelch',
     sourceUrl: 'https://commons.wikimedia.org/wiki/File:Valborgsbrasa-1.jpg',
     licenseName: 'Public domain',
-    note: 'Nedskalad från Wikimedia Commons-originalet.',
+    note: COMMONS_DOWNSCALED_NOTE,
   },
   {
     slug: 'paskafton',
@@ -37,7 +56,7 @@ export const imageCredits: ImageCredit[] = [
     sourceUrl: 'https://commons.wikimedia.org/wiki/File:Easter_egg_with_candy.jpg',
     licenseName: 'CC BY-SA 3.0',
     licenseUrl: 'https://creativecommons.org/licenses/by-sa/3.0/',
-    note: 'Nedskalad från Wikimedia Commons-originalet.',
+    note: COMMONS_DOWNSCALED_NOTE,
   },
   {
     slug: 'nationaldagen',
@@ -47,7 +66,7 @@ export const imageCredits: ImageCredit[] = [
     sourceUrl: 'https://commons.wikimedia.org/wiki/File:National_Day_of_Sweden_2015_8032.jpg',
     licenseName: 'CC BY-SA 4.0',
     licenseUrl: 'https://creativecommons.org/licenses/by-sa/4.0/',
-    note: 'Nedskalad från Wikimedia Commons-originalet.',
+    note: COMMONS_DOWNSCALED_NOTE,
   },
   {
     slug: 'midsommarafton',
@@ -57,7 +76,7 @@ export const imageCredits: ImageCredit[] = [
     sourceUrl: 'https://commons.wikimedia.org/wiki/File:Midsommar_Pole_-_Maypole_in_Sweden.jpg',
     licenseName: 'CC BY-SA 4.0',
     licenseUrl: 'https://creativecommons.org/licenses/by-sa/4.0/',
-    note: 'Nedskalad från Wikimedia Commons-originalet.',
+    note: COMMONS_DOWNSCALED_NOTE,
   },
   {
     slug: 'kanelbullensdag',
@@ -67,7 +86,7 @@ export const imageCredits: ImageCredit[] = [
     sourceUrl: 'https://commons.wikimedia.org/wiki/File:Cinnamon_roll_in_Stockholm.jpg',
     licenseName: 'CC BY-SA 4.0',
     licenseUrl: 'https://creativecommons.org/licenses/by-sa/4.0/',
-    note: 'Nedskalad från Wikimedia Commons-originalet.',
+    note: COMMONS_DOWNSCALED_NOTE,
   },
   {
     slug: 'kladdkakansdag',
@@ -76,7 +95,7 @@ export const imageCredits: ImageCredit[] = [
     creatorUrl: 'https://commons.wikimedia.org/wiki/User:Stolpskott',
     sourceUrl: 'https://commons.wikimedia.org/wiki/File:Kladdkaka.JPG',
     licenseName: 'Public domain',
-    note: 'Nedskalad från Wikimedia Commons-originalet.',
+    note: COMMONS_DOWNSCALED_NOTE,
   },
   {
     slug: 'surstrommingspremiar',
@@ -85,7 +104,7 @@ export const imageCredits: ImageCredit[] = [
     sourceUrl: 'https://commons.wikimedia.org/wiki/File:Serving_Surstr%C3%B6mming.jpg',
     licenseName: 'CC BY 2.0',
     licenseUrl: 'https://creativecommons.org/licenses/by/2.0/',
-    note: 'Nedskalad från Wikimedia Commons-originalet.',
+    note: COMMONS_DOWNSCALED_NOTE,
   },
   {
     slug: 'lucia',
@@ -94,7 +113,7 @@ export const imageCredits: ImageCredit[] = [
     sourceUrl: 'https://commons.wikimedia.org/wiki/File:Lucia_procession.jpg',
     licenseName: 'CC BY 2.0',
     licenseUrl: 'https://creativecommons.org/licenses/by/2.0/',
-    note: 'Nedskalad från Wikimedia Commons-originalet.',
+    note: COMMONS_DOWNSCALED_NOTE,
   },
   {
     slug: 'nyarsafton',
@@ -105,6 +124,6 @@ export const imageCredits: ImageCredit[] = [
       'https://commons.wikimedia.org/wiki/File:-_A_New_Year%27s_fireworks_in_central_Stockholm,_Sweden.jpg',
     licenseName: 'CC BY-SA 4.0',
     licenseUrl: 'https://creativecommons.org/licenses/by-sa/4.0/',
-    note: 'Nedskalad från Wikimedia Commons-originalet.',
+    note: COMMONS_DOWNSCALED_NOTE,
   },
 ];

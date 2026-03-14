@@ -1,20 +1,18 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import './App.css';
 import mojoLogo from './mojo-logo.png';
-import { DayType, getDayStatus, getUpcomingOfficialHolidayInWeek } from './dayLogic';
 import {
-  celebrations,
+  appText,
+  ordinaryThemeDayCardNotesByLocale,
+  ordinaryThemeDayTitleEndingsByLocale,
+} from './appText';
+import { usesCompactPrimaryMedia, formatTitle, hasLongTitleWord } from './celebrationPresentation';
+import {
+  getCelebrations,
   getCelebrationThemeAliases,
-  ordinaryBlurb,
-  ordinaryWeekendBlurbs,
-  ordinaryWeekdayBlurbs,
+  getOrdinaryBlurb,
+  getOrdinaryDayBlurbs,
 } from './celebrations';
-import {
-  usesCompactPrimaryMedia,
-  formatTitle,
-  hasLongTitleWord,
-  ordinaryThemeDayTitleEndings,
-} from './celebrationPresentation';
 import {
   addDays,
   formatCenterDate,
@@ -23,8 +21,16 @@ import {
   formatShortSwedishDate,
   getDaysUntil,
 } from './dateUtils';
+import { DayType, getDayStatus, getUpcomingOfficialHolidayInWeek } from './dayLogic';
 import { formatDaysUntilLabel, getUpcomingHolidayBlurb } from './holidayPresentation';
-import { imageCredits } from './imageCredits';
+import { getImageCreditNote, imageCredits } from './imageCredits';
+import {
+  Locale,
+  LOCALE_STORAGE_KEY,
+  getInitialLocale,
+  translateOfficialHolidayName,
+  translateThemeDayName,
+} from './locale';
 import { fetchNameDays } from './nameDays';
 import { getSeasonalNotes } from './seasonalNotes';
 import { buildThemeDayBlurbs, filterThemeDays, joinWithAnd } from './themeDayBlurbs';
@@ -37,20 +43,22 @@ type AppProps = {
 
 type NameDayState = 'loading' | 'ready' | 'error';
 
-const ordinaryThemeDayCardNotes = [
-  'Det är inte officiellt, men tillräckligt många har uppenbarligen bestämt sig för att göra något av det här datumet.',
-  'Kalendern får arbeta med det material den har, och idag blev det ändå förvånansvärt dugligt.',
-  'Det här är inte statsbärande direkt, men absolut tillräckligt för att spela lite större än datumet först såg ut.',
-  'Ingen regering står bakom det här, men folk har ändå visat den goda smaken att fylla dagen med något märkbart.',
-  'Det är smalt, löst sammanhållet och fullt tillräckligt för att ge datumet någon sorts ryggrad.',
-  'Officiellt är det tunt. Inofficiellt är det ändå nog för att låta dagen slippa total förnedring.',
-  'Någon tog sig tid att ge dagen innehåll, och det vore småaktigt att inte arbeta vidare på det.',
-  'Det här får duga som folkligt initiativ. Inte majestätiskt, men klart bättre än kalendermässig öken.',
-];
+const imageCreditDayTypes: Record<string, Exclude<DayType, 'ordinary'> | undefined> = {
+  vaffeldagen: 'vaffeldagen',
+  valborg: 'valborg',
+  paskafton: 'paskafton',
+  nationaldagen: 'nationaldagen',
+  midsommarafton: 'midsommarafton',
+  kanelbullensdag: 'kanelbullensdag',
+  kladdkakansdag: 'kladdkakansdag',
+  surstrommingspremiar: 'surstrommingspremiar',
+  lucia: 'lucia',
+  nyarsafton: 'nyarsafton',
+};
 
-function getRandomItem(options: string[], current?: string): string {
+function getRandomItem(options: string[], fallback: string, current?: string): string {
   if (options.length === 0) {
-    return ordinaryBlurb;
+    return fallback;
   }
 
   if (options.length === 1) {
@@ -63,27 +71,34 @@ function getRandomItem(options: string[], current?: string): string {
   return pool[index];
 }
 
-function getOrdinaryDayBlurbs(date: Date, dayType: DayType): string[] | null {
-  if (dayType !== 'ordinary') {
-    return null;
+function getImageCreditLabel(slug: string, locale: Locale): string {
+  const dayType = imageCreditDayTypes[slug];
+  if (!dayType) {
+    return slug;
   }
 
-  const weekday = date.getDay();
-  return weekday >= 1 && weekday <= 5 ? ordinaryWeekdayBlurbs : ordinaryWeekendBlurbs;
+  const aliases = getCelebrationThemeAliases(dayType, locale);
+  return aliases[0] ?? slug;
 }
 
 function App({ initialDate = new Date() }: AppProps) {
+  const [locale, setLocale] = useState<Locale>(getInitialLocale);
   const [darkMode, setDarkMode] = useState(false);
   const [showImageCredits, setShowImageCredits] = useState(false);
   const [selectedDate, setSelectedDate] = useState(formatForInput(initialDate));
   const [nameDays, setNameDays] = useState<string[]>([]);
   const [nameDayState, setNameDayState] = useState<NameDayState>('loading');
-  const [blurb, setBlurb] = useState(ordinaryBlurb);
+  const [blurb, setBlurb] = useState(getOrdinaryBlurb(getInitialLocale()));
   const [themeDayTitleEnding, setThemeDayTitleEnding] = useState(
-    ordinaryThemeDayTitleEndings[0]
+    ordinaryThemeDayTitleEndingsByLocale[getInitialLocale()][0]
   );
-  const [themeDayCardNote, setThemeDayCardNote] = useState(ordinaryThemeDayCardNotes[0]);
+  const [themeDayCardNote, setThemeDayCardNote] = useState(
+    ordinaryThemeDayCardNotesByLocale[getInitialLocale()][0]
+  );
 
+  const text = appText[locale];
+  const celebrations = useMemo(() => getCelebrations(locale), [locale]);
+  const ordinaryBlurb = useMemo(() => getOrdinaryBlurb(locale), [locale]);
   const selectedDateObject = useMemo(
     () => new Date(`${selectedDate}T12:00:00`),
     [selectedDate]
@@ -100,28 +115,35 @@ function App({ initialDate = new Date() }: AppProps) {
       return themeDays;
     }
 
-    return filterThemeDays(themeDays, getCelebrationThemeAliases(dayStatus.dayType));
-  }, [celebration, dayStatus.dayType, themeDays]);
-  const hasThemeDays = visibleThemeDays.length > 0;
-  const humanDate = formatForHumans(selectedDateObject);
-  const centerDate = formatCenterDate(selectedDateObject);
+    return filterThemeDays(themeDays, getCelebrationThemeAliases(dayStatus.dayType, locale));
+  }, [celebration, dayStatus.dayType, locale, themeDays]);
+  const displayThemeDays = useMemo(
+    () => visibleThemeDays.map((themeDay) => translateThemeDayName(themeDay, locale)),
+    [locale, visibleThemeDays]
+  );
+  const hasThemeDays = displayThemeDays.length > 0;
+  const humanDate = formatForHumans(selectedDateObject, locale);
+  const centerDate = formatCenterDate(selectedDateObject, locale);
   const upcomingHoliday = getUpcomingOfficialHolidayInWeek(selectedDateObject);
+  const upcomingHolidayName = upcomingHoliday
+    ? translateOfficialHolidayName(upcomingHoliday.name, locale)
+    : null;
   const daysUntilHoliday = upcomingHoliday
     ? getDaysUntil(selectedDateObject, upcomingHoliday.date)
     : null;
   const upcomingNotables = useMemo(
-    () => getUpcomingNotables(selectedDateObject),
-    [selectedDateObject]
+    () => getUpcomingNotables(selectedDateObject, 4, 21, locale),
+    [locale, selectedDateObject]
   );
   const seasonalNotes = useMemo(
-    () => getSeasonalNotes(selectedDateObject),
-    [selectedDateObject]
+    () => getSeasonalNotes(selectedDateObject, locale),
+    [locale, selectedDateObject]
   );
   const theme = celebration?.theme ?? 'ordinary';
   const compactPrimaryMedia = usesCompactPrimaryMedia(dayStatus.dayType);
   const themeDayBlurbs = useMemo(
-    () => (!celebration && hasThemeDays ? buildThemeDayBlurbs(visibleThemeDays) : null),
-    [celebration, hasThemeDays, visibleThemeDays]
+    () => (!celebration && hasThemeDays ? buildThemeDayBlurbs(visibleThemeDays, locale) : null),
+    [celebration, hasThemeDays, locale, visibleThemeDays]
   );
   const currentBlurbs = useMemo(() => {
     if (celebration) {
@@ -132,23 +154,31 @@ function App({ initialDate = new Date() }: AppProps) {
       return themeDayBlurbs;
     }
 
-    return getOrdinaryDayBlurbs(selectedDateObject, dayStatus.dayType);
-  }, [celebration, themeDayBlurbs, dayStatus.dayType, selectedDateObject]);
+    if (dayStatus.dayType !== 'ordinary') {
+      return null;
+    }
+
+    return getOrdinaryDayBlurbs(locale, selectedDateObject.getDay() === 0 || selectedDateObject.getDay() === 6);
+  }, [celebration, dayStatus.dayType, locale, selectedDateObject, themeDayBlurbs]);
   const kicker = celebration
     ? celebration.kicker
     : hasThemeDays
-      ? visibleThemeDays.length > 1
-        ? `Inofficiella temadagar x${visibleThemeDays.length}`
-        : 'Inofficiell temadag'
-      : 'Ingen officiell stordådskänsla';
-  const themeDayDisplayTitle = hasThemeDays ? visibleThemeDays[0] : null;
+      ? displayThemeDays.length > 1
+        ? text.unofficialThemeDays(displayThemeDays.length)
+        : text.unofficialThemeDay
+      : text.noOfficialEnergy;
+  const themeDayDisplayTitle = hasThemeDays ? displayThemeDays[0] : null;
   const celebrationSubtitle = celebration?.subtitle ?? null;
   const mainTitle = celebration
     ? celebration.title
     : hasThemeDays
       ? `${themeDayDisplayTitle}. ${themeDayTitleEnding}`
-      : 'En vanlig dag. Så sorgligt är det.';
+      : text.ordinaryTitle;
   const hasLongWordTitle = hasLongTitleWord(themeDayDisplayTitle ?? mainTitle);
+
+  useEffect(() => {
+    window.localStorage.setItem(LOCALE_STORAGE_KEY, locale);
+  }, [locale]);
 
   useEffect(() => {
     if (!currentBlurbs) {
@@ -156,26 +186,28 @@ function App({ initialDate = new Date() }: AppProps) {
       return;
     }
 
-    setBlurb(getRandomItem(currentBlurbs));
-  }, [selectedDate, currentBlurbs]);
+    setBlurb(getRandomItem(currentBlurbs, ordinaryBlurb));
+  }, [selectedDate, locale, currentBlurbs, ordinaryBlurb]);
 
   useEffect(() => {
+    const endings = ordinaryThemeDayTitleEndingsByLocale[locale];
     if (!themeDayDisplayTitle || celebration) {
-      setThemeDayTitleEnding(ordinaryThemeDayTitleEndings[0]);
+      setThemeDayTitleEnding(endings[0]);
       return;
     }
 
-    setThemeDayTitleEnding(getRandomItem(ordinaryThemeDayTitleEndings));
-  }, [selectedDate, themeDayDisplayTitle, celebration]);
+    setThemeDayTitleEnding(getRandomItem(endings, endings[0]));
+  }, [selectedDate, locale, themeDayDisplayTitle, celebration]);
 
   useEffect(() => {
+    const notes = ordinaryThemeDayCardNotesByLocale[locale];
     if (!hasThemeDays || celebration) {
-      setThemeDayCardNote(ordinaryThemeDayCardNotes[0]);
+      setThemeDayCardNote(notes[0]);
       return;
     }
 
-    setThemeDayCardNote(getRandomItem(ordinaryThemeDayCardNotes));
-  }, [selectedDate, hasThemeDays, celebration]);
+    setThemeDayCardNote(getRandomItem(notes, notes[0]));
+  }, [selectedDate, locale, hasThemeDays, celebration]);
 
   useEffect(() => {
     let isCurrent = true;
@@ -214,28 +246,34 @@ function App({ initialDate = new Date() }: AppProps) {
       <div className="app-backdrop" aria-hidden="true" />
       <div className="app-grid">
         <header className="app-panel app-panel--intro">
-          <button
-            type="button"
-            className="theme-toggle"
-            onClick={() => setDarkMode((current) => !current)}
-          >
-            {darkMode ? 'Ljust läge' : 'Mörkt läge'}
-          </button>
+          <div className="intro-controls">
+            <button
+              type="button"
+              className="theme-toggle theme-toggle--language"
+              onClick={() => setLocale((current) => (current === 'sv' ? 'en' : 'sv'))}
+            >
+              {text.languageButton}
+            </button>
+            <button
+              type="button"
+              className="theme-toggle"
+              onClick={() => setDarkMode((current) => !current)}
+            >
+              {darkMode ? text.lightMode : text.darkMode}
+            </button>
+          </div>
 
           <div className="brand-block">
             <img src={mojoLogo} alt="Mojo Logo" className="brand-logo" />
             <div className="brand-copy">
-              <p className="eyebrow">Fredagskoll deluxe</p>
-              <h1 className="brand-title">Vad firar vi idag?</h1>
-              <p className="brand-lede">
-                Välj ett datum och låt appen avgöra om dagen förtjänar sill,
-                semla, fisk eller bara ett tyst konstaterande av tomhet.
-              </p>
+              <p className="eyebrow">{text.eyebrow}</p>
+              <h1 className="brand-title">{text.title}</h1>
+              <p className="brand-lede">{text.lede}</p>
             </div>
           </div>
 
           <label htmlFor="date-picker" className="picker-label">
-            Välj datum
+            {text.pickDate}
           </label>
           <div className="picker-shell">
             <input
@@ -252,41 +290,35 @@ function App({ initialDate = new Date() }: AppProps) {
           </div>
 
           <div className="nameday-card">
-            <p className="eyebrow">Dagens namnsdag</p>
-            {nameDayState === 'loading' ? (
-              <p className="nameday-text">Laddar namnsdag från öppet API.</p>
-            ) : null}
-            {nameDayState === 'error' ? (
-              <p className="nameday-text">
-                Namnsdag gick inte att hämta just nu. Internet måste förstås
-                också vilja samarbeta.
-              </p>
-            ) : null}
+            <p className="eyebrow">{text.nameday}</p>
+            {nameDayState === 'loading' ? <p className="nameday-text">{text.namedayLoading}</p> : null}
+            {nameDayState === 'error' ? <p className="nameday-text">{text.namedayError}</p> : null}
             {nameDayState === 'ready' && nameDays.length > 0 ? (
-              <p className="nameday-text">{nameDays.join(' och ')}</p>
+              <p className="nameday-text">{nameDays.join(locale === 'en' ? ' and ' : ' och ')}</p>
             ) : null}
             {nameDayState === 'ready' && nameDays.length === 0 ? (
-              <p className="nameday-text">Ingen namnsdag registrerad för datumet.</p>
+              <p className="nameday-text">{text.namedayNone}</p>
             ) : null}
           </div>
 
-          {upcomingHoliday && daysUntilHoliday !== null ? (
+          {upcomingHoliday && upcomingHolidayName && daysUntilHoliday !== null ? (
             <div className="holiday-card">
-              <p className="eyebrow">Veckans helgdag</p>
-              <p className="holiday-title">{upcomingHoliday.name}</p>
+              <p className="eyebrow">{text.weeklyHoliday}</p>
+              <p className="holiday-title">{upcomingHolidayName}</p>
               <p className="nameday-text">
-                {getUpcomingHolidayBlurb(upcomingHoliday.name, daysUntilHoliday)}
+                {getUpcomingHolidayBlurb(upcomingHolidayName, daysUntilHoliday, locale)}
               </p>
               <p className="holiday-meta">
-                {formatDaysUntilLabel(daysUntilHoliday)} till{' '}
-                {formatShortSwedishDate(upcomingHoliday.date)}.
+                {formatDaysUntilLabel(daysUntilHoliday, locale)}{' '}
+                {locale === 'en' ? 'until' : 'till'}{' '}
+                {formatShortSwedishDate(upcomingHoliday.date, locale)}.
               </p>
             </div>
           ) : null}
 
           {seasonalNotes.length > 0 ? (
             <div className="season-card">
-              <p className="eyebrow">Säsongen pågår</p>
+              <p className="eyebrow">{text.nowCard}</p>
               <div className="season-list">
                 {seasonalNotes.map((item) => (
                   <article key={item.id} className="season-item">
@@ -304,18 +336,18 @@ function App({ initialDate = new Date() }: AppProps) {
 
           {upcomingNotables.length > 0 ? (
             <div className="upcoming-card">
-              <p className="eyebrow">På gång</p>
+              <p className="eyebrow">{text.upcoming}</p>
               <div className="upcoming-list">
                 {upcomingNotables.map((item) => (
                   <article key={item.dateLabel} className="upcoming-item">
                     <div className="upcoming-item-top">
                       <span className="upcoming-label">{item.label}</span>
                       <span className="upcoming-days">
-                        {item.daysUntil === 1 ? 'I morgon' : `Om ${item.daysUntil} dagar`}
+                        {item.daysUntil === 1 ? text.upcomingTomorrow : text.upcomingInDays(item.daysUntil)}
                       </span>
                     </div>
                     <p className="upcoming-title">{item.title}</p>
-                    <p className="upcoming-date">{formatShortSwedishDate(item.date)}</p>
+                    <p className="upcoming-date">{formatShortSwedishDate(item.date, locale)}</p>
                     <p className="upcoming-note">{item.note}</p>
                   </article>
                 ))}
@@ -329,7 +361,7 @@ function App({ initialDate = new Date() }: AppProps) {
               className="source-link source-link--button"
               onClick={() => setShowImageCredits(true)}
             >
-              Bildkällor
+              {text.imageCredits}
             </button>
             <a
               className="source-link"
@@ -337,19 +369,19 @@ function App({ initialDate = new Date() }: AppProps) {
               target="_blank"
               rel="noreferrer"
             >
-              Temadagar inspirerade av temadagar.se
+              {text.themeDaySource}
             </a>
           </footer>
         </header>
 
         <main className="app-panel celebration-card">
-          <div className="card-nav" aria-label="Datumnavigering">
+          <div className="card-nav" aria-label={locale === 'en' ? 'Date navigation' : 'Datumnavigering'}>
             <button
               type="button"
               className="card-nav-button"
               onClick={() => stepSelectedDate(-1)}
             >
-              Föregående dag
+              {text.previousDay}
             </button>
             <p className="card-date">{centerDate}</p>
             <button
@@ -357,7 +389,7 @@ function App({ initialDate = new Date() }: AppProps) {
               className="card-nav-button"
               onClick={() => stepSelectedDate(1)}
             >
-              Nästa dag
+              {text.nextDay}
             </button>
           </div>
           <p className="eyebrow">{kicker}</p>
@@ -394,9 +426,9 @@ function App({ initialDate = new Date() }: AppProps) {
               <button
                 type="button"
                 className="reroll-button"
-                onClick={() => setBlurb(getRandomItem(currentBlurbs, blurb))}
+                onClick={() => setBlurb(getRandomItem(currentBlurbs, ordinaryBlurb, blurb))}
               >
-                Ny ursäkt
+                {text.reroll}
               </button>
             ) : null}
           </div>
@@ -426,28 +458,24 @@ function App({ initialDate = new Date() }: AppProps) {
                 ) : null}
                 {!celebration.primaryImage && !celebration.secondaryImage ? (
                   <div className="placeholder-card placeholder-card--visual">
-                    <span>{celebration.visualBadge ?? 'Bildfri zon'}</span>
-                    <strong>
-                      {celebration.visualTitle ??
-                        'Det här firandet får bära sig självt utan fotobevis.'}
-                    </strong>
-                    <p>
-                      {celebration.visualBody ??
-                        'Ingen bild finns än, men dagen försöker i alla fall inte se tom ut längre.'}
-                    </p>
+                    <span>{celebration.visualBadge ?? text.noImageBadge}</span>
+                    <strong>{celebration.visualTitle ?? text.noImageTitle}</strong>
+                    <p>{celebration.visualBody ?? text.noImageBody}</p>
                   </div>
                 ) : null}
               </div>
 
               {hasThemeDays ? (
                 <div className="theme-day-panel">
-                  <span className="ordinary-badge">Fler temadagar idag</span>
+                  <span className="ordinary-badge">{text.extraThemeDays}</span>
                   <p>
-                    Som om {themeDayDisplayTitle?.toLowerCase()} inte räckte, så pågår även{' '}
-                    {joinWithAnd(visibleThemeDays)} i bakgrunden.
+                    {text.asIfThatWasNotEnough(
+                      themeDayDisplayTitle ?? '',
+                      joinWithAnd(displayThemeDays, locale)
+                    )}
                   </p>
                   <ul className="theme-day-list">
-                    {visibleThemeDays.map((themeDay) => (
+                    {displayThemeDays.map((themeDay) => (
                       <li key={themeDay}>{themeDay}</li>
                     ))}
                   </ul>
@@ -457,16 +485,16 @@ function App({ initialDate = new Date() }: AppProps) {
           ) : (
             <div className="ordinary-card">
               <span className="ordinary-badge">
-                {hasThemeDays ? 'Dagens temadagar' : 'Ingen träff'}
+                {hasThemeDays ? text.todayThemeDays : text.noHit}
               </span>
               <p>
                 {hasThemeDays
-                  ? `Temadagsmotorn hittade ${joinWithAnd(visibleThemeDays)}. ${themeDayCardNote}`
-                  : 'Datumet har kollats. Systemet fann ingen semla, ingen sill, ingen bullplikt och ingen kollektiv ursäkt för att tappa fokus.'}
+                  ? text.ordinaryThemeDayLead(joinWithAnd(displayThemeDays, locale), themeDayCardNote)
+                  : text.ordinaryNoHitBody}
               </p>
               {hasThemeDays ? (
                 <ul className="theme-day-list">
-                  {visibleThemeDays.map((themeDay) => (
+                  {displayThemeDays.map((themeDay) => (
                     <li key={themeDay}>{themeDay}</li>
                   ))}
                 </ul>
@@ -491,30 +519,27 @@ function App({ initialDate = new Date() }: AppProps) {
           <section className="credits-panel">
             <div className="credits-header">
               <div>
-                <p className="eyebrow">Bildkällor</p>
+                <p className="eyebrow">{text.creditsEyebrow}</p>
                 <h2 id="image-credits-title" className="credits-title">
-                  Wikimedia Commons-credits
+                  {text.creditsTitle}
                 </h2>
-                <p className="credits-lede">
-                  De nedladdade Commons-bilderna är publikt krediterade här med skapare,
-                  källsida och licens. Bilderna i appen är nedskalade versioner.
-                </p>
+                <p className="credits-lede">{text.creditsLead}</p>
               </div>
               <button
                 type="button"
                 className="theme-toggle credits-close"
                 onClick={() => setShowImageCredits(false)}
               >
-                Stäng
+                {text.close}
               </button>
             </div>
 
             <div className="credits-list">
               {imageCredits.map((credit) => (
                 <article key={credit.slug} className="credits-item">
-                  <p className="credits-item-title">{credit.label}</p>
+                  <p className="credits-item-title">{getImageCreditLabel(credit.slug, locale)}</p>
                   <p className="credits-item-meta">
-                    Skapare:{' '}
+                    {text.creator}:{' '}
                     {credit.creatorUrl ? (
                       <a href={credit.creatorUrl} target="_blank" rel="noreferrer">
                         {credit.creator}
@@ -524,7 +549,7 @@ function App({ initialDate = new Date() }: AppProps) {
                     )}
                   </p>
                   <p className="credits-item-meta">
-                    Licens:{' '}
+                    {text.license}:{' '}
                     {credit.licenseUrl ? (
                       <a href={credit.licenseUrl} target="_blank" rel="noreferrer">
                         {credit.licenseName}
@@ -534,12 +559,14 @@ function App({ initialDate = new Date() }: AppProps) {
                     )}
                   </p>
                   <p className="credits-item-meta">
-                    Källa:{' '}
+                    {text.source}:{' '}
                     <a href={credit.sourceUrl} target="_blank" rel="noreferrer">
-                      Commons-filsida
+                      {text.commonsFilePage}
                     </a>
                   </p>
-                  {credit.note ? <p className="credits-item-note">{credit.note}</p> : null}
+                  {credit.note ? (
+                    <p className="credits-item-note">{getImageCreditNote(credit.note, locale)}</p>
+                  ) : null}
                 </article>
               ))}
             </div>

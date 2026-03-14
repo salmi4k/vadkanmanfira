@@ -140,6 +140,14 @@
   gap: 1.25rem;
 }
 
+.intro-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
 .theme-toggle {
   align-self: flex-end;
   border: 0;
@@ -158,11 +166,37 @@
     box-shadow 220ms ease;
 }
 
+.intro-controls .theme-toggle {
+  align-self: auto;
+}
+
+.theme-toggle--language {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--panel-border);
+  box-shadow: none;
+}
+
+.theme-toggle--language:hover {
+  background: rgba(255, 255, 255, 0.42);
+}
+
 .App.dark .theme-toggle {
   color: #19161d;
   background: #f7eedf;
   transform: translateY(-1px);
   box-shadow: 0 14px 28px rgba(0, 0, 0, 0.24);
+}
+
+.App.dark .theme-toggle--language {
+  color: var(--text);
+  background: transparent;
+  border-color: var(--panel-border);
+  box-shadow: none;
+}
+
+.App.dark .theme-toggle--language:hover {
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .brand-block {
@@ -596,7 +630,6 @@
   font-weight: 700;
   letter-spacing: 0.01em;
   color: var(--text);
-  text-transform: lowercase;
 }
 
 .card-nav-button {
@@ -903,6 +936,11 @@
   .theme-toggle {
     padding: 0.68rem 0.85rem;
     font-size: 0.84rem;
+  }
+
+  .intro-controls {
+    flex-direction: column;
+    align-items: stretch;
   }
 
   .brand-logo {
