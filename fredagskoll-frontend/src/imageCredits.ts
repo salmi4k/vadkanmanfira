@@ -25,6 +25,10 @@ export function getImageCreditNote(
     return 'Downscaled from the original Wikimedia Commons file.';
   }
 
+  if (locale === 'pt-BR' && note === COMMONS_DOWNSCALED_NOTE) {
+    return 'Reduzida a partir do arquivo original do Wikimedia Commons.';
+  }
+
   return note;
 }
 

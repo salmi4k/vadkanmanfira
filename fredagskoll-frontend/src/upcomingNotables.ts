@@ -169,6 +169,62 @@ const upcomingCopyByLocale: Record<Locale, UpcomingCopySet> = {
       ],
     },
   },
+  'pt-BR': {
+    labels: {
+      holiday: 'Feriado',
+      celebration: 'Comemoração',
+      themeDay: 'Dia temático',
+      themeDays: (count: number) => `Dias temáticos x${count}`,
+    },
+    timing: {
+      waitsTomorrow: 'espera amanhã',
+      waitsInDays: (days: number) => `espera em ${days} dias`,
+      arrivesTomorrow: 'aparece amanhã',
+      arrivesInDays: (days: number) => `aparece em ${days} dias`,
+      comesTomorrow: 'chega amanhã',
+      comesInDays: (days: number) => `chega em ${days} dias`,
+      liesAheadTomorrow: 'está logo ali amanhã',
+      liesAheadInDays: (days: number) => `está a ${days} dias de distância`,
+    },
+    notes: {
+      holidayWithExtras: [
+        '{title} {arrives}, e {extras} vem no embalo, para a alegria de ninguém.',
+        '{title} {waits}. Como bônus, {extras} conseguiu enfiar o pé na mesma data - não que alguém tenha pedido.',
+        '{title} {comes}, e {extras} aparece meio sem jeito como aquele ato estranho no show principal.',
+        '{title} {liesAhead}. Enquanto isso, {extras} teima em roubar a cena, claro.',
+      ],
+      holidaySolo:
+        '{title} {arrives}, pelo menos a semana ganha uma desculpa oficial para existir.',
+      celebrationWithExtras: [
+        '{title} {waits}. E, como se não bastasse, {extras} já está ali no canto querendo atenção.',
+        '{title} {arrives}, e {extras} claramente não vai ficar só no sofá dessa vez.',
+        '{title} {comes}. Como sempre, não foi suficiente, então {extras} resolveu se meter também.',
+        '{title} {liesAhead}, enquanto {extras} voa por aí igual bônus indesejado, mas que apareceu mesmo assim.',
+        '{title} {waits}, e {extras} já está ali cutucando a cortina, esperando o show começar.',
+        '{title} {comes}. Além disso, {extras} decidiu que merece uma fatia do holofote.',
+      ],
+      celebrationSolo: [
+        '{title} {waits}, o que já é melhor do que encarar uma semana sem graça.',
+        '{title} {arrives}, e a semana ganha pelo menos uma cara menos entediante.',
+        '{title} {comes}. Nada épico, mas já quebra o silêncio sepulcral do calendário.',
+        '{title} {liesAhead}, o suficiente para deixar a semana um tiquinho menos cinza.',
+      ],
+      themeDayWithExtras: [
+        '{title} {waits}, e {extras} se agarra ao dia feito chiclete no sapato.',
+        '{title} {arrives}. Para completar, {extras} milagrosamente entrou na brecha do calendário.',
+        '{title} {liesAhead}, e {extras} claramente não pretende sair de cena sozinho.',
+        '{title} {comes}. Como se não bastasse, {extras} aparece mancando por ali também.',
+      ],
+      themeDaySolo: [
+        '{title} {waits}. Pelo menos o calendário tenta parecer menos morto do que o normal.',
+        '{title} {arrives}, uma quantidade surpreendente de personalidade para um dia justamente comum.',
+        '{title} {waits}. Exatamente o tipo de dignidade modesta que se aprende a apreciar.',
+        '{title} {comes}, e isso já é mais cultura do que a semana sugeria inicialmente.',
+        '{title} {liesAhead}. Nicho, sim, mas bem melhor do que aquele deserto no calendário.',
+        '{title} {waits}. Alguém se deu ao trabalho de dar um cantinho especial para a data, respeita.',
+      ],
+    },
+  },
 };
 
 function toLocalDateOnly(date: Date): Date {
