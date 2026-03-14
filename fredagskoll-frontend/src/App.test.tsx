@@ -98,7 +98,12 @@ test('renders Fisktorsdag using the cleaned non-branded image', async () => {
   await renderAppAt(new Date(2026, 2, 19));
 
   expect(
-    screen.getByRole('heading', { level: 2, name: /Fisktorsdag håller ihop civilisationen/i })
+    screen.getByRole('heading', { level: 2, name: /Fisktorsdag/i })
+  ).toBeInTheDocument();
+  expect(
+    screen.getByText(
+      /Håller ihop civilisationen med dill och institutionell envishet\./i
+    )
   ).toBeInTheDocument();
   expect(screen.getByAltText(/Fisktorsdag/i)).toHaveAttribute(
     'src',
@@ -133,7 +138,33 @@ test('renders a rerollable blurb on an ordinary weekday', async () => {
 
   expect(
     screen.getByText(
-      /Allt tyder på att du får ta dig igenom den här dagen utan hjälp av någon som helst högtidsenergi\./i
+      /Det här är administrationens egen lilla arbetsseger: en dag som inte stör, gläder eller ursäktar något alls\./i
+    )
+  ).toBeInTheDocument();
+
+  randomSpy.mockRestore();
+});
+
+test('renders a rerollable blurb on an ordinary weekend date', async () => {
+  const randomSpy = jest
+    .spyOn(Math, 'random')
+    .mockReturnValueOnce(0)
+    .mockReturnValueOnce(0.99);
+
+  await renderAppAt(new Date(2026, 2, 28));
+
+  expect(
+    screen.getByText(
+      /Det är helg, men inte på det minsta glittriga sättet\. Bara frihet med lätt städsmak i bakgrunden\./i
+    )
+  ).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: /Ny ursäkt/i })).toBeInTheDocument();
+
+  fireEvent.click(screen.getByRole('button', { name: /Ny ursäkt/i }));
+
+  expect(
+    screen.getByText(
+      /Helgens stora innehåll idag är att den pågår\. Man får tydligen vara tacksam för det\./i
     )
   ).toBeInTheDocument();
 
@@ -267,7 +298,7 @@ test('rerolls the excuse when clicking Ny ursäkt', async () => {
 
   expect(
     screen.getByText(
-      /Nu gäller det att avrunda veckan med samma energi som en sliten men välfungerande efterrätt\./i
+      /Marmeladfredag är när helgen syns i dörren och samvetet försöker hålla ihop med hjälp av socker\./i
     )
   ).toBeInTheDocument();
 
