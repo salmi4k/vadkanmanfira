@@ -8,7 +8,12 @@ import {
   ordinaryBlurb,
   ordinaryWeekdayBlurbs,
 } from './celebrations';
-import { usesCompactPrimaryMedia, formatTitle, hasLongTitleWord } from './celebrationPresentation';
+import {
+  usesCompactPrimaryMedia,
+  formatTitle,
+  hasLongTitleWord,
+  ordinaryThemeDayTitleEndings,
+} from './celebrationPresentation';
 import {
   addDays,
   formatCenterDate,
@@ -61,6 +66,9 @@ function App({ initialDate = new Date() }: AppProps) {
   const [nameDays, setNameDays] = useState<string[]>([]);
   const [nameDayState, setNameDayState] = useState<NameDayState>('loading');
   const [blurb, setBlurb] = useState(ordinaryBlurb);
+  const [themeDayTitleEnding, setThemeDayTitleEnding] = useState(
+    ordinaryThemeDayTitleEndings[0]
+  );
 
   const selectedDateObject = useMemo(
     () => new Date(`${selectedDate}T12:00:00`),
@@ -119,12 +127,13 @@ function App({ initialDate = new Date() }: AppProps) {
         ? `Inofficiella temadagar x${visibleThemeDays.length}`
         : 'Inofficiell temadag'
       : 'Ingen officiell stordådskänsla';
+  const themeDayDisplayTitle = hasThemeDays ? visibleThemeDays[0] : null;
   const mainTitle = celebration
     ? celebration.title
     : hasThemeDays
-      ? `${visibleThemeDays[0]}. Det får väl räcka.`
+      ? `${themeDayDisplayTitle}. ${themeDayTitleEnding}`
       : 'En vanlig dag. Så sorgligt är det.';
-  const hasLongWordTitle = hasLongTitleWord(mainTitle);
+  const hasLongWordTitle = hasLongTitleWord(themeDayDisplayTitle ?? mainTitle);
 
   useEffect(() => {
     if (!currentBlurbs) {
@@ -134,6 +143,15 @@ function App({ initialDate = new Date() }: AppProps) {
 
     setBlurb(getRandomItem(currentBlurbs));
   }, [selectedDate, currentBlurbs]);
+
+  useEffect(() => {
+    if (!themeDayDisplayTitle || celebration) {
+      setThemeDayTitleEnding(ordinaryThemeDayTitleEndings[0]);
+      return;
+    }
+
+    setThemeDayTitleEnding(getRandomItem(ordinaryThemeDayTitleEndings));
+  }, [selectedDate, themeDayDisplayTitle, celebration]);
 
   useEffect(() => {
     let isCurrent = true;
@@ -301,13 +319,24 @@ function App({ initialDate = new Date() }: AppProps) {
             </button>
           </div>
           <p className="eyebrow">{kicker}</p>
-          <h2
-            className={`celebration-title${
-              hasLongWordTitle ? ' celebration-title--longword' : ''
-            }`}
-          >
-            {formatTitle(mainTitle)}
-          </h2>
+          {themeDayDisplayTitle && !celebration ? (
+            <h2
+              className={`celebration-title celebration-title--stacked${
+                hasLongWordTitle ? ' celebration-title--longword' : ''
+              }`}
+            >
+              {themeDayDisplayTitle}.
+              <span className="celebration-title-subline">{themeDayTitleEnding}</span>
+            </h2>
+          ) : (
+            <h2
+              className={`celebration-title${
+                hasLongWordTitle ? ' celebration-title--longword' : ''
+              }`}
+            >
+              {formatTitle(mainTitle)}
+            </h2>
+          )}
           <div className="blurb-row">
             <p className="celebration-blurb">{blurb}</p>
             {currentBlurbs ? (
@@ -363,7 +392,7 @@ function App({ initialDate = new Date() }: AppProps) {
                 <div className="theme-day-panel">
                   <span className="ordinary-badge">Fler temadagar idag</span>
                   <p>
-                    Som om {mainTitle.split('.')[0].toLowerCase()} inte räckte, så pågår även{' '}
+                    Som om {themeDayDisplayTitle?.toLowerCase()} inte räckte, så pågår även{' '}
                     {joinWithAnd(visibleThemeDays)} i bakgrunden.
                   </p>
                   <ul className="theme-day-list">
