@@ -26,6 +26,7 @@ import {
 import { formatDaysUntilLabel, getUpcomingHolidayBlurb } from './holidayPresentation';
 import { imageCredits } from './imageCredits';
 import { fetchNameDays } from './nameDays';
+import { getSeasonalNotes } from './seasonalNotes';
 import { buildThemeDayBlurbs, filterThemeDays, joinWithAnd } from './themeDayBlurbs';
 import { getThemeDaysForDate } from './temadagar';
 import { getUpcomingNotables } from './upcomingNotables';
@@ -35,6 +36,17 @@ type AppProps = {
 };
 
 type NameDayState = 'loading' | 'ready' | 'error';
+
+const ordinaryThemeDayCardNotes = [
+  'Det är inte officiellt, men tillräckligt många har uppenbarligen bestämt sig för att göra något av det här datumet.',
+  'Kalendern får arbeta med det material den har, och idag blev det ändå förvånansvärt dugligt.',
+  'Det här är inte statsbärande direkt, men absolut tillräckligt för att spela lite större än datumet först såg ut.',
+  'Ingen regering står bakom det här, men folk har ändå visat den goda smaken att fylla dagen med något märkbart.',
+  'Det är smalt, löst sammanhållet och fullt tillräckligt för att ge datumet någon sorts ryggrad.',
+  'Officiellt är det tunt. Inofficiellt är det ändå nog för att låta dagen slippa total förnedring.',
+  'Någon tog sig tid att ge dagen innehåll, och det vore småaktigt att inte arbeta vidare på det.',
+  'Det här får duga som folkligt initiativ. Inte majestätiskt, men klart bättre än kalendermässig öken.',
+];
 
 function getRandomItem(options: string[], current?: string): string {
   if (options.length === 0) {
@@ -70,6 +82,7 @@ function App({ initialDate = new Date() }: AppProps) {
   const [themeDayTitleEnding, setThemeDayTitleEnding] = useState(
     ordinaryThemeDayTitleEndings[0]
   );
+  const [themeDayCardNote, setThemeDayCardNote] = useState(ordinaryThemeDayCardNotes[0]);
 
   const selectedDateObject = useMemo(
     () => new Date(`${selectedDate}T12:00:00`),
@@ -98,6 +111,10 @@ function App({ initialDate = new Date() }: AppProps) {
     : null;
   const upcomingNotables = useMemo(
     () => getUpcomingNotables(selectedDateObject),
+    [selectedDateObject]
+  );
+  const seasonalNotes = useMemo(
+    () => getSeasonalNotes(selectedDateObject),
     [selectedDateObject]
   );
   const theme = celebration?.theme ?? 'ordinary';
@@ -150,6 +167,15 @@ function App({ initialDate = new Date() }: AppProps) {
 
     setThemeDayTitleEnding(getRandomItem(ordinaryThemeDayTitleEndings));
   }, [selectedDate, themeDayDisplayTitle, celebration]);
+
+  useEffect(() => {
+    if (!hasThemeDays || celebration) {
+      setThemeDayCardNote(ordinaryThemeDayCardNotes[0]);
+      return;
+    }
+
+    setThemeDayCardNote(getRandomItem(ordinaryThemeDayCardNotes));
+  }, [selectedDate, hasThemeDays, celebration]);
 
   useEffect(() => {
     let isCurrent = true;
@@ -255,6 +281,24 @@ function App({ initialDate = new Date() }: AppProps) {
                 {formatDaysUntilLabel(daysUntilHoliday)} till{' '}
                 {formatShortSwedishDate(upcomingHoliday.date)}.
               </p>
+            </div>
+          ) : null}
+
+          {seasonalNotes.length > 0 ? (
+            <div className="season-card">
+              <p className="eyebrow">Säsongen pågår</p>
+              <div className="season-list">
+                {seasonalNotes.map((item) => (
+                  <article key={item.id} className="season-item">
+                    <div className="season-item-top">
+                      <span className="season-label">{item.label}</span>
+                      <span className="season-meta">{item.meta}</span>
+                    </div>
+                    <p className="season-title">{item.title}</p>
+                    <p className="nameday-text">{item.note}</p>
+                  </article>
+                ))}
+              </div>
             </div>
           ) : null}
 
@@ -417,7 +461,7 @@ function App({ initialDate = new Date() }: AppProps) {
               </span>
               <p>
                 {hasThemeDays
-                  ? `Temadagsmotorn hittade ${joinWithAnd(visibleThemeDays)}. Det är inte officiellt, men det räcker gott för att börja improvisera.`
+                  ? `Temadagsmotorn hittade ${joinWithAnd(visibleThemeDays)}. ${themeDayCardNote}`
                   : 'Datumet har kollats. Systemet fann ingen semla, ingen sill, ingen bullplikt och ingen kollektiv ursäkt för att tappa fokus.'}
               </p>
               {hasThemeDays ? (
