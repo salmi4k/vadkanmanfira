@@ -4,6 +4,10 @@ import App from './App';
 import { buildInfo } from './buildInfo.generated';
 import { ContentPack } from './contentPack';
 
+jest.mock('./aiBlurbs', () => ({
+  fetchAiBlurbBundle: jest.fn().mockResolvedValue(null),
+}));
+
 async function renderAppAt(date: Date, contentPack?: ContentPack): Promise<void> {
   render(<App initialDate={date} contentPack={contentPack} />);
   await waitFor(() =>
@@ -16,6 +20,14 @@ async function renderAppAt(date: Date, contentPack?: ContentPack): Promise<void>
 beforeEach(() => {
   jest.spyOn(global, 'fetch').mockImplementation(async (input: RequestInfo | URL) => {
     const url = String(input);
+
+    if (url.includes('/api/blurbs')) {
+      return {
+        ok: true,
+        status: 204,
+        json: async () => ({}),
+      } as Response;
+    }
 
     if (url.includes('/2026/03/14')) {
       return {

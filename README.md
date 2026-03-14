@@ -44,6 +44,10 @@ If the variable is unset, the app defaults to `public`.
   Curated unofficial temadag dataset.
 - `fredagskoll-frontend/public/images`
   Celebration images and source metadata.
+- `api/blurbs`
+  Azure Function endpoint for optional AI-generated blurb bundles.
+- `api/shared`
+  Request validation, prompt building, Azure OpenAI calling, and Table Storage cache logic.
 
 ## Built-in celebration rules
 
@@ -101,12 +105,46 @@ npm run build
 - `.github/workflows/deploy-static-apps.yml` builds the app twice:
   - `REACT_APP_CONTENT_PACK=public` deploys to `vadkanmanfira`
   - `REACT_APP_CONTENT_PACK=team` deploys to `fredagskoll`
+- The same workflow now also deploys `api/` as a Static Web Apps managed API
 - Required GitHub Actions secrets:
   - `AZURE_STATIC_WEB_APPS_API_TOKEN_THANKFUL_BUSH_0D8565003_1`
   - `AZURE_STATIC_WEB_APPS_API_TOKEN_DELIGHTFUL_GROUND_0B3AA2B03`
 - Azure Static Web Apps hosts both variants
 - SPA routing fallback lives in
   `fredagskoll-frontend/public/staticwebapp.config.json`
+
+## Optional AI blurbs
+
+The app can now ask an Azure Function for generated blurb bundles. This is optional:
+if the API is unavailable or Azure OpenAI is not configured, the frontend keeps using
+the existing handwritten/static blurbs.
+
+The API endpoint:
+
+- `POST /api/blurbs`
+
+What it does:
+
+- receives a structured date context from the frontend
+- computes a deterministic cache key
+- checks Azure Table Storage first
+- only calls Azure OpenAI on cache miss
+- returns multiple options for:
+  - `blurbs`
+  - `titleEndings` for ordinary theme-day headlines
+  - `cardNotes` for ordinary theme-day support text
+
+Required Azure app settings for each Static Web App if you want the AI path enabled:
+
+- `AZURE_OPENAI_ENDPOINT`
+- `AZURE_OPENAI_API_KEY`
+- `AZURE_OPENAI_DEPLOYMENT`
+- `AZURE_OPENAI_API_VERSION`
+- `AZURE_TABLES_CONNECTION_STRING`
+
+Local sample config lives in:
+
+- `api/local.settings.sample.json`
 
 ## Data and sources
 

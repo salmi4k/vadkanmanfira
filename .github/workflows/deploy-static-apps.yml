@@ -32,7 +32,7 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: upload
           app_location: fredagskoll-frontend
-          api_location: ""
+          api_location: api
           output_location: build
 
   deploy_team:
@@ -56,5 +56,5 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: upload
           app_location: fredagskoll-frontend
-          api_location: ""
+          api_location: api
           output_location: build
