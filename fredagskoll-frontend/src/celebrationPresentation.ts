@@ -1,3 +1,4 @@
+import { isTeamWeekdayDayType } from './contentPack';
 import { DayType } from './dayLogic';
 
 export function formatTitle(title: string): string {
@@ -11,9 +12,5 @@ export function hasLongTitleWord(title: string): boolean {
 }
 
 export function usesCompactPrimaryMedia(dayType: DayType): boolean {
-  return (
-    dayType === 'kottonsdag' ||
-    dayType === 'fisktorsdag' ||
-    dayType === 'marmeladfredag'
-  );
+  return isTeamWeekdayDayType(dayType);
 }

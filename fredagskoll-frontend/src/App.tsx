@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import './App.css';
 import mojoLogo from './mojo-logo.png';
+import publicLogo from './vkmf-logo-public.png';
 import {
   appText,
   ordinaryThemeDayCardNotesByLocale,
@@ -14,6 +15,7 @@ import {
   getOrdinaryBlurb,
   getOrdinaryDayBlurbs,
 } from './celebrations';
+import { ContentPack, getActiveContentPack, showsTeamBranding } from './contentPack';
 import {
   addDays,
   formatCenterDate,
@@ -41,6 +43,7 @@ import { getUpcomingNotables } from './upcomingNotables';
 
 type AppProps = {
   initialDate?: Date;
+  contentPack?: ContentPack;
 };
 
 type NameDayState = 'loading' | 'ready' | 'error';
@@ -79,13 +82,13 @@ function getRandomItem(options: string[], fallback: string, current?: string): s
   return pool[index];
 }
 
-function getImageCreditLabel(slug: string, locale: Locale): string {
+function getImageCreditLabel(slug: string, locale: Locale, contentPack: ContentPack): string {
   const dayType = imageCreditDayTypes[slug];
   if (!dayType) {
     return slug;
   }
 
-  const aliases = getCelebrationThemeAliases(dayType, locale);
+  const aliases = getCelebrationThemeAliases(dayType, locale, contentPack);
   return aliases[0] ?? slug;
 }
 
@@ -140,7 +143,10 @@ function formatBuildStamp(locale: Locale): string {
   return `${buildInfo.gitSha} | ${formattedTime}`;
 }
 
-function App({ initialDate = new Date() }: AppProps) {
+function App({
+  initialDate = new Date(),
+  contentPack = getActiveContentPack(),
+}: AppProps) {
   const [locale, setLocale] = useState<Locale>(getInitialLocale);
   const [darkMode, setDarkMode] = useState(false);
   const [showImageCredits, setShowImageCredits] = useState(false);
@@ -168,13 +174,13 @@ function App({ initialDate = new Date() }: AppProps) {
 
   const text = appText[locale];
   const buildStamp = useMemo(() => formatBuildStamp(locale), [locale]);
-  const celebrations = useMemo(() => getCelebrations(locale), [locale]);
+  const celebrations = useMemo(() => getCelebrations(locale, contentPack), [contentPack, locale]);
   const ordinaryBlurb = useMemo(() => getOrdinaryBlurb(locale), [locale]);
   const selectedDateObject = useMemo(
     () => new Date(`${selectedDate}T12:00:00`),
     [selectedDate]
   );
-  const dayStatus = getDayStatus(selectedDateObject);
+  const dayStatus = getDayStatus(selectedDateObject, contentPack);
   const celebration =
     dayStatus.dayType === 'ordinary' ? null : celebrations[dayStatus.dayType];
   const themeDays = useMemo(
@@ -186,8 +192,8 @@ function App({ initialDate = new Date() }: AppProps) {
       return themeDays;
     }
 
-    return filterThemeDays(themeDays, getCelebrationThemeAliases(dayStatus.dayType, locale));
-  }, [celebration, dayStatus.dayType, locale, themeDays]);
+    return filterThemeDays(themeDays, getCelebrationThemeAliases(dayStatus.dayType, locale, contentPack));
+  }, [celebration, contentPack, dayStatus.dayType, locale, themeDays]);
   const displayThemeDays = useMemo(
     () => visibleThemeDays.map((themeDay) => translateThemeDayName(themeDay, locale)),
     [locale, visibleThemeDays]
@@ -207,8 +213,8 @@ function App({ initialDate = new Date() }: AppProps) {
     ? getDaysUntil(selectedDateObject, upcomingHoliday.date)
     : null;
   const upcomingNotables = useMemo(
-    () => getUpcomingNotables(selectedDateObject, 4, 21, locale),
-    [locale, selectedDateObject]
+    () => getUpcomingNotables(selectedDateObject, 4, 21, locale, contentPack),
+    [contentPack, locale, selectedDateObject]
   );
   const seasonalNotes = useMemo(
     () => getSeasonalNotes(selectedDateObject, locale),
@@ -249,12 +255,12 @@ function App({ initialDate = new Date() }: AppProps) {
   const themeDayDisplayTitle = hasThemeDays ? displayThemeDays[0] : null;
   const extraThemeDayLead = useMemo(() => {
     if (celebration && dayStatus.dayType !== 'ordinary') {
-      const aliases = getCelebrationThemeAliases(dayStatus.dayType, locale);
+      const aliases = getCelebrationThemeAliases(dayStatus.dayType, locale, contentPack);
       return aliases[0] ?? celebration.title;
     }
 
     return themeDayDisplayTitle;
-  }, [celebration, dayStatus.dayType, locale, themeDayDisplayTitle]);
+  }, [celebration, contentPack, dayStatus.dayType, locale, themeDayDisplayTitle]);
   const celebrationSubtitle = celebration?.subtitle ?? null;
   const mainTitle = celebration
     ? celebration.title
@@ -375,8 +381,15 @@ function App({ initialDate = new Date() }: AppProps) {
             </button>
           </div>
 
-          <div className="brand-block">
-            <img src={mojoLogo} alt="Mojo Logo" className="brand-logo" />
+          <div className={`brand-block${showsTeamBranding(contentPack) ? '' : ' brand-block--text-only'}`}>
+            {showsTeamBranding(contentPack) ? (
+              <img src={mojoLogo} alt="Mojo Logo" className="brand-logo" />
+            ) : (
+              <div className="brand-mark" aria-label="VKMF">
+                <img src={publicLogo} alt="VKMF emblem" className="brand-logo brand-logo--public" />
+                <span className="brand-mark-label">VKMF</span>
+              </div>
+            )}
             <div className="brand-copy">
               <p className="eyebrow">{text.eyebrow}</p>
               <h1 className="brand-title">{text.title}</h1>
@@ -725,7 +738,7 @@ function App({ initialDate = new Date() }: AppProps) {
             <div className="credits-list">
               {imageCredits.map((credit) => (
                 <article key={credit.slug} className="credits-item">
-                  <p className="credits-item-title">{getImageCreditLabel(credit.slug, locale)}</p>
+                  <p className="credits-item-title">{getImageCreditLabel(credit.slug, locale, contentPack)}</p>
                   <p className="credits-item-meta">
                     {text.creator}:{' '}
                     {credit.creatorUrl ? (

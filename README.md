@@ -1,30 +1,53 @@
-# Fredagskoll
+# Vad kan man fira?
 
-Fredagskoll is a frontend-only React app that decides whether a Swedish date
-deserves celebration, resignation, baked goods, or a dry remark about office
-life.
+`Vad kan man fira?` is a frontend-only React app that decides whether a Swedish
+date deserves celebration, resignation, baked goods, or a dry remark about
+calendar reality.
 
 The shipped product lives in `fredagskoll-frontend` and is deployed to Azure
 Static Web Apps from the `main` branch.
 
+## Content packs
+
+The app now supports two variants on top of the same shared core:
+
+- `public`
+  Default build. Uses the public `VKMF` branding and excludes the internal team
+  weekday lore.
+- `team`
+  Keeps the private weekday celebrations such as `Köttonsdag`, `Fisktorsdag`,
+  and `Marmeladfredag`, plus the `Mojo` team branding.
+
+Set the variant with:
+
+```sh
+$env:REACT_APP_CONTENT_PACK="team"
+```
+
+If the variable is unset, the app defaults to `public`.
+
 ## Project structure
 
 - `fredagskoll-frontend/src/App.tsx`
-  Main composition layer for the UI
+  Main composition layer for the UI.
+- `fredagskoll-frontend/src/contentPack.ts`
+  Content-pack selection, public/team boundaries, and recurring weekday rules.
 - `fredagskoll-frontend/src/dayLogic.ts`
-  Date classification and official Swedish holiday calculations
+  Date classification and official Swedish holiday calculations.
 - `fredagskoll-frontend/src/celebrations.ts`
-  Built-in celebration content for major special dates
+  Built-in celebration content and pack-filtered exports.
 - `fredagskoll-frontend/src/themeDaySpecificBlurbs.ts`
-  Handwritten temadag overrides
+  Handwritten temadag overrides.
 - `fredagskoll-frontend/src/themeDayCategoryBlurbs.ts`
-  Category fallback blurbs for temadagar
+  Category fallback blurbs for temadagar.
 - `fredagskoll-frontend/src/data/temadagarByDate.json`
-  Curated unofficial temadag dataset
+  Curated unofficial temadag dataset.
 - `fredagskoll-frontend/public/images`
-  Celebration images and source metadata
+  Celebration images and source metadata.
 
 ## Built-in celebration rules
+
+Shared core:
 
 - `allahjartansdag`: February 14
 - `fettisdag`: calculated from Easter
@@ -39,16 +62,28 @@ Static Web Apps from the `main` branch.
 - `lucia`: December 13
 - `julafton`: December 24
 - `nyarsafton`: December 31
+
+Team pack only:
+
 - `kottonsdag`: every Wednesday
 - `fisktorsdag`: every Thursday
 - `marmeladfredag`: every Friday
-- ordinary days: no built-in major celebration, but temadagar may still apply
+
+Ordinary days still pick up temadagar, seasonal notes, and other sidebar/context
+logic as usual.
 
 ## Development
 
 ```sh
 cd fredagskoll-frontend
 npm install
+npm start
+```
+
+Run the team edition locally:
+
+```sh
+$env:REACT_APP_CONTENT_PACK="team"
 npm start
 ```
 

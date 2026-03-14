@@ -1,3 +1,5 @@
+import { ContentPack, TeamWeekdayDayType, getActiveContentPack, getRecurringWeekdayRule } from './contentPack';
+
 export type DayType =
   | 'ordinary'
   | 'allahjartansdag'
@@ -13,9 +15,7 @@ export type DayType =
   | 'lucia'
   | 'julafton'
   | 'nyarsafton'
-  | 'kottonsdag'
-  | 'fisktorsdag'
-  | 'marmeladfredag';
+  | TeamWeekdayDayType;
 
 export interface DayStatus {
   dateLabel: string;
@@ -159,7 +159,10 @@ export function getUpcomingOfficialHolidayInWeek(
   return holidays.length > 0 ? holidays[0] : null;
 }
 
-export function getDayStatus(inputDate: Date): DayStatus {
+export function getDayStatus(
+  inputDate: Date,
+  contentPack: ContentPack = getActiveContentPack()
+): DayStatus {
   const date = toLocalDateOnly(inputDate);
   const dayOfWeek = date.getDay();
   const easterSunday = getEasterSunday(date.getFullYear());
@@ -256,24 +259,12 @@ export function getDayStatus(inputDate: Date): DayStatus {
     };
   }
 
-  if (dayOfWeek === 3) {
-    return {
-      dateLabel: formatDate(date),
-      dayType: 'kottonsdag',
-    };
-  }
+  const recurringWeekdayRule = getRecurringWeekdayRule(dayOfWeek, contentPack);
 
-  if (dayOfWeek === 4) {
+  if (recurringWeekdayRule) {
     return {
       dateLabel: formatDate(date),
-      dayType: 'fisktorsdag',
-    };
-  }
-
-  if (dayOfWeek === 5) {
-    return {
-      dateLabel: formatDate(date),
-      dayType: 'marmeladfredag',
+      dayType: recurringWeekdayRule.dayType,
     };
   }
 

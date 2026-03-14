@@ -16,6 +16,18 @@ test('classifies Surströmmingspremiär ahead of ordinary Thursday logic', () =>
   expect(result.dateLabel).toBe('2026-08-20');
 });
 
+test('treats ordinary weekdays as ordinary in the public content pack', () => {
+  const result = getDayStatus(new Date(2026, 2, 19), 'public');
+
+  expect(result.dayType).toBe('ordinary');
+});
+
+test('restores recurring weekday lore in the team content pack', () => {
+  const result = getDayStatus(new Date(2026, 2, 19), 'team');
+
+  expect(result.dayType).toBe('fisktorsdag');
+});
+
 test('includes Långfredagen in the official holiday list', () => {
   const holidays = getOfficialHolidays(2026);
   const holiday = holidays.find((item) => item.name === 'Långfredagen');

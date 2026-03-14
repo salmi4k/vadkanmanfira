@@ -2,7 +2,25 @@ const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 
+function getEnvSha() {
+  const candidates = [
+    process.env.GITHUB_SHA,
+    process.env.SOURCE_VERSION,
+    process.env.BUILD_SOURCEVERSION,
+    process.env.VERCEL_GIT_COMMIT_SHA,
+    process.env.COMMIT_REF,
+  ];
+
+  const match = candidates.find((value) => typeof value === 'string' && value.trim().length > 0);
+  return match ? match.trim().slice(0, 7) : null;
+}
+
 function getGitSha() {
+  const envSha = getEnvSha();
+  if (envSha) {
+    return envSha;
+  }
+
   try {
     return execSync('git rev-parse --short HEAD', {
       cwd: path.resolve(__dirname, '..', '..'),

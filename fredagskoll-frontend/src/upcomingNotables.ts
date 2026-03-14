@@ -1,5 +1,11 @@
 import { getCelebrationThemeAliases, getCelebrations } from './celebrations';
 import {
+  ContentPack,
+  getActiveContentPack,
+  getRecurringWeekdayTypes,
+  isTeamWeekdayDayType,
+} from './contentPack';
+import {
   DayType,
   OfficialHoliday,
   getDayStatus,
@@ -49,8 +55,6 @@ type UpcomingCopySet = {
     themeDaySolo: string[];
   };
 };
-
-const recurringWeekdayTypes: DayType[] = ['kottonsdag', 'fisktorsdag', 'marmeladfredag'];
 
 const upcomingCopyByLocale: Record<Locale, UpcomingCopySet> = {
   sv: {
@@ -194,10 +198,11 @@ function getOfficialHolidayForDate(date: Date): OfficialHoliday | null {
 
 function getCelebrationDisplayName(
   dayType: Exclude<DayType, 'ordinary'>,
-  locale: Locale
+  locale: Locale,
+  contentPack: ContentPack
 ): string {
-  const celebrations = getCelebrations(locale);
-  const aliases = getCelebrationThemeAliases(dayType, locale);
+  const celebrations = getCelebrations(locale, contentPack);
+  const aliases = getCelebrationThemeAliases(dayType, locale, contentPack);
   if (aliases.length > 0) {
     return aliases[0];
   }
@@ -298,19 +303,22 @@ export function getUpcomingNotables(
   inputDate: Date,
   maxItems = 4,
   lookaheadDays = 21,
-  locale: Locale = 'sv'
+  locale: Locale = 'sv',
+  contentPack: ContentPack = getActiveContentPack()
 ): UpcomingNotable[] {
   const startDate = toLocalDateOnly(inputDate);
   const priorityItems: UpcomingNotable[] = [];
   const secondaryItems: UpcomingNotable[] = [];
+  const recurringWeekdayTypes = getRecurringWeekdayTypes(contentPack);
 
   for (let offset = 1; offset <= lookaheadDays; offset += 1) {
     const date = toLocalDateOnly(addDays(startDate, offset));
     const dateLabel = formatDate(date);
     const officialHoliday = getOfficialHolidayForDate(date);
-    const dayStatus = getDayStatus(date);
+    const dayStatus = getDayStatus(date, contentPack);
     const hasMajorCelebration =
-      dayStatus.dayType !== 'ordinary' && !recurringWeekdayTypes.includes(dayStatus.dayType);
+      dayStatus.dayType !== 'ordinary' &&
+      !(isTeamWeekdayDayType(dayStatus.dayType) && recurringWeekdayTypes.includes(dayStatus.dayType));
     const themeDays = getThemeDaysForDate(date);
 
     if (!officialHoliday && !hasMajorCelebration && themeDays.length === 0) {
@@ -329,7 +337,7 @@ export function getUpcomingNotables(
       const celebrationDayType = dayStatus.dayType as Exclude<DayType, 'ordinary'>;
       kind = 'celebration';
       label = upcomingCopyByLocale[locale].labels.celebration;
-      title = getCelebrationDisplayName(celebrationDayType, locale);
+      title = getCelebrationDisplayName(celebrationDayType, locale, contentPack);
     } else {
       kind = 'themeday';
       label =
