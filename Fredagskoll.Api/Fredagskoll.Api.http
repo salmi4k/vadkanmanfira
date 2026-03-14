@@ -1,0 +1,6 @@
+@Fredagskoll.Api_HostAddress = http://localhost:5166
+
+GET {{Fredagskoll.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
