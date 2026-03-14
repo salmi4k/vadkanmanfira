@@ -68,6 +68,12 @@ function formatTitle(title: string): string {
   return title.replaceAll('. ', '.\n');
 }
 
+function hasLongTitleWord(title: string): boolean {
+  return title
+    .split(/\s+/)
+    .some((word) => word.replace(/[^\p{L}\p{N}-]/gu, '').length >= 18);
+}
+
 function hasOrdinaryWeekdayExcuses(date: Date, dayType: DayType): boolean {
   if (dayType !== 'ordinary') {
     return false;
@@ -204,6 +210,7 @@ function App({ initialDate = new Date() }: AppProps) {
     : hasThemeDays
       ? `${visibleThemeDays[0]}. Det får väl räcka.`
       : 'En vanlig dag. Så sorgligt är det.';
+  const hasLongWordTitle = hasLongTitleWord(mainTitle);
 
   useEffect(() => {
     if (!currentBlurbs) {
@@ -379,7 +386,13 @@ function App({ initialDate = new Date() }: AppProps) {
             </button>
           </div>
           <p className="eyebrow">{kicker}</p>
-          <h2 className="celebration-title">{formatTitle(mainTitle)}</h2>
+          <h2
+            className={`celebration-title${
+              hasLongWordTitle ? ' celebration-title--longword' : ''
+            }`}
+          >
+            {formatTitle(mainTitle)}
+          </h2>
           <div className="blurb-row">
             <p className="celebration-blurb">{blurb}</p>
             {currentBlurbs ? (
