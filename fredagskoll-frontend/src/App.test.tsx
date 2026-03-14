@@ -157,8 +157,17 @@ test('renders an upcoming official holiday note when one lands later that week',
   await renderAppAt(new Date(2026, 3, 27));
 
   expect(screen.getByText(/Veckans helgdag/i)).toBeInTheDocument();
-  expect(screen.getByText(/^Första maj$/i)).toBeInTheDocument();
+  expect(screen.getAllByText(/^Första maj$/i).length).toBeGreaterThan(0);
   expect(screen.getByText(/4 dagar kvar/i)).toBeInTheDocument();
+});
+
+test('renders upcoming notable dates with major celebrations ahead of random filler', async () => {
+  await renderAppAt(new Date(2026, 3, 27));
+
+  expect(screen.getByText(/På gång/i)).toBeInTheDocument();
+  expect(screen.getByText(/^Valborg$/i)).toBeInTheDocument();
+  expect(screen.getAllByText(/^Första maj$/i).length).toBeGreaterThan(0);
+  expect(screen.getAllByText(/Om 3 dagar/i).length).toBeGreaterThan(0);
 });
 
 test('rerolls the excuse when clicking Ny ursäkt', async () => {

@@ -21,6 +21,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "test:visual": "playwright test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -42,6 +43,7 @@
     ]
   },
   "devDependencies": {
+    "@playwright/test": "^1.58.2",
     "playwright": "^1.58.2"
   }
 }

@@ -10,6 +10,7 @@ import {
 } from './celebrations';
 import { buildThemeDayBlurbs, filterThemeDays, joinWithAnd } from './themeDayBlurbs';
 import { getThemeDaysForDate } from './temadagar';
+import { getUpcomingNotables } from './upcomingNotables';
 
 type AppProps = {
   initialDate?: Date;
@@ -148,6 +149,10 @@ function App({ initialDate = new Date() }: AppProps) {
   const daysUntilHoliday = upcomingHoliday
     ? getDaysUntil(selectedDateObject, upcomingHoliday.date)
     : null;
+  const upcomingNotables = useMemo(
+    () => getUpcomingNotables(selectedDateObject),
+    [selectedDateObject]
+  );
   const theme = celebration?.theme ?? 'ordinary';
   const compactPrimaryMedia = usesCompactPrimaryMedia(dayStatus.dayType);
   const themeDayBlurbs = useMemo(
@@ -291,6 +296,27 @@ function App({ initialDate = new Date() }: AppProps) {
                 {formatDaysUntilLabel(daysUntilHoliday)} till{' '}
                 {formatShortSwedishDate(upcomingHoliday.date)}.
               </p>
+            </div>
+          ) : null}
+
+          {upcomingNotables.length > 0 ? (
+            <div className="upcoming-card">
+              <p className="eyebrow">På gång</p>
+              <div className="upcoming-list">
+                {upcomingNotables.map((item) => (
+                  <article key={item.dateLabel} className="upcoming-item">
+                    <div className="upcoming-item-top">
+                      <span className="upcoming-label">{item.label}</span>
+                      <span className="upcoming-days">
+                        {item.daysUntil === 1 ? 'I morgon' : `Om ${item.daysUntil} dagar`}
+                      </span>
+                    </div>
+                    <p className="upcoming-title">{item.title}</p>
+                    <p className="upcoming-date">{formatShortSwedishDate(item.date)}</p>
+                    <p className="upcoming-note">{item.note}</p>
+                  </article>
+                ))}
+              </div>
             </div>
           ) : null}
 
