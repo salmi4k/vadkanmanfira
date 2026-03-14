@@ -2,6 +2,7 @@ export type DayType =
   | 'ordinary'
   | 'allahjartansdag'
   | 'fettisdag'
+  | 'paskafton'
   | 'vaffeldagen'
   | 'valborg'
   | 'nationaldagen'
@@ -10,6 +11,8 @@ export type DayType =
   | 'kladdkakansdag'
   | 'surstrommingspremiar'
   | 'lucia'
+  | 'julafton'
+  | 'nyarsafton'
   | 'kottonsdag'
   | 'fisktorsdag'
   | 'marmeladfredag';
@@ -159,6 +162,7 @@ export function getUpcomingOfficialHolidayInWeek(
 export function getDayStatus(inputDate: Date): DayStatus {
   const date = toLocalDateOnly(inputDate);
   const dayOfWeek = date.getDay();
+  const easterSunday = getEasterSunday(date.getFullYear());
   const fettisdag = getFettisdag(date.getFullYear());
 
   if (isFixedDate(date, 1, 14)) {
@@ -172,6 +176,13 @@ export function getDayStatus(inputDate: Date): DayStatus {
     return {
       dateLabel: formatDate(date),
       dayType: 'fettisdag',
+    };
+  }
+
+  if (isSameLocalDate(date, subtractDays(easterSunday, 1))) {
+    return {
+      dateLabel: formatDate(date),
+      dayType: 'paskafton',
     };
   }
 
@@ -228,6 +239,20 @@ export function getDayStatus(inputDate: Date): DayStatus {
     return {
       dateLabel: formatDate(date),
       dayType: 'lucia',
+    };
+  }
+
+  if (isFixedDate(date, 11, 24)) {
+    return {
+      dateLabel: formatDate(date),
+      dayType: 'julafton',
+    };
+  }
+
+  if (isFixedDate(date, 11, 31)) {
+    return {
+      dateLabel: formatDate(date),
+      dayType: 'nyarsafton',
     };
   }
 

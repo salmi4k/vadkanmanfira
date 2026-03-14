@@ -372,9 +372,16 @@ function App({ initialDate = new Date() }: AppProps) {
                   </figure>
                 ) : null}
                 {!celebration.primaryImage && !celebration.secondaryImage ? (
-                  <div className="placeholder-card">
-                    <span>Ingen bild ännu</span>
-                    <strong>Det här firandet får leva på text och dåliga beslut.</strong>
+                  <div className="placeholder-card placeholder-card--visual">
+                    <span>{celebration.visualBadge ?? 'Bildfri zon'}</span>
+                    <strong>
+                      {celebration.visualTitle ??
+                        'Det här firandet får bära sig självt utan fotobevis.'}
+                    </strong>
+                    <p>
+                      {celebration.visualBody ??
+                        'Ingen bild finns än, men dagen försöker i alla fall inte se tom ut längre.'}
+                    </p>
                   </div>
                 ) : null}
               </div>

@@ -128,6 +128,59 @@ test('renders a rerollable blurb on an ordinary weekday', async () => {
   randomSpy.mockRestore();
 });
 
+test('renders Påskafton with an actual image', async () => {
+  await renderAppAt(new Date(2026, 3, 4));
+
+  expect(
+    screen.getByRole('heading', { level: 2, name: /Påskafton/i })
+  ).toBeInTheDocument();
+  expect(screen.getByAltText(/Påskafton/i)).toHaveAttribute('src', '/images/paskafton.jpg');
+});
+
+test('renders Våffeldagen with an actual image', async () => {
+  await renderAppAt(new Date(2026, 2, 25));
+
+  expect(
+    screen.getByRole('heading', { level: 2, name: /Våffeldagen har tagit över/i })
+  ).toBeInTheDocument();
+  expect(screen.getByAltText(/Våffeldagen har tagit över/i)).toHaveAttribute(
+    'src',
+    '/images/vaffeldagen.jpg'
+  );
+});
+
+test('renders Valborg with an actual image', async () => {
+  await renderAppAt(new Date(2026, 3, 30));
+
+  expect(
+    screen.getByRole('heading', { level: 2, name: /Valborg, alltså vår med dåligt omdöme/i })
+  ).toBeInTheDocument();
+  expect(screen.getByAltText(/Valborg, alltså vår med dåligt omdöme/i)).toHaveAttribute(
+    'src',
+    '/images/valborg.jpg'
+  );
+});
+
+test('renders Julafton ahead of the generic Thursday fallback', async () => {
+  await renderAppAt(new Date(2026, 11, 24));
+
+  expect(
+    screen.getByRole('heading', { level: 2, name: /Julafton/i })
+  ).toBeInTheDocument();
+  expect(screen.getByAltText(/Julafton/i)).toBeInTheDocument();
+  expect(screen.queryByText(/FISKTORSDAG/i)).not.toBeInTheDocument();
+});
+
+test('renders Nyårsafton ahead of the generic Thursday fallback with an actual image', async () => {
+  await renderAppAt(new Date(2026, 11, 31));
+
+  expect(
+    screen.getByRole('heading', { level: 2, name: /Nyårsafton/i })
+  ).toBeInTheDocument();
+  expect(screen.getByAltText(/Nyårsafton/i)).toHaveAttribute('src', '/images/nyarsafton.jpg');
+  expect(screen.queryByText(/FISKTORSDAG/i)).not.toBeInTheDocument();
+});
+
 test('renders filtered temadagar for an otherwise ordinary date', async () => {
   const randomSpy = jest.spyOn(Math, 'random').mockReturnValue(0);
 

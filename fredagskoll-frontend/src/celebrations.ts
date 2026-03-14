@@ -1,4 +1,5 @@
 import carltonGif from './gifs/carlton.gif';
+import carltonChristmasGif from './gifs/carltonchristmas.gif';
 import { DayType } from './dayLogic';
 export type CelebrationTheme =
   | 'ordinary'
@@ -15,6 +16,9 @@ export type CelebrationContent = {
   blurbs: string[];
   primaryImage?: string;
   secondaryImage?: string;
+  visualBadge?: string;
+  visualTitle?: string;
+  visualBody?: string;
   theme: CelebrationTheme;
 };
 export const ordinaryBlurb =
@@ -41,6 +45,8 @@ export function getCelebrationThemeAliases(dayType: Exclude<DayType, 'ordinary'>
       return ['Alla hjärtans dag'];
     case 'fettisdag':
       return ['Fettisdagen', 'Semmeldagen'];
+    case 'paskafton':
+      return ['Påskafton'];
     case 'vaffeldagen':
       return ['Våffeldagen'];
     case 'valborg':
@@ -57,6 +63,10 @@ export function getCelebrationThemeAliases(dayType: Exclude<DayType, 'ordinary'>
       return ['Surströmmingspremiär'];
     case 'lucia':
       return ['Lucia', 'Luciadagen'];
+    case 'julafton':
+      return ['Julafton'];
+    case 'nyarsafton':
+      return ['Nyårsafton'];
     case 'kottonsdag':
       return ['Köttonsdag'];
     case 'fisktorsdag':
@@ -103,6 +113,24 @@ export const celebrations: Record<Exclude<DayType, 'ordinary'>, CelebrationConte
     secondaryImage: '/520321381_10234349504453830_7039877959207209298_n.jpg',
     theme: 'cream',
   },
+  paskafton: {
+    title: 'Påskafton. Sill, godis och fri disciplin.',
+    kicker: 'Äggdriven vapenvila',
+    blurbs: [
+      'Påskafton är dagen då ägg, godis och märkliga små fjädrar får bära hela samhällsbygget en stund.',
+      'Det här är en högtid för sill, färg och låg ambitionsnivå, vilket faktiskt känns väldigt sunt.',
+      'Påskafton låter vuxna människor legitimera godisberg genom att nämna tradition och sedan gå vidare.',
+      'Det är fullt rimligt att låta helgen dofta ägg, kaffe och mild social förvirring idag.',
+      'Påskafton är kalenderns sätt att säga att struktur är överskattat när choklad och ledighet samarbetar.',
+      'Ingen tror på effektivitet här. Det är bara ägg, socker och ett stilla accepterande av läget.',
+    ],
+    visualBadge: 'Påskläge',
+    visualTitle: 'Ägg, fjädrar och taktisk frånvaro',
+    visualBody:
+      'Det finns dagar med högre stringens. Påskafton nöjer sig med färg, socker och att ingen försöker låta vuxen i onödan.',
+    primaryImage: '/images/paskafton.jpg',
+    theme: 'gold',
+  },
   vaffeldagen: {
     title: 'Våffeldagen har tagit över',
     kicker: 'Fras före fokus',
@@ -116,6 +144,11 @@ export const celebrations: Record<Exclude<DayType, 'ordinary'>, CelebrationConte
       'Det knastrar lite, kladdar lite och förbättrar stämningen mer än någon kickoff.',
       'Våffeldagen visar återigen att smör och disciplin inte går att prioritera samtidigt.',
     ],
+    visualBadge: 'Frasläge',
+    visualTitle: 'Grädde före gravallvar',
+    visualBody:
+      'När våffeljärnet väl fått mandatet finns det ingen poäng i att låtsas som att dagen handlar om något annat.',
+    primaryImage: '/images/vaffeldagen.jpg',
     theme: 'gold',
   },
   valborg: {
@@ -131,6 +164,7 @@ export const celebrations: Record<Exclude<DayType, 'ordinary'>, CelebrationConte
       'Valborg är i praktiken ett nationellt medgivande om att april inte kan avslutas nyktert i själen.',
       'Det här är sista april. Schemat finns kvar, men respekten för det är borta.',
     ],
+    primaryImage: '/images/valborg.jpg',
     theme: 'ember',
   },
   nationaldagen: {
@@ -146,6 +180,7 @@ export const celebrations: Record<Exclude<DayType, 'ordinary'>, CelebrationConte
       'Dagen kräver inte mycket. Bara lite värdighet, något blågult och ett minimum av gnäll.',
       'Det är en bra dag att uppskatta fungerande kollektivtrafik, skaplig välfärd och kaffebröd.',
     ],
+    primaryImage: '/images/nationaldagen.jpg',
     theme: 'forest',
   },
   midsommarafton: {
@@ -162,6 +197,7 @@ export const celebrations: Record<Exclude<DayType, 'ordinary'>, CelebrationConte
       'Sillen är planerad, jordgubbarna kylda och samtliga ambitioner parkerade.',
       'Den enda realistiska leveransen idag är att folk tar sig ut genom dörren i tid.',
     ],
+    primaryImage: '/images/midsommarafton.jpg',
     theme: 'forest',
   },
   kanelbullensdag: {
@@ -178,6 +214,7 @@ export const celebrations: Record<Exclude<DayType, 'ordinary'>, CelebrationConte
       'Ingen vill vara personen som "inte är så mycket för bullar" idag. Det vore socialt självmord.',
       'Dagen mäts inte i timmar utan i antal bullar som mystiskt försvinner från köket.',
     ],
+    primaryImage: '/images/kanelbullensdag.jpg',
     theme: 'gold',
   },
   kladdkakansdag: {
@@ -193,6 +230,7 @@ export const celebrations: Record<Exclude<DayType, 'ordinary'>, CelebrationConte
       'Det här är dagen då undergräddat blir en dygd och ingen orkar låtsas något annat.',
       'Kakan ska vara kladdig, portionsstorleken orimlig och skuldkänslan uppskjuten.',
     ],
+    primaryImage: '/images/kladdkakansdag.jpg',
     theme: 'jam',
   },
   surstrommingspremiar: {
@@ -209,6 +247,7 @@ export const celebrations: Record<Exclude<DayType, 'ordinary'>, CelebrationConte
       'Man behöver inte förstå det. Det räcker att acceptera att någon i landet öppnar en burk med avsikt.',
       'Dagen luktar kraftigt av historia, salt och människans förmåga att romantisera dåliga idéer.',
     ],
+    primaryImage: '/images/surstrommingspremiar.jpg',
     theme: 'midnight',
   },
   lucia: {
@@ -224,7 +263,45 @@ export const celebrations: Record<Exclude<DayType, 'ordinary'>, CelebrationConte
       'Det är inte bara en tradition. Det är ett sätt att överleva december med något slags värdighet.',
       'Ljusen fladdrar, saffranet jobbar och mörkret får tillfälligt backa undan.',
     ],
+    primaryImage: '/images/lucia.jpg',
     theme: 'cream',
+  },
+  julafton: {
+    title: 'Julafton. Nu spelar ingen normal längre.',
+    kicker: 'Kalle, kaffe och kollektiv regression',
+    blurbs: [
+      'Julafton är den sorts dag där tidtabellerna ersätts av glögglogik och ingen har kraft att invända.',
+      'Det är fullt normalt att hela dagen styrs av kaffe, julbord och exakt när någon tycker att Kalle måste börja.',
+      'Julafton förvandlar annars sansade människor till traditionsoperatörer med starka åsikter om skinka och stearin.',
+      'Det här är datumet då soffor, paketpapper och lätt spänd släktsamverkan bär nationen.',
+      'Julafton fungerar eftersom alla accepterar att logik, punktlighet och självinsikt får ta ledigt.',
+      'Man kan kalla det högtid. Man kan också kalla det ett välorganiserat sammanbrott med saffran i periferin.',
+      'Inget är särskilt effektivt, men allt är mycket laddat, vilket i praktiken räcker som juldefinition.',
+    ],
+    primaryImage: carltonChristmasGif,
+    visualBadge: 'Juldrift',
+    visualTitle: 'Soffläge med hög symbolisk densitet',
+    visualBody:
+      'Julafton behöver inte bilder för att kännas full. Den är redan överbelamrad av ritualer, dofter och människor som försöker bete sig rimligt.',
+    theme: 'cream',
+  },
+  nyarsafton: {
+    title: 'Nyårsafton. Ambition möter fyrverkerier.',
+    kicker: 'Tolvslaget som projekt',
+    blurbs: [
+      'Nyårsafton är den årliga ritualen där folk låtsas att tolvslaget automatiskt förbättrar karaktären.',
+      'Det här är kvällen då bubbel, löften och lätt överskattad framtidstro ska samsas i samma rum.',
+      'Nyårsafton fungerar bäst om ingen ställer för många frågor om planering, skor eller morgondagen.',
+      'Allt kulminerar i några minuter av ljud, ljus och kollektivt beslut att nästa år nog ändå blir bättre.',
+      'Nyårsafton är kalenderns dyraste sätt att säga att tiden går vidare oavsett om du är redo.',
+      'Man ska helst vara festlig, hoppfull och aningen frusen på samma gång. Ett märkligt men etablerat upplägg.',
+    ],
+    visualBadge: 'Tolvslag',
+    visualTitle: 'Glitter, löften och kontrollerad övertro',
+    visualBody:
+      'Nyårsafton bär sin egen scenografi. Det enda som egentligen krävs är att någon räknar ner och att ingen tappar fattningen för tidigt.',
+    primaryImage: '/images/nyarsafton.jpg',
+    theme: 'midnight',
   },
   kottonsdag: {
     title: 'Köttonsdag. Inga frågor.',

@@ -188,6 +188,7 @@
   display: grid;
   gap: 0.85rem;
   padding-right: 1.35rem;
+  min-width: 0;
 }
 
 .eyebrow {
@@ -203,9 +204,10 @@
 .celebration-title {
   margin: 0;
   font-family: Georgia, "Times New Roman", serif;
-  line-height: 0.92;
+  line-height: 0.96;
   letter-spacing: -0.03em;
   text-wrap: balance;
+  overflow-wrap: anywhere;
 }
 
 .brand-title {
@@ -218,10 +220,12 @@
 .celebration-blurb,
 .picker-meta,
 .ordinary-card p,
-.placeholder-card strong {
+.placeholder-card strong,
+.placeholder-card p {
   margin: 0;
   color: var(--muted);
   line-height: 1.5;
+  overflow-wrap: anywhere;
 }
 
 .blurb-row {
@@ -278,6 +282,7 @@
   border-radius: 22px;
   background: rgba(255, 255, 255, 0.34);
   border: 1px solid var(--panel-border);
+  min-width: 0;
   transition:
     background-color 260ms ease,
     border-color 260ms ease;
@@ -294,6 +299,7 @@
   border-radius: 22px;
   background: rgba(255, 255, 255, 0.34);
   border: 1px solid var(--panel-border);
+  min-width: 0;
   transition:
     background-color 260ms ease,
     border-color 260ms ease;
@@ -310,6 +316,7 @@
   border-radius: 22px;
   background: rgba(255, 255, 255, 0.34);
   border: 1px solid var(--panel-border);
+  min-width: 0;
   transition:
     background-color 260ms ease,
     border-color 260ms ease;
@@ -323,6 +330,7 @@
   margin: 0;
   color: var(--muted);
   line-height: 1.45;
+  overflow-wrap: anywhere;
 }
 
 .holiday-title,
@@ -331,6 +339,7 @@
 .upcoming-date,
 .upcoming-note {
   margin: 0;
+  overflow-wrap: anywhere;
 }
 
 .holiday-title {
@@ -542,6 +551,22 @@
   gap: 0.6rem;
 }
 
+.placeholder-card--visual {
+  align-content: start;
+  min-height: 320px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.46), rgba(255, 255, 255, 0.24)),
+    radial-gradient(circle at top right, rgba(255, 255, 255, 0.52), transparent 42%),
+    linear-gradient(140deg, var(--accent-soft), rgba(255, 255, 255, 0.08));
+}
+
+.App.dark .placeholder-card--visual {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.03)),
+    radial-gradient(circle at top right, rgba(255, 255, 255, 0.14), transparent 44%),
+    linear-gradient(140deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+}
+
 .theme-day-panel {
   padding: 1.4rem;
   display: grid;
@@ -562,6 +587,17 @@
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.08em;
+}
+
+.placeholder-card--visual strong {
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  line-height: 1.02;
+  color: var(--text);
+  max-width: 14ch;
+}
+
+.placeholder-card--visual p {
+  max-width: 30rem;
 }
 
 .ordinary-card {
@@ -648,6 +684,10 @@
   }
 
   .media-card img {
+    min-height: 240px;
+  }
+
+  .placeholder-card--visual {
     min-height: 240px;
   }
 
