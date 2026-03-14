@@ -6,6 +6,7 @@ import {
   celebrations,
   getCelebrationThemeAliases,
   ordinaryBlurb,
+  ordinaryWeekendBlurbs,
   ordinaryWeekdayBlurbs,
 } from './celebrations';
 import {
@@ -50,13 +51,13 @@ function getRandomItem(options: string[], current?: string): string {
   return pool[index];
 }
 
-function hasOrdinaryWeekdayExcuses(date: Date, dayType: DayType): boolean {
+function getOrdinaryDayBlurbs(date: Date, dayType: DayType): string[] | null {
   if (dayType !== 'ordinary') {
-    return false;
+    return null;
   }
 
   const weekday = date.getDay();
-  return weekday >= 1 && weekday <= 5;
+  return weekday >= 1 && weekday <= 5 ? ordinaryWeekdayBlurbs : ordinaryWeekendBlurbs;
 }
 
 function App({ initialDate = new Date() }: AppProps) {
@@ -114,11 +115,7 @@ function App({ initialDate = new Date() }: AppProps) {
       return themeDayBlurbs;
     }
 
-    if (hasOrdinaryWeekdayExcuses(selectedDateObject, dayStatus.dayType)) {
-      return ordinaryWeekdayBlurbs;
-    }
-
-    return null;
+    return getOrdinaryDayBlurbs(selectedDateObject, dayStatus.dayType);
   }, [celebration, themeDayBlurbs, dayStatus.dayType, selectedDateObject]);
   const kicker = celebration
     ? celebration.kicker
@@ -128,6 +125,7 @@ function App({ initialDate = new Date() }: AppProps) {
         : 'Inofficiell temadag'
       : 'Ingen officiell stordådskänsla';
   const themeDayDisplayTitle = hasThemeDays ? visibleThemeDays[0] : null;
+  const celebrationSubtitle = celebration?.subtitle ?? null;
   const mainTitle = celebration
     ? celebration.title
     : hasThemeDays
@@ -327,6 +325,15 @@ function App({ initialDate = new Date() }: AppProps) {
             >
               {themeDayDisplayTitle}.
               <span className="celebration-title-subline">{themeDayTitleEnding}</span>
+            </h2>
+          ) : celebrationSubtitle ? (
+            <h2
+              className={`celebration-title celebration-title--stacked${
+                hasLongWordTitle ? ' celebration-title--longword' : ''
+              }`}
+            >
+              {formatTitle(mainTitle)}
+              <span className="celebration-title-subline">{celebrationSubtitle}</span>
             </h2>
           ) : (
             <h2
