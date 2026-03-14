@@ -503,6 +503,38 @@
   min-width: 0;
 }
 
+.card-nav {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: start;
+}
+
+.card-nav-button {
+  border: 0;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  padding: 0.72rem 1rem;
+  font-size: 0.88rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition:
+    background-color 220ms ease,
+    color 220ms ease,
+    filter 220ms ease,
+    transform 220ms ease;
+}
+
+.card-nav-button:hover {
+  filter: brightness(0.96);
+}
+
+.card-nav-button:active {
+  transform: translateY(1px);
+}
+
 .celebration-title {
   font-size: clamp(2.7rem, 4.9vw, 4.85rem);
   max-width: 10.5ch;
@@ -743,6 +775,14 @@
   .celebration-card {
     padding: 1.25rem;
     border-radius: 24px;
+  }
+
+  .card-nav {
+    flex-direction: column;
+  }
+
+  .card-nav-button {
+    width: 100%;
   }
 
   .theme-toggle {
