@@ -41,7 +41,7 @@ afterEach(() => {
 });
 
 test('renders Wednesday content for an ordinary Wednesday', async () => {
-  await renderAppAt(new Date(2026, 0, 14));
+  await renderAppAt(new Date(2026, 6, 8));
   expect(
     screen.getByRole('heading', { level: 2, name: /KÖTTONSDAG/i })
   ).toBeInTheDocument();
@@ -56,17 +56,26 @@ test('renders Fettisdag content on the actual Fettisdag date', async () => {
 
 test('renders Kanelbullens dag ahead of the generic Saturday fallback', async () => {
   await renderAppAt(new Date(2026, 9, 4));
-  expect(screen.getByText(/KANELBULLENS DAG/i)).toBeInTheDocument();
+  expect(
+    screen.getByRole('heading', { level: 2, name: /Kanelbullens dag bär upp nationen/i })
+  ).toBeInTheDocument();
+  expect(screen.getByText(/Fler temadagar idag/i)).toBeInTheDocument();
+  expect(screen.getAllByText(/Internationella Tacodagen/i).length).toBeGreaterThan(0);
+  expect(screen.queryByText(/^Kanelbullens dag$/i)).not.toBeInTheDocument();
 });
 
 test('renders Valborg as a fixed celebration date', async () => {
   await renderAppAt(new Date(2026, 3, 30));
-  expect(screen.getByText(/VALBORG/i)).toBeInTheDocument();
+  expect(
+    screen.getByRole('heading', { level: 2, name: /Valborg, alltså vår med dåligt omdöme/i })
+  ).toBeInTheDocument();
 });
 
 test('renders Nationaldagen ahead of the generic Saturday fallback', async () => {
   await renderAppAt(new Date(2026, 5, 6));
-  expect(screen.getByText(/NATIONALDAGEN/i)).toBeInTheDocument();
+  expect(
+    screen.getByRole('heading', { level: 2, name: /Nationaldagen får väl firas då/i })
+  ).toBeInTheDocument();
 });
 
 test('renders Midsommarafton ahead of the generic Friday fallback', async () => {
@@ -86,7 +95,7 @@ test('renders Surströmmingspremiär ahead of the generic Thursday fallback', as
 });
 
 test('does not render Fettisdag content on a random Tuesday', async () => {
-  await renderAppAt(new Date(2026, 1, 24));
+  await renderAppAt(new Date(2026, 2, 30));
   expect(screen.queryByText(/FETTISDAG/i)).not.toBeInTheDocument();
   expect(
     screen.getByRole('heading', { level: 2, name: /En vanlig dag/i })
@@ -99,7 +108,7 @@ test('renders a rerollable blurb on an ordinary weekday', async () => {
     .mockReturnValueOnce(0)
     .mockReturnValueOnce(0.99);
 
-  await renderAppAt(new Date(2026, 2, 16));
+  await renderAppAt(new Date(2026, 1, 16));
 
   expect(
     screen.getByText(
@@ -119,9 +128,37 @@ test('renders a rerollable blurb on an ordinary weekday', async () => {
   randomSpy.mockRestore();
 });
 
+test('renders filtered temadagar for an otherwise ordinary date', async () => {
+  const randomSpy = jest.spyOn(Math, 'random').mockReturnValue(0);
+
+  await renderAppAt(new Date(2027, 2, 23));
+
+  expect(
+    screen.getByRole('heading', { level: 2, name: /Matlådans dag\./i })
+  ).toBeInTheDocument();
+  expect(screen.getByRole('list')).toBeInTheDocument();
+  expect(screen.getAllByText(/Nordens dag/i).length).toBeGreaterThan(0);
+  expect(screen.getAllByText(/Världsmeteorologidagen/i).length).toBeGreaterThan(0);
+  expect(screen.queryByText(/Internationella barnreumatikerdagen/i)).not.toBeInTheDocument();
+  expect(screen.getByText(/Dagens temadagar/i)).toBeInTheDocument();
+  expect(
+    screen.getByText(/Matlådans dag är i praktiken ett erkännande av kall disciplin i plastform\./i)
+  ).toBeInTheDocument();
+
+  randomSpy.mockRestore();
+});
+
 test('renders namnsdag data from the open API lookup', async () => {
   await renderAppAt(new Date(2026, 2, 14));
   expect(screen.getByText(/Matilda och Maud/i)).toBeInTheDocument();
+});
+
+test('renders an upcoming official holiday note when one lands later that week', async () => {
+  await renderAppAt(new Date(2026, 3, 27));
+
+  expect(screen.getByText(/Veckans helgdag/i)).toBeInTheDocument();
+  expect(screen.getByText(/^Första maj$/i)).toBeInTheDocument();
+  expect(screen.getByText(/4 dagar kvar/i)).toBeInTheDocument();
 });
 
 test('rerolls the excuse when clicking Ny ursäkt', async () => {
