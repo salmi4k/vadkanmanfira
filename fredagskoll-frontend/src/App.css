@@ -556,6 +556,18 @@
   text-wrap: pretty;
 }
 
+.celebration-title--stacked {
+  max-width: 11.5ch;
+}
+
+.celebration-title-subline {
+  display: block;
+  margin-top: 0.16em;
+  font-size: 0.64em;
+  line-height: 0.98;
+  letter-spacing: -0.015em;
+}
+
 .celebration-title--longword {
   font-size: clamp(1.95rem, 3.9vw, 3.2rem);
   max-width: none;
@@ -827,6 +839,10 @@
   .celebration-title {
     font-size: clamp(2.15rem, 11vw, 3.1rem);
     line-height: 0.94;
+  }
+
+  .celebration-title-subline {
+    font-size: 0.68em;
   }
 
   .celebration-blurb {

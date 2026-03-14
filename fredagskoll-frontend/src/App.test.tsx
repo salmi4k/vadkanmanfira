@@ -199,7 +199,10 @@ test('renders filtered temadagar for an otherwise ordinary date', async () => {
   await renderAppAt(new Date(2027, 2, 23));
 
   expect(
-    screen.getByRole('heading', { level: 2, name: /Matlådans dag\./i })
+    screen.getByRole('heading', {
+      level: 2,
+      name: /Matlådans dag\.\s*Det får väl bära dagen då\./i,
+    })
   ).toBeInTheDocument();
   expect(screen.getByRole('list')).toBeInTheDocument();
   expect(screen.getAllByText(/Nordens dag/i).length).toBeGreaterThan(0);
