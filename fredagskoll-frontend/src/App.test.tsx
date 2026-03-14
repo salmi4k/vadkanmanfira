@@ -206,6 +206,19 @@ test('renders namnsdag data from the open API lookup', async () => {
   expect(screen.getByText(/Matilda och Maud/i)).toBeInTheDocument();
 });
 
+test('renders public image credits when opening the credits dialog', async () => {
+  await renderAppAt(new Date(2026, 2, 25));
+
+  fireEvent.click(screen.getByRole('button', { name: /Bildkällor/i }));
+
+  expect(
+    screen.getByRole('heading', { level: 2, name: /Wikimedia Commons-credits/i })
+  ).toBeInTheDocument();
+  expect(screen.getAllByText(/Våffeldagen/i).length).toBeGreaterThan(0);
+  expect(screen.getAllByText(/CC BY-SA 4.0/i).length).toBeGreaterThan(0);
+  expect(screen.getAllByText(/Commons-filsida/i).length).toBeGreaterThan(0);
+});
+
 test('renders an upcoming official holiday note when one lands later that week', async () => {
   await renderAppAt(new Date(2026, 3, 27));
 
