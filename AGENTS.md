@@ -9,6 +9,8 @@
 - The app has two content packs:
   - `public` is the default and should stay safe for public deployment
   - `team` contains private recurring weekday lore and the Mojo branding
+- `main` is intended to deploy both variants from the same codebase with
+  different `REACT_APP_CONTENT_PACK` values.
 
 ## Runbook
 

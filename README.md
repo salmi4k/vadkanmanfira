@@ -98,7 +98,13 @@ npm run build
 ## Deployment
 
 - GitHub Actions deploys the frontend from `main`
-- Azure Static Web Apps hosts the site
+- `.github/workflows/deploy-static-apps.yml` builds the app twice:
+  - `REACT_APP_CONTENT_PACK=public` deploys to `vadkanmanfira`
+  - `REACT_APP_CONTENT_PACK=team` deploys to `fredagskoll`
+- Required GitHub Actions secrets:
+  - `AZURE_STATIC_WEB_APPS_API_TOKEN_THANKFUL_BUSH_0D8565003_1`
+  - `AZURE_STATIC_WEB_APPS_API_TOKEN_DELIGHTFUL_GROUND_0B3AA2B03`
+- Azure Static Web Apps hosts both variants
 - SPA routing fallback lives in
   `fredagskoll-frontend/public/staticwebapp.config.json`
 

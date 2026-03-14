@@ -59,4 +59,9 @@ npm run build
 The app is deployed via Azure Static Web Apps from the repository root
 workflow:
 
-- `.github/workflows/azure-static-web-apps-delightful-ground-0b3aa2b03.yml`
+- `.github/workflows/deploy-static-apps.yml`
+
+That workflow builds the same app twice from `main`:
+
+- `REACT_APP_CONTENT_PACK=public` -> `vadkanmanfira`
+- `REACT_APP_CONTENT_PACK=team` -> `fredagskoll`
