@@ -336,7 +336,7 @@ export const celebrations: Record<Exclude<DayType, 'ordinary'>, CelebrationConte
       'Fisk är kanske inte sexigt, men det är pålitligt, och torsdagar uppskattar det.',
       'Torsdagen vill inte överraska. Den vill servera fisk och gå vidare med livet.',
     ],
-    primaryImage: '/fisktorsdag.gif',
+    primaryImage: '/fisktorsdag-fixed-composite.png',
     theme: 'midnight',
   },
   marmeladfredag: {
