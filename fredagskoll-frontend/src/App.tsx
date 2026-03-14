@@ -49,6 +49,28 @@ function formatShortSwedishDate(date: Date): string {
   }).format(date);
 }
 
+function getSwedishOrdinalDay(day: number): string {
+  const tens = day % 100;
+  const ones = day % 10;
+
+  if (tens !== 11 && (ones === 1 || ones === 2)) {
+    return `${day}:a`;
+  }
+
+  return `${day}:e`;
+}
+
+function formatCenterDate(date: Date): string {
+  const weekday = new Intl.DateTimeFormat('sv-SE', {
+    weekday: 'long',
+  }).format(date);
+  const month = new Intl.DateTimeFormat('sv-SE', {
+    month: 'long',
+  }).format(date);
+
+  return `${weekday} ${getSwedishOrdinalDay(date.getDate())} ${month}`;
+}
+
 function getRandomItem(options: string[], current?: string): string {
   if (options.length === 0) {
     return ordinaryBlurb;
@@ -169,6 +191,7 @@ function App({ initialDate = new Date() }: AppProps) {
   }, [celebration, dayStatus.dayType, themeDays]);
   const hasThemeDays = visibleThemeDays.length > 0;
   const humanDate = formatForHumans(selectedDateObject);
+  const centerDate = formatCenterDate(selectedDateObject);
   const upcomingHoliday = getUpcomingOfficialHolidayInWeek(selectedDateObject);
   const daysUntilHoliday = upcomingHoliday
     ? getDaysUntil(selectedDateObject, upcomingHoliday.date)
@@ -377,6 +400,7 @@ function App({ initialDate = new Date() }: AppProps) {
             >
               Föregående dag
             </button>
+            <p className="card-date">{centerDate}</p>
             <button
               type="button"
               className="card-nav-button"

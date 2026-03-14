@@ -506,10 +506,20 @@
 }
 
 .card-nav {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   gap: 1rem;
-  align-items: start;
+  align-items: center;
+}
+
+.card-date {
+  margin: 0;
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: var(--text);
+  text-transform: lowercase;
 }
 
 .card-nav-button {
@@ -789,11 +799,16 @@
   }
 
   .card-nav {
-    flex-direction: column;
+    grid-template-columns: 1fr;
   }
 
   .card-nav-button {
     width: 100%;
+  }
+
+  .card-date {
+    order: -1;
+    font-size: 0.94rem;
   }
 
   .theme-toggle {
