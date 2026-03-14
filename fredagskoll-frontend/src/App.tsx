@@ -8,6 +8,7 @@ import {
   ordinaryBlurb,
   ordinaryWeekdayBlurbs,
 } from './celebrations';
+import { imageCredits } from './imageCredits';
 import { buildThemeDayBlurbs, filterThemeDays, joinWithAnd } from './themeDayBlurbs';
 import { getThemeDaysForDate } from './temadagar';
 import { getUpcomingNotables } from './upcomingNotables';
@@ -120,6 +121,7 @@ async function fetchNameDays(dateLabel: string): Promise<string[]> {
 
 function App({ initialDate = new Date() }: AppProps) {
   const [darkMode, setDarkMode] = useState(false);
+  const [showImageCredits, setShowImageCredits] = useState(false);
   const [selectedDate, setSelectedDate] = useState(formatForInput(initialDate));
   const [nameDays, setNameDays] = useState<string[]>([]);
   const [nameDayState, setNameDayState] = useState<NameDayState>('loading');
@@ -321,6 +323,13 @@ function App({ initialDate = new Date() }: AppProps) {
           ) : null}
 
           <footer className="intro-footer">
+            <button
+              type="button"
+              className="source-link source-link--button"
+              onClick={() => setShowImageCredits(true)}
+            >
+              Bildkällor
+            </button>
             <a
               className="source-link"
               href="https://temadagar.se/kalender/"
@@ -372,9 +381,16 @@ function App({ initialDate = new Date() }: AppProps) {
                   </figure>
                 ) : null}
                 {!celebration.primaryImage && !celebration.secondaryImage ? (
-                  <div className="placeholder-card">
-                    <span>Ingen bild ännu</span>
-                    <strong>Det här firandet får leva på text och dåliga beslut.</strong>
+                  <div className="placeholder-card placeholder-card--visual">
+                    <span>{celebration.visualBadge ?? 'Bildfri zon'}</span>
+                    <strong>
+                      {celebration.visualTitle ??
+                        'Det här firandet får bära sig självt utan fotobevis.'}
+                    </strong>
+                    <p>
+                      {celebration.visualBody ??
+                        'Ingen bild finns än, men dagen försöker i alla fall inte se tom ut längre.'}
+                    </p>
                   </div>
                 ) : null}
               </div>
@@ -415,6 +431,77 @@ function App({ initialDate = new Date() }: AppProps) {
           )}
         </main>
       </div>
+
+      {showImageCredits ? (
+        <div
+          className="credits-overlay"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="image-credits-title"
+        >
+          <div
+            className="credits-backdrop"
+            aria-hidden="true"
+            onClick={() => setShowImageCredits(false)}
+          />
+          <section className="credits-panel">
+            <div className="credits-header">
+              <div>
+                <p className="eyebrow">Bildkällor</p>
+                <h2 id="image-credits-title" className="credits-title">
+                  Wikimedia Commons-credits
+                </h2>
+                <p className="credits-lede">
+                  De nedladdade Commons-bilderna är publikt krediterade här med skapare,
+                  källsida och licens. Bilderna i appen är nedskalade versioner.
+                </p>
+              </div>
+              <button
+                type="button"
+                className="theme-toggle credits-close"
+                onClick={() => setShowImageCredits(false)}
+              >
+                Stäng
+              </button>
+            </div>
+
+            <div className="credits-list">
+              {imageCredits.map((credit) => (
+                <article key={credit.slug} className="credits-item">
+                  <p className="credits-item-title">{credit.label}</p>
+                  <p className="credits-item-meta">
+                    Skapare:{' '}
+                    {credit.creatorUrl ? (
+                      <a href={credit.creatorUrl} target="_blank" rel="noreferrer">
+                        {credit.creator}
+                      </a>
+                    ) : (
+                      credit.creator
+                    )}
+                  </p>
+                  <p className="credits-item-meta">
+                    Licens:{' '}
+                    {credit.licenseUrl ? (
+                      <a href={credit.licenseUrl} target="_blank" rel="noreferrer">
+                        {credit.licenseName}
+                      </a>
+                    ) : (
+                      credit.licenseName
+                    )}
+                  </p>
+                  <p className="credits-item-meta">
+                    Källa:{' '}
+                    <a href={credit.sourceUrl} target="_blank" rel="noreferrer">
+                      Commons-filsida
+                    </a>
+                  </p>
+                  {credit.note ? <p className="credits-item-note">{credit.note}</p> : null}
+                </article>
+              ))}
+            </div>
+          </section>
+        </div>
+      ) : null}
     </div>
   );
 }
