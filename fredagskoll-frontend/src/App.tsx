@@ -32,6 +32,7 @@ import {
   translateThemeDayName,
 } from './locale';
 import { fetchNameDays } from './nameDays';
+import { getNationalDayPanel } from './nationalDays';
 import { getSeasonalNotes } from './seasonalNotes';
 import { buildThemeDayBlurbs, filterThemeDays, joinWithAnd } from './themeDayBlurbs';
 import { getThemeDaysForDate } from './temadagar';
@@ -137,6 +138,10 @@ function App({ initialDate = new Date() }: AppProps) {
   );
   const seasonalNotes = useMemo(
     () => getSeasonalNotes(selectedDateObject, locale),
+    [locale, selectedDateObject]
+  );
+  const nationalDayPanel = useMemo(
+    () => getNationalDayPanel(selectedDateObject, locale),
     [locale, selectedDateObject]
   );
   const theme = celebration?.theme ?? 'ordinary';
@@ -501,6 +506,27 @@ function App({ initialDate = new Date() }: AppProps) {
               ) : null}
             </div>
           )}
+
+          {nationalDayPanel ? (
+            <div className="world-day-panel">
+              <span className="ordinary-badge">{text.worldNationalDaysBadge}</span>
+              <p className="world-day-summary">{nationalDayPanel.summary}</p>
+              <div className="world-day-header">
+                <p className="eyebrow">{text.worldNationalDays}</p>
+              </div>
+              <ul className="theme-day-list world-day-list">
+                {nationalDayPanel.items.map((item) => (
+                  <li key={`${item.nation}-${item.significance}`}>
+                    <strong>{item.nation}</strong>
+                    <span>{item.significance}</span>
+                  </li>
+                ))}
+              </ul>
+              {nationalDayPanel.hiddenCount > 0 ? (
+                <p className="world-day-more">{text.worldNationalDaysMore(nationalDayPanel.hiddenCount)}</p>
+              ) : null}
+            </div>
+          ) : null}
         </main>
       </div>
 

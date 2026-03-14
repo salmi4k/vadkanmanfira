@@ -697,7 +697,8 @@
 .media-card,
 .placeholder-card,
 .ordinary-card,
-.theme-day-panel {
+.theme-day-panel,
+.world-day-panel {
   border-radius: 24px;
   overflow: hidden;
   background: rgba(255, 255, 255, 0.38);
@@ -707,7 +708,8 @@
 .App.dark .media-card,
 .App.dark .placeholder-card,
 .App.dark .ordinary-card,
-.App.dark .theme-day-panel {
+.App.dark .theme-day-panel,
+.App.dark .world-day-panel {
   background: rgba(255, 255, 255, 0.05);
 }
 
@@ -759,6 +761,43 @@
   gap: 0.75rem;
   margin-top: 1rem;
   max-width: 44rem;
+}
+
+.world-day-panel {
+  padding: 1.4rem;
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  max-width: 44rem;
+}
+
+.world-day-summary,
+.world-day-more {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.world-day-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.world-day-list li {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.world-day-list strong,
+.world-day-list span {
+  overflow-wrap: anywhere;
+}
+
+.world-day-list strong {
+  color: var(--text);
 }
 
 .placeholder-card span,

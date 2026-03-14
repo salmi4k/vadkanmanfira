@@ -1,0 +1,26 @@
+import React from 'react';
+import { render, screen, waitFor } from '@testing-library/react';
+import App from './App';
+
+beforeEach(() => {
+  jest.spyOn(global, 'fetch').mockResolvedValue({
+    ok: true,
+    json: async () => ({ dagar: [{ namnsdag: [] }] }),
+  } as Response);
+});
+
+afterEach(() => {
+  jest.restoreAllMocks();
+});
+
+test('renders the world national-day panel inside the main card when the date matches', async () => {
+  render(<App initialDate={new Date(2026, 2, 25)} />);
+
+  await waitFor(() =>
+    expect(screen.queryByText(/Laddar namnsdag/i)).not.toBeInTheDocument()
+  );
+
+  expect(screen.getByText(/Nationaldagar ute i världen/i)).toBeInTheDocument();
+  expect(screen.getByText(/^Greece$/i)).toBeInTheDocument();
+  expect(screen.getByText(/Självständighetsdagen/i)).toBeInTheDocument();
+});
