@@ -64,6 +64,15 @@ export const appText = {
     weeklyHoliday: 'Veckans helgdag',
     nowCard: 'Säsongen pågår',
     upcoming: 'På gång',
+    collapseShow: 'Visa',
+    collapseHide: 'Dölj',
+    mobileWeeklyHolidaySummary: 'Veckans helgdag',
+    mobileSeasonSummary: (count: number) => `Säsonger just nu${count > 1 ? ` (${count})` : ''}`,
+    mobileUpcomingSummary: (count: number) => `På gång${count > 1 ? ` (${count})` : ''}`,
+    mobileExtraThemeDaysSummary: (count: number) =>
+      `Fler temadagar${count > 1 ? ` (${count})` : ''}`,
+    mobileWorldDaysSummary: (count: number) =>
+      `Nationaldagar ute i världen${count > 1 ? ` (${count})` : ''}`,
     worldNationalDays: 'Nationaldagar ute i världen',
     worldNationalDaysBadge: 'Också idag',
     worldNationalDaysMore: (count: number) => `Och ${count} till.`,
@@ -119,6 +128,15 @@ export const appText = {
     weeklyHoliday: "This Week's Holiday",
     nowCard: 'Season in progress',
     upcoming: 'Coming up',
+    collapseShow: 'Show',
+    collapseHide: 'Hide',
+    mobileWeeklyHolidaySummary: "This week's holiday",
+    mobileSeasonSummary: (count: number) => `Current seasons${count > 1 ? ` (${count})` : ''}`,
+    mobileUpcomingSummary: (count: number) => `Coming up${count > 1 ? ` (${count})` : ''}`,
+    mobileExtraThemeDaysSummary: (count: number) =>
+      `More theme days${count > 1 ? ` (${count})` : ''}`,
+    mobileWorldDaysSummary: (count: number) =>
+      `National days elsewhere${count > 1 ? ` (${count})` : ''}`,
     worldNationalDays: 'National days elsewhere today',
     worldNationalDaysBadge: 'Also today',
     worldNationalDaysMore: (count: number) => `And ${count} more.`,

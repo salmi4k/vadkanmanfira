@@ -43,6 +43,12 @@ type AppProps = {
 };
 
 type NameDayState = 'loading' | 'ready' | 'error';
+type MobileSectionKey =
+  | 'holiday'
+  | 'season'
+  | 'upcoming'
+  | 'extraThemeDays'
+  | 'worldNationalDays';
 
 const imageCreditDayTypes: Record<string, Exclude<DayType, 'ordinary'> | undefined> = {
   vaffeldagen: 'vaffeldagen',
@@ -82,10 +88,57 @@ function getImageCreditLabel(slug: string, locale: Locale): string {
   return aliases[0] ?? slug;
 }
 
+function getInitialMobileLayout(): boolean {
+  return typeof window !== 'undefined' &&
+    typeof window.matchMedia === 'function'
+    ? window.matchMedia('(max-width: 640px)').matches
+    : false;
+}
+
+function MobileSection({
+  isMobile,
+  expanded,
+  onToggle,
+  summary,
+  children,
+}: {
+  isMobile: boolean;
+  expanded: boolean;
+  onToggle: () => void;
+  summary: React.ReactNode;
+  children: React.ReactNode;
+}) {
+  if (!isMobile) {
+    return <>{children}</>;
+  }
+
+  return (
+    <section className={`mobile-section${expanded ? ' mobile-section--open' : ''}`}>
+      <button type="button" className="mobile-section-toggle" onClick={onToggle}>
+        <span>{summary}</span>
+        <span className="mobile-section-chevron" aria-hidden="true">
+          {expanded ? '−' : '+'}
+        </span>
+      </button>
+      {expanded ? <div className="mobile-section-content">{children}</div> : null}
+    </section>
+  );
+}
+
 function App({ initialDate = new Date() }: AppProps) {
   const [locale, setLocale] = useState<Locale>(getInitialLocale);
   const [darkMode, setDarkMode] = useState(false);
   const [showImageCredits, setShowImageCredits] = useState(false);
+  const [isMobileLayout, setIsMobileLayout] = useState(getInitialMobileLayout);
+  const [expandedMobileSections, setExpandedMobileSections] = useState<
+    Record<MobileSectionKey, boolean>
+  >({
+    holiday: false,
+    season: false,
+    upcoming: false,
+    extraThemeDays: false,
+    worldNationalDays: false,
+  });
   const [selectedDate, setSelectedDate] = useState(formatForInput(initialDate));
   const [nameDays, setNameDays] = useState<string[]>([]);
   const [nameDayState, setNameDayState] = useState<NameDayState>('loading');
@@ -182,6 +235,24 @@ function App({ initialDate = new Date() }: AppProps) {
   const hasLongWordTitle = hasLongTitleWord(themeDayDisplayTitle ?? mainTitle);
 
   useEffect(() => {
+    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') {
+      return undefined;
+    }
+
+    const mediaQuery = window.matchMedia('(max-width: 640px)');
+    const handleChange = (event: MediaQueryListEvent): void => {
+      setIsMobileLayout(event.matches);
+    };
+
+    setIsMobileLayout(mediaQuery.matches);
+    mediaQuery.addEventListener('change', handleChange);
+
+    return () => {
+      mediaQuery.removeEventListener('change', handleChange);
+    };
+  }, []);
+
+  useEffect(() => {
     window.localStorage.setItem(LOCALE_STORAGE_KEY, locale);
   }, [locale]);
 
@@ -246,6 +317,13 @@ function App({ initialDate = new Date() }: AppProps) {
     setSelectedDate(formatForInput(addDays(selectedDateObject, days)));
   }
 
+  function toggleMobileSection(section: MobileSectionKey): void {
+    setExpandedMobileSections((current) => ({
+      ...current,
+      [section]: !current[section],
+    }));
+  }
+
   return (
     <div className={`App ${darkMode ? 'dark' : ''} theme-${theme}`}>
       <div className="app-backdrop" aria-hidden="true" />
@@ -307,57 +385,78 @@ function App({ initialDate = new Date() }: AppProps) {
           </div>
 
           {upcomingHoliday && upcomingHolidayName && daysUntilHoliday !== null ? (
-            <div className="holiday-card">
-              <p className="eyebrow">{text.weeklyHoliday}</p>
-              <p className="holiday-title">{upcomingHolidayName}</p>
-              <p className="nameday-text">
-                {getUpcomingHolidayBlurb(upcomingHolidayName, daysUntilHoliday, locale)}
-              </p>
-              <p className="holiday-meta">
-                {formatDaysUntilLabel(daysUntilHoliday, locale)}{' '}
-                {locale === 'en' ? 'until' : 'till'}{' '}
-                {formatShortSwedishDate(upcomingHoliday.date, locale)}.
-              </p>
-            </div>
+            <MobileSection
+              isMobile={isMobileLayout}
+              expanded={expandedMobileSections.holiday}
+              onToggle={() => toggleMobileSection('holiday')}
+              summary={text.mobileWeeklyHolidaySummary}
+            >
+              <div className="holiday-card">
+                <p className="eyebrow">{text.weeklyHoliday}</p>
+                <p className="holiday-title">{upcomingHolidayName}</p>
+                <p className="nameday-text">
+                  {getUpcomingHolidayBlurb(upcomingHolidayName, daysUntilHoliday, locale)}
+                </p>
+                <p className="holiday-meta">
+                  {formatDaysUntilLabel(daysUntilHoliday, locale)}{' '}
+                  {locale === 'en' ? 'until' : 'till'}{' '}
+                  {formatShortSwedishDate(upcomingHoliday.date, locale)}.
+                </p>
+              </div>
+            </MobileSection>
           ) : null}
 
           {seasonalNotes.length > 0 ? (
-            <div className="season-card">
-              <p className="eyebrow">{text.nowCard}</p>
-              <div className="season-list">
-                {seasonalNotes.map((item) => (
-                  <article key={item.id} className="season-item">
-                    <div className="season-item-top">
-                      <span className="season-label">{item.label}</span>
-                      <span className="season-meta">{item.meta}</span>
-                    </div>
-                    <p className="season-title">{item.title}</p>
-                    <p className="nameday-text">{item.note}</p>
-                  </article>
-                ))}
+            <MobileSection
+              isMobile={isMobileLayout}
+              expanded={expandedMobileSections.season}
+              onToggle={() => toggleMobileSection('season')}
+              summary={text.mobileSeasonSummary(seasonalNotes.length)}
+            >
+              <div className="season-card">
+                <p className="eyebrow">{text.nowCard}</p>
+                <div className="season-list">
+                  {seasonalNotes.map((item) => (
+                    <article key={item.id} className="season-item">
+                      <div className="season-item-top">
+                        <span className="season-label">{item.label}</span>
+                        <span className="season-meta">{item.meta}</span>
+                      </div>
+                      <p className="season-title">{item.title}</p>
+                      <p className="nameday-text">{item.note}</p>
+                    </article>
+                  ))}
+                </div>
               </div>
-            </div>
+            </MobileSection>
           ) : null}
 
           {upcomingNotables.length > 0 ? (
-            <div className="upcoming-card">
-              <p className="eyebrow">{text.upcoming}</p>
-              <div className="upcoming-list">
-                {upcomingNotables.map((item) => (
-                  <article key={item.dateLabel} className="upcoming-item">
-                    <div className="upcoming-item-top">
-                      <span className="upcoming-label">{item.label}</span>
-                      <span className="upcoming-days">
-                        {item.daysUntil === 1 ? text.upcomingTomorrow : text.upcomingInDays(item.daysUntil)}
-                      </span>
-                    </div>
-                    <p className="upcoming-title">{item.title}</p>
-                    <p className="upcoming-date">{formatShortSwedishDate(item.date, locale)}</p>
-                    <p className="upcoming-note">{item.note}</p>
-                  </article>
-                ))}
+            <MobileSection
+              isMobile={isMobileLayout}
+              expanded={expandedMobileSections.upcoming}
+              onToggle={() => toggleMobileSection('upcoming')}
+              summary={text.mobileUpcomingSummary(upcomingNotables.length)}
+            >
+              <div className="upcoming-card">
+                <p className="eyebrow">{text.upcoming}</p>
+                <div className="upcoming-list">
+                  {upcomingNotables.map((item) => (
+                    <article key={item.dateLabel} className="upcoming-item">
+                      <div className="upcoming-item-top">
+                        <span className="upcoming-label">{item.label}</span>
+                        <span className="upcoming-days">
+                          {item.daysUntil === 1 ? text.upcomingTomorrow : text.upcomingInDays(item.daysUntil)}
+                        </span>
+                      </div>
+                      <p className="upcoming-title">{item.title}</p>
+                      <p className="upcoming-date">{formatShortSwedishDate(item.date, locale)}</p>
+                      <p className="upcoming-note">{item.note}</p>
+                    </article>
+                  ))}
+                </div>
               </div>
-            </div>
+            </MobileSection>
           ) : null}
 
           <footer className="intro-footer">
@@ -471,20 +570,27 @@ function App({ initialDate = new Date() }: AppProps) {
               </div>
 
               {hasThemeDays ? (
-                <div className="theme-day-panel">
-                  <span className="ordinary-badge">{text.extraThemeDays}</span>
-                  <p>
-                    {text.asIfThatWasNotEnough(
-                      themeDayDisplayTitle ?? '',
-                      joinWithAnd(displayThemeDays, locale)
-                    )}
-                  </p>
-                  <ul className="theme-day-list">
-                    {displayThemeDays.map((themeDay) => (
-                      <li key={themeDay}>{themeDay}</li>
-                    ))}
-                  </ul>
-                </div>
+                <MobileSection
+                  isMobile={isMobileLayout}
+                  expanded={expandedMobileSections.extraThemeDays}
+                  onToggle={() => toggleMobileSection('extraThemeDays')}
+                  summary={text.mobileExtraThemeDaysSummary(displayThemeDays.length)}
+                >
+                  <div className="theme-day-panel">
+                    <span className="ordinary-badge">{text.extraThemeDays}</span>
+                    <p>
+                      {text.asIfThatWasNotEnough(
+                        themeDayDisplayTitle ?? '',
+                        joinWithAnd(displayThemeDays, locale)
+                      )}
+                    </p>
+                    <ul className="theme-day-list">
+                      {displayThemeDays.map((themeDay) => (
+                        <li key={themeDay}>{themeDay}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </MobileSection>
               ) : null}
             </>
           ) : (
@@ -508,24 +614,33 @@ function App({ initialDate = new Date() }: AppProps) {
           )}
 
           {nationalDayPanel ? (
-            <div className="world-day-panel">
-              <span className="ordinary-badge">{text.worldNationalDaysBadge}</span>
-              <p className="world-day-summary">{nationalDayPanel.summary}</p>
-              <div className="world-day-header">
-                <p className="eyebrow">{text.worldNationalDays}</p>
+            <MobileSection
+              isMobile={isMobileLayout}
+              expanded={expandedMobileSections.worldNationalDays}
+              onToggle={() => toggleMobileSection('worldNationalDays')}
+              summary={text.mobileWorldDaysSummary(
+                nationalDayPanel.items.length + nationalDayPanel.hiddenCount
+              )}
+            >
+              <div className="world-day-panel">
+                <span className="ordinary-badge">{text.worldNationalDaysBadge}</span>
+                <p className="world-day-summary">{nationalDayPanel.summary}</p>
+                <div className="world-day-header">
+                  <p className="eyebrow">{text.worldNationalDays}</p>
+                </div>
+                <ul className="theme-day-list world-day-list">
+                  {nationalDayPanel.items.map((item) => (
+                    <li key={`${item.nation}-${item.significance}`}>
+                      <strong>{item.nation}</strong>
+                      <span>{item.significance}</span>
+                    </li>
+                  ))}
+                </ul>
+                {nationalDayPanel.hiddenCount > 0 ? (
+                  <p className="world-day-more">{text.worldNationalDaysMore(nationalDayPanel.hiddenCount)}</p>
+                ) : null}
               </div>
-              <ul className="theme-day-list world-day-list">
-                {nationalDayPanel.items.map((item) => (
-                  <li key={`${item.nation}-${item.significance}`}>
-                    <strong>{item.nation}</strong>
-                    <span>{item.significance}</span>
-                  </li>
-                ))}
-              </ul>
-              {nationalDayPanel.hiddenCount > 0 ? (
-                <p className="world-day-more">{text.worldNationalDaysMore(nationalDayPanel.hiddenCount)}</p>
-              ) : null}
-            </div>
+            </MobileSection>
           ) : null}
         </main>
       </div>

@@ -568,6 +568,41 @@
   font: inherit;
 }
 
+.mobile-section {
+  display: contents;
+}
+
+.mobile-section-toggle {
+  width: 100%;
+  border: 1px solid var(--panel-border);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.34);
+  color: var(--text);
+  padding: 0.95rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  text-align: left;
+}
+
+.App.dark .mobile-section-toggle {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.mobile-section-chevron {
+  flex: 0 0 auto;
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.mobile-section-content {
+  display: grid;
+}
+
 @keyframes theme-wash {
   0% {
     opacity: 0;
@@ -960,16 +995,20 @@
   }
 
   .card-nav {
-    grid-template-columns: 1fr;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 0.55rem;
   }
 
   .card-nav-button {
-    width: 100%;
+    width: auto;
+    min-width: 0;
+    padding: 0.6rem 0.75rem;
+    font-size: 0.77rem;
   }
 
   .card-date {
-    order: -1;
-    font-size: 0.94rem;
+    order: 0;
+    font-size: 0.88rem;
   }
 
   .theme-toggle {
@@ -1001,6 +1040,7 @@
 
   .celebration-blurb {
     font-size: 0.96rem;
+    line-height: 1.42;
   }
 
   .reroll-button {
@@ -1018,6 +1058,49 @@
     justify-content: start;
     gap: 0.3rem;
     font-size: 0.84rem;
+  }
+
+  .brand-lede,
+  .nameday-text,
+  .holiday-meta,
+  .upcoming-note,
+  .world-day-summary,
+  .world-day-more,
+  .ordinary-card p,
+  .theme-day-panel p,
+  .world-day-panel p {
+    font-size: 0.92rem;
+  }
+
+  .season-item,
+  .upcoming-item,
+  .nameday-card,
+  .holiday-card,
+  .season-card,
+  .upcoming-card,
+  .theme-day-panel,
+  .world-day-panel,
+  .ordinary-card {
+    padding: 1rem;
+    border-radius: 20px;
+  }
+
+  .app-panel--intro {
+    gap: 0.9rem;
+  }
+
+  .mobile-section {
+    display: grid;
+    gap: 0.65rem;
+  }
+
+  .mobile-section-content > * {
+    margin-top: 0;
+  }
+
+  .theme-day-panel,
+  .world-day-panel {
+    max-width: none;
   }
 
   .media-card--primary {
