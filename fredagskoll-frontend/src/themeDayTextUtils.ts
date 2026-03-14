@@ -5,7 +5,7 @@ export function joinWithAnd(items: string[], locale: Locale = 'sv'): string {
     return items[0] ?? '';
   }
 
-  const conjunction = locale === 'en' ? 'and' : 'och';
+  const conjunction = locale === 'en' ? 'and' : locale === 'pt-BR' ? 'e' : 'och';
 
   if (items.length === 2) {
     return `${items[0]} ${conjunction} ${items[1]}`;

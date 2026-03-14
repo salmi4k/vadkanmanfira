@@ -54,6 +54,14 @@ export function getThemeDayCategoryBlurbs(
         `You do not need to understand why ${lower(shownDay)} exists. You just need to serve something and move on.`,
       ];
     }
+    if (locale === 'pt-BR') {
+      return [
+        `${shownDay} parece decisão administrativa tomada por pessoas com migalhas no teclado.`,
+        `Hoje é ${lower(shownDay)}, mais uma desculpa para fingir que calorias têm valor cultural.`,
+        `${shownDay} melhora o dia rebaixando padrões e elevando o açúcar no sangue.`,
+        `Não precisa entender por que ${lower(shownDay)} existe. Só serve algo e segue o baile.`,
+      ];
+    }
 
     return [
       `${themeDay} känns som ett administrativt beslut fattat av folk med smulor på tangentbordet.`,
@@ -97,6 +105,14 @@ export function getThemeDayCategoryBlurbs(
         `The calendar is trying to intellectualize you via ${lower(shownDay)}. Fairly bold, really.`,
       ];
     }
+    if (locale === 'pt-BR') {
+      return [
+        `${shownDay} quer que você se sinta culto sem esforço absurdo.`,
+        `Hoje é ${lower(shownDay)}, soa melhor que mais um dia insosso.`,
+        `${shownDay} dá à data uma camada fina, porém funcional, de cultura. Isso basta.`,
+        `O calendário tenta te intelectualizar com ${lower(shownDay)}. Ousado, não?`,
+      ];
+    }
 
     return [
       `${themeDay} vill att du ska känna dig bildad utan att behöva anstränga dig orimligt mycket.`,
@@ -138,6 +154,14 @@ export function getThemeDayCategoryBlurbs(
         `The calendar is trying to raise the level with ${lower(shownDay)} today. We should probably act accordingly.`,
       ];
     }
+    if (locale === 'pt-BR') {
+      return [
+        `${shownDay} merece mais que um olhar preguiçoso e um “tá bom” meia-boca.`,
+        `Hoje é ${lower(shownDay)}, pelo menos dá à data um pouco mais de fibra que o blá-blá tema padrão.`,
+        `${shownDay} empresta uma dignidade cultural ao dia que esse app nem sempre consegue.`,
+        `O calendário quer subir o nível com ${lower(shownDay)} hoje. Melhor agir conforme.`,
+      ];
+    }
 
     return [
       `${themeDay} förtjänar faktiskt mer än ett slött ögonkast och ett halvdant "jaha".`,
@@ -168,6 +192,14 @@ export function getThemeDayCategoryBlurbs(
         `It's ${lower(shownDay)} today. Good. At last, something with a reasonably sound moral profile.`,
         `${shownDay} makes the calendar marginally more sympathetic than usual.`,
         `If the day belongs to ${lower(shownDay)}, the sensible response is to nod and accept it.`,
+      ];
+    }
+    if (locale === 'pt-BR') {
+      return [
+        `${shownDay} é exatamente aquele tipo de dia tema que ninguém sensato discute.`,
+        `Hoje é ${lower(shownDay)}. Que bom. Pelo menos algo com perfil moral minimamente decente.`,
+        `${shownDay} torna o calendário um pouco mais simpático que o normal.`,
+        `Se o dia é de ${lower(shownDay)}, a resposta sensata é concordar e seguir em frente.`,
       ];
     }
 
@@ -206,6 +238,14 @@ export function getThemeDayCategoryBlurbs(
         `It's ${lower(shownDay)} today, so somewhere an enthusiast is feeling extremely good about themselves.`,
         `${shownDay} gives the date a faint smell of nerdy self-confidence, which is not the worst thing.`,
         `The calendar has handed the day over to ${lower(shownDay)}. Best just live with it.`,
+      ];
+    }
+    if (locale === 'pt-BR') {
+      return [
+        `${shownDay} soa como coisa inventada na internet que ninguém quer largar.`,
+        `Hoje é ${lower(shownDay)}, em algum canto um entusiasta está se sentindo ótimo.`,
+        `${shownDay} oferece à data um cheirinho leve de nerdice confiante. Não é ruim.`,
+        `O calendário entregou o dia para ${lower(shownDay)}. O jeito é aceitar.`,
       ];
     }
 
@@ -249,6 +289,14 @@ export function getThemeDayCategoryBlurbs(
         `The calendar is leaning on ${lower(shownDay)} today, and it feels surprisingly deserved.`,
       ];
     }
+    if (locale === 'pt-BR') {
+      return [
+        `${shownDay} é um lembrete direto de qual profissão quer ser vista sem precisar fazer rebelião.`,
+        `Hoje é ${lower(shownDay)}. Com razão, o dia pede ao menos um reconhecimento meia-boca.`,
+        `${shownDay} lembra a sociedade quem mantém essa bagunça de pé.`,
+        `O calendário aposta em ${lower(shownDay)} hoje, e isso parece até merecido.`,
+      ];
+    }
 
     return [
       `${themeDay} är en ganska tydlig signal om att någon yrkesgrupp vill bli sedd utan att behöva starta upplopp.`,
@@ -288,6 +336,14 @@ export function getThemeDayCategoryBlurbs(
         `If the day insists on being ${lower(shownDay)}, then fine. Take a walk and stop complaining.`,
       ];
     }
+    if (locale === 'pt-BR') {
+      return [
+        `${shownDay} parece o calendário tentando empurrar geral para fora, daquele jeito gentil, mas insistente.`,
+        `Hoje é ${lower(shownDay)}, mais uma desculpa pra fingir que ar fresco resolve tudo.`,
+        `${shownDay} deixa a data com cheirinho gostoso de romance com a natureza e culpas leves.`,
+        `Se o dia insiste que é ${lower(shownDay)}, beleza. Vai dar uma caminhada e para de reclamar.`,
+      ];
+    }
 
     return [
       `${themeDay} känns som kalenderns försök att få ut folk ur huset med mjuk tvångston.`,
@@ -318,6 +374,14 @@ export function getThemeDayCategoryBlurbs(
         `It's ${lower(shownDay)} today, so the only move is to display some social competence and hope for the best.`,
         `${shownDay} makes relationships unnecessarily formal, but at least the expectations are clear.`,
         `The calendar has granted ${lower(shownDay)} quasi-official status. Unfortunately, you can't really argue with that.`,
+      ];
+    }
+    if (locale === 'pt-BR') {
+      return [
+        `${shownDay} parece um dia criado para alguém no seu círculo pedir atenção com respaldo do calendário.`,
+        `Hoje é ${lower(shownDay)}, então o jeito é mostrar alguma habilidade social e torcer para o melhor.`,
+        `${shownDay} deixa as relações desnecessariamente formais, mas pelo menos as expectativas são claras.`,
+        `O calendário deu status quase oficial para ${lower(shownDay)}. Infelizmente, não tem discussão.`,
       ];
     }
 
@@ -354,6 +418,14 @@ export function getThemeDayCategoryBlurbs(
         `The calendar has decided on ${lower(shownDay)} today. No one really knows why, but the machinery rolls on.`,
       ];
     }
+    if (locale === 'pt-BR') {
+      return [
+        `${shownDay} é um belo exemplo de até onde a humanidade pode levar a ideia de que qualquer coisa merece um dia.`,
+        `Hoje é ${lower(shownDay)}, informação específica demais pra ser inventada e absurda demais pra contestar.`,
+        `${shownDay} concede a objetos comuns um breve, mas intenso momento de dignidade irracional.`,
+        `O calendário decidiu por ${lower(shownDay)} hoje. Ninguém sabe bem o porquê, mas o mecanismo continua.`,
+      ];
+    }
 
     return [
       `${themeDay} är ett vackert exempel på hur långt människan kan driva idén "allt kan få en dag".`,
@@ -387,6 +459,14 @@ export function getThemeDayCategoryBlurbs(
         `The calendar went all in on ${lower(shownDay)} here, and you almost have to respect the nerve.`,
       ];
     }
+    if (locale === 'pt-BR') {
+      return [
+        `${shownDay} é exatamente o tipo de coisa que faz o calendário parecer ao mesmo tempo charmoso e meio doente.`,
+        `Hoje é ${lower(shownDay)}, e não tem resposta digna além de um sorriso cansado.`,
+        `${shownDay} lembra que dias tema geralmente surgem quando alguém com energia demais tem acesso a uma data.`,
+        `O calendário foi com tudo em ${lower(shownDay)} aqui, e quase dá para respeitar a ousadia.`,
+      ];
+    }
 
     return [
       `${themeDay} är exakt den sorts dag som får kalendern att kännas både charmig och lätt sinnessjuk.`,
@@ -402,6 +482,14 @@ export function getThemeDayCategoryBlurbs(
       `It's ${shownDay} today. That is sufficient reason to lower expectations slightly.`,
       `${shownDay} gets to carry the date. That is still better than a plain unsupported weekday.`,
       `Someone turned ${lower(shownDay)} into a thing, and the rest of us are now simply expected to accept the situation.`,
+    ];
+  }
+  if (locale === 'pt-BR') {
+    return [
+      `${shownDay} arranjou um jeito de entrar no calendário e aparentemente exige algum respeito.`,
+      `Hoje é ${shownDay}. Motivo suficiente para abaixar um pouco as expectativas.`,
+      `${shownDay} carrega a data. Ainda é melhor que um dia comum sem graça.`,
+      `Alguém transformou ${lower(shownDay)} em coisa séria, e o resto de nós só pode aceitar.`,
     ];
   }
 

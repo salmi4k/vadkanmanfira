@@ -53,10 +53,15 @@ export function formatCenterDate(date: Date, locale: Locale = 'sv'): string {
   const month = new Intl.DateTimeFormat(intlLocale, {
     month: 'long',
   }).format(date);
-  const day =
-    locale === 'sv' ? getSwedishOrdinalDay(date.getDate()) : getEnglishOrdinalDay(date.getDate());
+  if (locale === 'sv') {
+    return `${weekday} ${getSwedishOrdinalDay(date.getDate())} ${month}`;
+  }
 
-  return locale === 'sv' ? `${weekday} ${day} ${month}` : `${weekday}, ${month} ${day}`;
+  if (locale === 'pt-BR') {
+    return `${weekday}, ${date.getDate()} de ${month}`;
+  }
+
+  return `${weekday}, ${month} ${getEnglishOrdinalDay(date.getDate())}`;
 }
 
 export function getDaysUntil(date: Date, target: Date): number {

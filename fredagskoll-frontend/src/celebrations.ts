@@ -7,6 +7,7 @@ import {
   isTeamWeekdayDayType,
 } from './contentPack';
 import celebrationsEn from './data/celebrations.en.json';
+import celebrationsPtBr from './data/celebrations.pt-BR.json';
 import { DayType } from './dayLogic';
 import { Locale } from './locale';
 export type CelebrationTheme =
@@ -53,6 +54,7 @@ type CelebrationLocalePayload = {
 };
 
 const englishCelebrationContent = celebrationsEn as CelebrationLocalePayload;
+const portugueseCelebrationContent = celebrationsPtBr as CelebrationLocalePayload;
 
 const ordinaryBlurbSv =
   'Nej, idag är det inte någon svensk firardag som platsar här.';
@@ -543,6 +545,19 @@ const celebrationsEnLocalized = Object.fromEntries(
   ])
 ) as Record<Exclude<DayType, 'ordinary'>, CelebrationContent>;
 
+const celebrationsPtBrLocalized = Object.fromEntries(
+  (Object.keys(celebrationsSv) as Array<Exclude<DayType, 'ordinary'>>).map((dayType) => [
+    dayType,
+    {
+      ...celebrationsSv[dayType],
+      ...portugueseCelebrationContent.celebrations[dayType],
+      primaryImage: celebrationsSv[dayType].primaryImage,
+      secondaryImage: celebrationsSv[dayType].secondaryImage,
+      theme: celebrationsSv[dayType].theme,
+    },
+  ])
+) as Record<Exclude<DayType, 'ordinary'>, CelebrationContent>;
+
 function splitCelebrationsByPack<T extends Record<Exclude<DayType, 'ordinary'>, unknown>>(
   celebrations: T
 ): {
@@ -569,13 +584,25 @@ const { shared: sharedCelebrationsSv, teamOnly: teamCelebrationsSv } =
   splitCelebrationsByPack(celebrationsSv);
 const { shared: sharedCelebrationsEn, teamOnly: teamCelebrationsEn } =
   splitCelebrationsByPack(celebrationsEnLocalized);
+const { shared: sharedCelebrationsPtBr, teamOnly: teamCelebrationsPtBr } =
+  splitCelebrationsByPack(celebrationsPtBrLocalized);
 const { shared: sharedAliasesSv, teamOnly: teamAliasesSv } =
   splitCelebrationsByPack(celebrationAliasesSv);
 const { shared: sharedAliasesEn, teamOnly: teamAliasesEn } =
   splitCelebrationsByPack(englishCelebrationContent.celebrationThemeAliases);
+const { shared: sharedAliasesPtBr, teamOnly: teamAliasesPtBr } =
+  splitCelebrationsByPack(portugueseCelebrationContent.celebrationThemeAliases);
 
 export function getOrdinaryBlurb(locale: Locale): string {
-  return locale === 'en' ? englishCelebrationContent.ordinaryBlurb : ordinaryBlurbSv;
+  if (locale === 'en') {
+    return englishCelebrationContent.ordinaryBlurb;
+  }
+
+  if (locale === 'pt-BR') {
+    return portugueseCelebrationContent.ordinaryBlurb;
+  }
+
+  return ordinaryBlurbSv;
 }
 
 export function getOrdinaryDayBlurbs(locale: Locale, isWeekend: boolean): string[] {
@@ -583,6 +610,12 @@ export function getOrdinaryDayBlurbs(locale: Locale, isWeekend: boolean): string
     return isWeekend
       ? englishCelebrationContent.ordinaryWeekendBlurbs
       : englishCelebrationContent.ordinaryWeekdayBlurbs;
+  }
+
+  if (locale === 'pt-BR') {
+    return isWeekend
+      ? portugueseCelebrationContent.ordinaryWeekendBlurbs
+      : portugueseCelebrationContent.ordinaryWeekdayBlurbs;
   }
 
   return isWeekend ? ordinaryWeekendBlurbsSv : ordinaryWeekdayBlurbsSv;
@@ -597,13 +630,19 @@ export function getCelebrationThemeAliases(
     return [];
   }
 
-  const aliases = (locale === 'en'
-    ? contentPack === 'team'
-      ? { ...sharedAliasesEn, ...teamAliasesEn }
-      : sharedAliasesEn
-    : contentPack === 'team'
-      ? { ...sharedAliasesSv, ...teamAliasesSv }
-      : sharedAliasesSv) as Partial<Record<Exclude<DayType, 'ordinary'>, string[]>>;
+  const aliases = (
+    locale === 'en'
+      ? contentPack === 'team'
+        ? { ...sharedAliasesEn, ...teamAliasesEn }
+        : sharedAliasesEn
+      : locale === 'pt-BR'
+        ? contentPack === 'team'
+          ? { ...sharedAliasesPtBr, ...teamAliasesPtBr }
+          : sharedAliasesPtBr
+        : contentPack === 'team'
+          ? { ...sharedAliasesSv, ...teamAliasesSv }
+          : sharedAliasesSv
+  ) as Partial<Record<Exclude<DayType, 'ordinary'>, string[]>>;
 
   return aliases[dayType] ?? [];
 }
@@ -616,6 +655,12 @@ export function getCelebrations(
     return (contentPack === 'team'
       ? { ...sharedCelebrationsEn, ...teamCelebrationsEn }
       : sharedCelebrationsEn) as Record<Exclude<DayType, 'ordinary'>, CelebrationContent>;
+  }
+
+  if (locale === 'pt-BR') {
+    return (contentPack === 'team'
+      ? { ...sharedCelebrationsPtBr, ...teamCelebrationsPtBr }
+      : sharedCelebrationsPtBr) as Record<Exclude<DayType, 'ordinary'>, CelebrationContent>;
   }
 
   return (contentPack === 'team'

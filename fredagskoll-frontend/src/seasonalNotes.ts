@@ -57,11 +57,19 @@ function buildSeasonalWindows(year: number, locale: Locale): SeasonalWindow[] {
   return [
     {
       id: 'semmelsasongen',
-      label: locale === 'en' ? 'Season' : 'Säsong',
-      title: locale === 'en' ? 'Semla season' : 'Semmelsäsongen',
+      label:
+        locale === 'en' ? 'Season' : locale === 'pt-BR' ? 'Temporada' : 'Säsong',
+      title:
+        locale === 'en'
+          ? 'Semla time'
+          : locale === 'pt-BR'
+          ? 'Tempo de semla'
+          : 'Semmeltid',
       note:
         locale === 'en'
           ? 'The bakery shelves have abandoned restraint and the whole country is pretending whipped cream is a valid winter strategy.'
+          : locale === 'pt-BR'
+          ? 'As prateleiras das padarias perderam toda a moderação e o país inteiro finge que chantilly é uma estratégia válida para o inverno.'
           : 'Bagerihyllorna har tappat all återhållsamhet och hela landet låtsas att grädde är en rimlig vinterstrategi.',
       meta: `${formatShortDate(new Date(year, 0, 2), locale)}-${formatShortDate(fettisdag, locale)}`,
       start: new Date(year, 0, 2),
@@ -70,11 +78,19 @@ function buildSeasonalWindows(year: number, locale: Locale): SeasonalWindow[] {
     },
     {
       id: 'bokrean',
-      label: locale === 'en' ? 'Season' : 'Säsong',
-      title: locale === 'en' ? 'The Book Sale' : 'Bokrean',
+      label:
+        locale === 'en' ? 'Season' : locale === 'pt-BR' ? 'Temporada' : 'Säsong',
+      title:
+        locale === 'en'
+          ? 'The Book Sale'
+          : locale === 'pt-BR'
+          ? 'Liquidação de livros'
+          : 'Bokrean',
       note:
         locale === 'en'
           ? 'Paper, impulse buying, and the old Swedish dream that one might suddenly become a person who reads more.'
+          : locale === 'pt-BR'
+          ? 'Papel, compras por impulso e o velho sonho sueco de que, num passe de mágica, você se torne alguém que lê mais.'
           : 'Papper, impulsköp och den gamla svenska drömmen om att man plötsligt ska bli en människa som läser mer.',
       meta: `${formatShortDate(bokreanStart, locale)}-${formatShortDate(bokreanEnd, locale)}`,
       start: bokreanStart,
@@ -83,11 +99,19 @@ function buildSeasonalWindows(year: number, locale: Locale): SeasonalWindow[] {
     },
     {
       id: 'prideveckor',
-      label: locale === 'en' ? 'Season' : 'Säsong',
-      title: 'Pride-veckor',
+      label:
+        locale === 'en' ? 'Season' : locale === 'pt-BR' ? 'Temporada' : 'Säsong',
+      title:
+        locale === 'en'
+          ? 'Pride-veckor'
+          : locale === 'pt-BR'
+          ? 'Semanas do Orgulho'
+          : 'Pride-veckor',
       note:
         locale === 'en'
           ? 'Rainbows, solidarity, and an unusually well-founded resistance to being boring for no reason.'
+          : locale === 'pt-BR'
+          ? 'Arco-íris, solidariedade e uma resistência surpreendentemente bem fundamentada a ser chato sem motivo.'
           : 'Regnbågar, gemenskap och ett ovanligt välgrundat motstånd mot att vara tråkig i onödan.',
       meta: `${formatShortDate(new Date(year, 6, 20), locale)}-${formatShortDate(new Date(year, 7, 10), locale)}`,
       start: new Date(year, 6, 20),
@@ -96,11 +120,19 @@ function buildSeasonalWindows(year: number, locale: Locale): SeasonalWindow[] {
     },
     {
       id: 'kraftskiva',
-      label: locale === 'en' ? 'Season' : 'Säsong',
-      title: locale === 'en' ? 'Crayfish party season' : 'Kräftskivesäsong',
+      label:
+        locale === 'en' ? 'Season' : locale === 'pt-BR' ? 'Temporada' : 'Säsong',
+      title:
+        locale === 'en'
+          ? 'Crayfish party season'
+          : locale === 'pt-BR'
+          ? 'Temporada da festa do lagostim'
+          : 'Kräftskivesäsong',
       note:
         locale === 'en'
           ? 'Paper hats, dill, and a collective decision that small crayfish apparently constitute a complete plan for late summer.'
+          : locale === 'pt-BR'
+          ? 'Chapéus de papel, endro e a decisão coletiva de que lagostins pequenos são, aparentemente, um plano completo para o fim do verão.'
           : 'Pappershattar, dill och ett kollektivt beslut att små kräftor tydligen är en fullgod plan för sensommaren.',
       meta: `${formatShortDate(new Date(year, 7, 1), locale)}-${formatShortDate(new Date(year, 8, 15), locale)}`,
       start: new Date(year, 7, 1),
@@ -109,11 +141,19 @@ function buildSeasonalWindows(year: number, locale: Locale): SeasonalWindow[] {
     },
     {
       id: 'halloween',
-      label: locale === 'en' ? 'Season' : 'Säsong',
-      title: locale === 'en' ? 'Halloween season' : 'Halloween-säsong',
+      label:
+        locale === 'en' ? 'Season' : locale === 'pt-BR' ? 'Temporada' : 'Säsong',
+      title:
+        locale === 'en'
+          ? 'Halloween season'
+          : locale === 'pt-BR'
+          ? 'Temporada de Halloween'
+          : 'Halloween-säsong',
       note:
         locale === 'en'
           ? 'Pumpkins, pick-and-mix, and a strangely broad social consensus that plastic spiders improve the atmosphere.'
+          : locale === 'pt-BR'
+          ? 'Abóboras, doces sortidos e um consenso social esquisitamente amplo de que aranhas de plástico melhoram a vibe.'
           : 'Pumpor, smågodis och ett märkligt folkligt samförstånd om att plastspindlar höjer stämningen.',
       meta: `${formatShortDate(new Date(year, 9, 24), locale)}-${formatShortDate(new Date(year, 10, 2), locale)}`,
       start: new Date(year, 9, 24),
@@ -122,11 +162,14 @@ function buildSeasonalWindows(year: number, locale: Locale): SeasonalWindow[] {
     },
     {
       id: 'black-week',
-      label: locale === 'en' ? 'Season' : 'Säsong',
-      title: 'Black Week',
+      label:
+        locale === 'en' ? 'Season' : locale === 'pt-BR' ? 'Temporada' : 'Säsong',
+      title: locale === 'en' ? 'Black Week' : locale === 'pt-BR' ? 'Semana Black Friday' : 'Black Week',
       note:
         locale === 'en'
           ? 'Campaign emails, temporary panic, and retail in a state of black-priced intensity.'
+          : locale === 'pt-BR'
+          ? 'E-mails promocionais, pânico temporário e comércio varejista em estado de intensidade preta-total.'
           : 'Kampanjmailer, tillfällig panik och hela handeln i ett tillstånd av svartprissatt intensitet.',
       meta: `${formatShortDate(blackWeekStart, locale)}-${formatShortDate(blackWeekEnd, locale)}`,
       start: blackWeekStart,
@@ -135,11 +178,19 @@ function buildSeasonalWindows(year: number, locale: Locale): SeasonalWindow[] {
     },
     {
       id: 'julbord',
-      label: locale === 'en' ? 'Season' : 'Säsong',
-      title: locale === 'en' ? 'Christmas buffet season' : 'Julbordssäsong',
+      label:
+        locale === 'en' ? 'Season' : locale === 'pt-BR' ? 'Temporada' : 'Säsong',
+      title:
+        locale === 'en'
+          ? 'Christmas buffet season'
+          : locale === 'pt-BR'
+          ? 'Temporada da ceia de Natal'
+          : 'Julbordssäsong',
       note:
         locale === 'en'
           ? 'Herring, ham, and the annual Swedish ability to turn buffet food into a moral obligation.'
+          : locale === 'pt-BR'
+          ? 'Arenque, presunto e a habilidade sueca anual de transformar comida de buffet em obrigação moral.'
           : 'Sill, skinka och den årliga svenska förmågan att förvandla buffé till moralisk plikt.',
       meta: `${formatShortDate(new Date(year, 10, 15), locale)}-${formatShortDate(new Date(year, 11, 24), locale)}`,
       start: new Date(year, 10, 15),
@@ -148,11 +199,19 @@ function buildSeasonalWindows(year: number, locale: Locale): SeasonalWindow[] {
     },
     {
       id: 'julmarknad',
-      label: locale === 'en' ? 'Season' : 'Säsong',
-      title: locale === 'en' ? 'Christmas market season' : 'Julmarknadssäsong',
+      label:
+        locale === 'en' ? 'Season' : locale === 'pt-BR' ? 'Temporada' : 'Säsong',
+      title:
+        locale === 'en'
+          ? 'Christmas market season'
+          : locale === 'pt-BR'
+          ? 'Temporada das feiras de Natal'
+          : 'Julmarknadssäsong',
       note:
         locale === 'en'
           ? 'Mulled wine, spruce branches, and small wooden stalls trying to sell dignity by candlelight.'
+          : locale === 'pt-BR'
+          ? 'Vinho quente, galhos de abeto e pequenas barracas de madeira tentando vender dignidade à luz de velas.'
           : 'Glögg, granris och små trästånd som försöker sälja värdighet i stearinbelyst tappning.',
       meta: `${formatShortDate(new Date(year, 10, 20), locale)}-${formatShortDate(new Date(year, 11, 23), locale)}`,
       start: new Date(year, 10, 20),

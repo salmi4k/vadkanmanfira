@@ -19,6 +19,14 @@ function buildFoodBlurbs(leadDay: string, allDays: string, locale: Locale): stri
     ];
   }
 
+  if (locale === 'pt-BR') {
+    return [
+      `${leadDay} paira sobre a data como uma desculpa perfeitamente legítima para levar comida e bebida mais a sério do que o trabalho.`,
+      `Se o dia parece com um sabor um pouco mais evidente do que o normal, é só porque ${lead} já invadiu o calendário e não pretende sair.`,
+      `${allDays} dividem a data, mas ${lead} ainda parece o ponto onde o bom senso desistiu.`,
+    ];
+  }
+
   return [
     `${leadDay} ligger över datumet som en fullt legitim ursäkt att ta mat och dryck på större allvar än arbetsuppgifter.`,
     `Om dagen känns lite mer smakstyrd än vanligt är det bara för att ${lead} redan tagit plats i kalendern och vägrar flytta på sig.`,
@@ -33,6 +41,14 @@ function buildCultureBlurbs(leadDay: string, allDays: string, locale: Locale): s
       `${leadDay} gives the date a very thin but fully usable layer of culture.`,
       `It becomes harder to treat the day as banal when ${lead} is already sitting there demanding a little dignity.`,
       `${allDays} are all crowding onto the same date, which at least gives the calendar more substance than an ordinary meeting block.`,
+    ];
+  }
+
+  if (locale === 'pt-BR') {
+    return [
+      `${leadDay} adiciona à data uma camada fina, mas bem utilizável, de cultura.`,
+      `Fica mais difícil tratar o dia como banal quando ${lead} já está ali, exigindo um pouco de dignidade.`,
+      `${allDays} amontoam-se na mesma data, o que ao menos dá mais conteúdo ao calendário do que uma reunião chata qualquer.`,
     ];
   }
 
@@ -53,6 +69,14 @@ function buildCommunityBlurbs(leadDay: string, allDays: string, locale: Locale):
     ];
   }
 
+  if (locale === 'pt-BR') {
+    return [
+      `${leadDay} eleva a data um pouco acima da correria diária, coisa que ela precisava, sejamos sinceros.`,
+      `Quando ${lead} chega primeiro no calendário, o resto do dia tem que aceitar ser um pouco menos cheio de si do que o normal.`,
+      `${allDays} dividem a mesma data, o que dá mais coluna vertebral ao dia do que ele normalmente tem.`,
+    ];
+  }
+
   return [
     `${leadDay} höjer ribban något över ren vardagsdrift, vilket datumet uppriktigt sagt behövde.`,
     `När ${lead} ligger först i kalendern får resten av dagen finna sig i att vara lite mindre självtillräcklig än vanligt.`,
@@ -67,6 +91,14 @@ function buildNatureBlurbs(leadDay: string, allDays: string, locale: Locale): st
       `${leadDay} makes it harder than usual to pretend office lighting is the whole world.`,
       `You can tell ${lead} is hanging over the date, because the day suddenly feels a little less humanly self-satisfied.`,
       `${allDays} are sharing the slot today, which in practice means nature has been granted interpretive priority over the schedule for a while.`,
+    ];
+  }
+
+  if (locale === 'pt-BR') {
+    return [
+      `${leadDay} dificulta do que o normal fingir que a luz do escritório é o mundo todo.`,
+      `Dá para perceber que ${lead} domina a data, porque o dia de repente parece menos convencido como ser humano.`,
+      `${allDays} dividem a vaga hoje, o que na prática significa que a natureza tem prioridade para interpretar o horário por um tempo.`,
     ];
   }
 
@@ -87,6 +119,14 @@ function buildAnimalBlurbs(leadDay: string, allDays: string, locale: Locale): st
     ];
   }
 
+  if (locale === 'pt-BR') {
+    return [
+      `${leadDay} dá à data um perfil moral muito mais legal do que muitos outros temas conseguem.`,
+      `Fica muito difícil contestar ${lead} sem parecer pior do que o necessário.`,
+      `${allDays} podem dividir a data, mas ${lead} continua sendo aquele tema que o pessoal espera que você aceite com humildade.`,
+    ];
+  }
+
   return [
     `${leadDay} ger datumet en klart trevligare moralisk profil än många andra temadagar lyckas med.`,
     `Det är svårt att invända mot ${lead} utan att omedelbart framstå som en sämre människa än nödvändigt.`,
@@ -101,6 +141,14 @@ function buildTechBlurbs(leadDay: string, allDays: string, locale: Locale): stri
       `${leadDay} gives the date a clear smell of enthusiasts who absolutely do not intend to be normal today either.`,
       `Once ${lead} sits at the top of the calendar, the rest of the day just has to accept that nerdiness temporarily counts as leadership.`,
       `${allDays} share the space, but ${lead} still feels like the main reason the date became strangely specific.`,
+    ];
+  }
+
+  if (locale === 'pt-BR') {
+    return [
+      `${leadDay} dá à data aquele cheirinho claro de entusiastas que não vão se contentar em ser normais hoje também.`,
+      `Quando ${lead} domina o calendário, o resto do dia tem que aceitar que nerdice conta como liderança – pelo menos por enquanto.`,
+      `${allDays} compartilham o espaço, mas ${lead} ainda parece a principal razão da data ter virado algo estranhamente específico.`,
     ];
   }
 
@@ -121,6 +169,14 @@ function buildProfessionBlurbs(leadDay: string, allDays: string, locale: Locale)
     ];
   }
 
+  if (locale === 'pt-BR') {
+    return [
+      `${leadDay} é um jeito bem direto de lembrar quem realmente mantém a vida diária costurada para o resto de nós.`,
+      `Se a data parece especialmente funcional hoje, é só porque ${lead} já deu uma estrutura para ela.`,
+      `${allDays} estão na agenda, mas ${lead} tem aquele peso que faz o resto se alinhar sem reclamar.`,
+    ];
+  }
+
   return [
     `${leadDay} är ett ganska tydligt sätt att påminna om vilka människor som faktiskt håller ihop vardagen åt resten av oss.`,
     `Om datumet känns ovanligt funktionellt idag är det bara för att ${lead} redan hunnit ge det lite struktur.`,
@@ -138,6 +194,14 @@ function buildObjectBlurbs(leadDay: string, allDays: string, locale: Locale): st
     ];
   }
 
+  if (locale === 'pt-BR') {
+    return [
+      `${leadDay} é tão específico que a data deixa de parecer neutra e começa a parecer meio possuída.`,
+      `É difícil discutir com ${lead} quando o calendário já decidiu dar todo o holofote pra ele.`,
+      `${allDays} dividem o dia, mas ${lead} ainda é justamente aquele detalhe que faz o resto parecer figurante.`,
+    ];
+  }
+
   return [
     `${leadDay} är så specifik att datumet omedelbart slutar kännas neutralt och börjar kännas lätt besatt.`,
     `Det är svårt att argumentera mot ${lead} när kalendern redan valt att ge ämnet full scenbelysning.`,
@@ -152,6 +216,14 @@ function buildFallbackBlurbs(leadDay: string, allDays: string, locale: Locale): 
       `${leadDay} has already taken possession of the date, so there is no point pretending this is a neutral weekday anymore.`,
       `Once ${lead} is in the calendar, the rest of the day mostly exists to adapt to its oddly specific energy.`,
       `${allDays} are sharing the same date, which feels less like order and more like a committee that refused to choose.`,
+    ];
+  }
+
+  if (locale === 'pt-BR') {
+    return [
+      `${leadDay} já tomou posse da data, então não adianta fingir que é um dia comum de semana.`,
+      `Depois que ${lead} aparece no calendário, o resto do dia serve principalmente para se adaptar àquela energia estranhamente específica.`,
+      `${allDays} dividem a mesma data, o que parece menos ordem e mais uma reunião que não quis decidir.`,
     ];
   }
 

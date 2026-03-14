@@ -30,7 +30,10 @@ import { getImageCreditNote, imageCredits } from './imageCredits';
 import {
   Locale,
   LOCALE_STORAGE_KEY,
+  getIntlLocale,
   getInitialLocale,
+  joinWithConjunction,
+  localeOptions,
   translateOfficialHolidayName,
   translateThemeDayName,
 } from './locale';
@@ -131,7 +134,7 @@ function MobileSection({
 
 function formatBuildStamp(locale: Locale): string {
   const builtAt = new Date(buildInfo.builtAt);
-  const formattedTime = new Intl.DateTimeFormat(locale === 'en' ? 'en-GB' : 'sv-SE', {
+  const formattedTime = new Intl.DateTimeFormat(getIntlLocale(locale), {
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
@@ -149,6 +152,7 @@ function App({
 }: AppProps) {
   const [locale, setLocale] = useState<Locale>(getInitialLocale);
   const [darkMode, setDarkMode] = useState(false);
+  const [showLanguageMenu, setShowLanguageMenu] = useState(false);
   const [showImageCredits, setShowImageCredits] = useState(false);
   const [isMobileLayout, setIsMobileLayout] = useState(getInitialMobileLayout);
   const [showUpcoming, setShowUpcoming] = useState(true);
@@ -292,6 +296,10 @@ function App({
   }, [locale]);
 
   useEffect(() => {
+    setShowLanguageMenu(false);
+  }, [locale]);
+
+  useEffect(() => {
     if (!currentBlurbs) {
       setBlurb(ordinaryBlurb);
       return;
@@ -360,18 +368,49 @@ function App({
   }
 
   return (
-    <div className={`App ${darkMode ? 'dark' : ''} theme-${theme}`}>
+    <div className={`App ${darkMode ? 'dark' : ''} theme-${theme} locale-${locale}`}>
       <div className="app-backdrop" aria-hidden="true" />
       <div className="app-grid">
         <header className="app-panel app-panel--intro">
           <div className="intro-controls">
-            <button
-              type="button"
-              className="theme-toggle theme-toggle--language"
-              onClick={() => setLocale((current) => (current === 'sv' ? 'en' : 'sv'))}
-            >
-              {text.languageButton}
-            </button>
+            <div className="language-control">
+              <button
+                type="button"
+                className="theme-toggle theme-toggle--language"
+                aria-haspopup="menu"
+                aria-expanded={showLanguageMenu}
+                aria-label={text.languageMenuLabel}
+                onClick={() => setShowLanguageMenu((current) => !current)}
+              >
+                <span className="language-toggle-flag" aria-hidden="true">
+                  {localeOptions.find((option) => option.value === locale)?.flag}
+                </span>
+                <span className="language-toggle-code" aria-hidden="true">
+                  {localeOptions.find((option) => option.value === locale)?.shortLabel}
+                </span>
+              </button>
+              {showLanguageMenu ? (
+                <div className="language-menu" role="menu" aria-label={text.languageMenuLabel}>
+                  {localeOptions.map((option) => (
+                    <button
+                      key={option.value}
+                      type="button"
+                      role="menuitemradio"
+                      aria-checked={locale === option.value}
+                      className={`language-option${
+                        locale === option.value ? ' language-option--active' : ''
+                      }`}
+                      onClick={() => setLocale(option.value)}
+                    >
+                      <span className="language-option-flag" aria-hidden="true">
+                        {option.flag}
+                      </span>
+                      <span className="language-option-text">{option.label}</span>
+                    </button>
+                  ))}
+                </div>
+              ) : null}
+            </div>
             <button
               type="button"
               className="theme-toggle"
@@ -419,7 +458,7 @@ function App({
             {nameDayState === 'loading' ? <p className="nameday-text">{text.namedayLoading}</p> : null}
             {nameDayState === 'error' ? <p className="nameday-text">{text.namedayError}</p> : null}
             {nameDayState === 'ready' && nameDays.length > 0 ? (
-              <p className="nameday-text">{nameDays.join(locale === 'en' ? ' and ' : ' och ')}</p>
+              <p className="nameday-text">{joinWithConjunction(nameDays, locale)}</p>
             ) : null}
             {nameDayState === 'ready' && nameDays.length === 0 ? (
               <p className="nameday-text">{text.namedayNone}</p>
@@ -441,7 +480,7 @@ function App({
                 </p>
                 <p className="holiday-meta">
                   {formatDaysUntilLabel(daysUntilHoliday, locale)}{' '}
-                  {locale === 'en' ? 'until' : 'till'}{' '}
+                  {text.untilLabel}{' '}
                   {formatShortSwedishDate(upcomingHoliday.date, locale)}.
                 </p>
               </div>
@@ -539,7 +578,7 @@ function App({
         </header>
 
         <main className="app-panel celebration-card">
-          <div className="card-nav" aria-label={locale === 'en' ? 'Date navigation' : 'Datumnavigering'}>
+          <div className="card-nav" aria-label={text.dateNavigationAria}>
             <button
               type="button"
               className="card-nav-button"

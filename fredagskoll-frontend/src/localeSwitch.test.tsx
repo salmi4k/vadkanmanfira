@@ -22,12 +22,12 @@ test('switches the interface to English and persists the locale', async () => {
     expect(screen.queryByText(/Laddar namnsdag/i)).not.toBeInTheDocument()
   );
 
-  fireEvent.click(screen.getByRole('button', { name: /English/i }));
+  fireEvent.click(screen.getByRole('button', { name: /Språk/i }));
+  fireEvent.click(screen.getByRole('menuitemradio', { name: /English/i }));
 
   expect(
     screen.getByRole('heading', { level: 1, name: /What can one celebrate\?/i })
   ).toBeInTheDocument();
-  expect(screen.getByRole('button', { name: /Svenska/i })).toBeInTheDocument();
   expect(screen.getByRole('button', { name: /Previous day/i })).toBeInTheDocument();
   expect(screen.getByText(/Image credits/i)).toBeInTheDocument();
   expect(window.localStorage.getItem('vadkanmanfira.locale')).toBe('en');

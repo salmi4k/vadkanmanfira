@@ -1,0 +1,483 @@
+{
+  "ordinaryBlurb": "Não, hoje não é uma celebração sueca digna de nota aqui.",
+  "ordinaryWeekdayBlurbs": [
+    "É um dia comum de trabalho. Você vai criar seu próprio clima, o que, francamente, é questionável.",
+    "Nenhum feriado salvou este dia. É só você, o calendário e uma insatisfação silenciosa.",
+    "Não há desculpa oficial hoje, apenas o tipo comum de resignação cotidiana.",
+    "Chegou um dia de semana completamente comum. Nossas condolências.",
+    "Esta data não oferece semla, nem arenque, nem camaradagem nacional. Só trabalho.",
+    "Nenhum tema sueco carrega você hoje. Vai ter que se carregar sozinho, o que parece desnecessário.",
+    "O dia é absolutamente comum, como se o universo tivesse optado ativamente por não entreter.",
+    "Sem festa, sem tradição, nem mesmo uma pitada de obrigação de pãozinho. Só rotina.",
+    "Um daqueles dias que existem principalmente para segurar a semana entre datas melhores.",
+    "Nada especial acontece hoje, o que infelizmente não impede as pessoas de marcarem reuniões.",
+    "É um dia de semana direto, sem apoio cultural. Um arranjo meio frio.",
+    "Tudo indica que você vai passar por este dia sem nenhuma energia festiva para ajudar.",
+    "Este é um dia de trabalho sem tema, ou seja, toda responsabilidade embaraçosamente ainda recai sobre você.",
+    "O calendário olhou para esta data e decidiu que definitivamente não ia ajudar.",
+    "Nem semla, nem arenque, nem euforia coletiva. Só o zumbido silencioso do escritório e um teclado sem inspiração.",
+    "É um daqueles dias de semana que fazem o café parecer o único adulto na sala.",
+    "O dia carece totalmente do impulso da tradição, o que é ousado dado o pouco que oferece além disso.",
+    "Algumas datas chegam com fanfarras. Esta entrou sorrateira carregando uma planilha Excel.",
+    "Não é um dia para lembrar. É um dia para administrar.",
+    "Tudo sobre este dia sinaliza 'continue em frente', o que não é poesia, mas, infelizmente, é um bom conselho.",
+    "Nenhuma tradição tocou este dia de semana. Ele fica completamente desprotegido contra reuniões de status e ar seco.",
+    "Esta data tem a mesma energia de uma reunião que poderia ser uma mensagem e que ainda continua.",
+    "Um dia padrão puro. Sem bandeiras, sem doces, só a usual batalha contra as 14h37.",
+    "O calendário enviou um dia de semana completamente vazio e aparentemente achou isso conteúdo suficiente.",
+    "Este é o dia em que você tem que criar sua própria faísca mesmo com tudo ao redor puxando para luzes fluorescentes e resignação.",
+    "Nada do patrimônio cultural pensou em aparecer hoje. É você, a cadeira e uma série de decisões moderadamente inspiradas.",
+    "Um dia comum de trabalho, sim. Mas de um jeito que até a impressora parece ter desistido um pouco antes.",
+    "Há dias para celebrar. Há dias para aguentar com café e silêncio cidadão. Este é o último.",
+    "O dia é tão ordinário que poderia ser a configuração padrão para todo o trimestre.",
+    "Todo o arranjo cheira a 'a gente faz depois do almoço', e aí ninguém faz nada digno depois do almoço também.",
+    "Nenhum tema menor sueco vai salvar a queda aqui. Você terá que pousar no cotidiano sozinho.",
+    "Esta é a pequena vitória administrativa: um dia que não perturba, não encanta, nem desculpa coisa alguma."
+  ],
+  "ordinaryWeekendBlurbs": [
+    "É fim de semana, mas nem um pouco brilhante. Só liberdade com um leve cheiro de tarefas no fundo.",
+    "Nenhum feriado governa este fim de semana. É você, um sofá e a vaga sensação de que algo deveria ser feito.",
+    "A data não oferece festa oficial, só a habitual paz de fim de semana misturada com uma culpa discreta.",
+    "Este é um dia de fim de semana completamente comum, o que significa que as ambições já começam a negociar por si mesmas.",
+    "Nenhuma tradição vai salvar o clima. É responsabilidade pessoal, que sempre parece desnecessária no fim de semana.",
+    "É um fim de semana sem suporte festivo. Você tem que se divertir com café, caminhadas e procrastinação de baixa intensidade.",
+    "Chegou um sábado ou domingo comum e basicamente só pede que você não se impressione demais.",
+    "O calendário não tem grandes planos para este fim de semana. Na verdade, espera que você mesmo resolva o resto.",
+    "Nenhuma fanfarra oficial hoje, só a calma sensação de fim de semana de que o tempo deveria ser usado com sabedoria, mas provavelmente não será.",
+    "É um daqueles dias de fim de semana que existem para mostrar que o tempo livre também pode ser meio vazio.",
+    "Sem semla, sem arenque, sem ritual nacional. Só o típico esforço sueco de fim de semana e uma geladeira com ambições pouco claras.",
+    "O dia tem paz mas não direção. Isso é, na verdade, bastante fim de semana em resumo.",
+    "Esta data carece totalmente de peso cerimonial e prefere apoiar-se fortemente em calças de moletom.",
+    "Fim de semana regular, ar regular, silêncio regular. Nada mal, só completamente sem festa.",
+    "O fim de semana está livre de tradições hoje, o que soa bem até você perceber que terá que inventar seu próprio significado.",
+    "Não há camadas históricas aqui, só a mistura contemporânea de café, scroll e estrutura adiada.",
+    "Um dia de fim de semana completamente neutro. A coisa mais próxima de uma celebração pode ser que ninguém queira algo de você.",
+    "É um daqueles dias em que se pode fazer exatamente o que quiser e portanto se deriva na paralisia leve das decisões.",
+    "Nenhuma razão oficial para se reunir, brindar ou assar. Só uma data livre com uma assustadora quantidade de responsabilidade pessoal.",
+    "O principal conteúdo do fim de semana hoje é que ele está acontecendo. Aparentemente, você deve ser grato por isso."
+  ],
+  "celebrationThemeAliases": {
+    "allahjartansdag": [
+      "Dia dos Namorados"
+    ],
+    "fettisdag": [
+      "Terça-feira Gorda",
+      "Dia do Semla"
+    ],
+    "paskafton": [
+      "Véspera de Páscoa"
+    ],
+    "vaffeldagen": [
+      "Dia da Waffle"
+    ],
+    "valborg": [
+      "Noite de Walpurgis",
+      "Véspera de Valborg"
+    ],
+    "nationaldagen": [
+      "Dia Nacional"
+    ],
+    "midsommarafton": [
+      "Véspera de Midsommar"
+    ],
+    "kanelbullensdag": [
+      "Dia do Pão de Canela"
+    ],
+    "kladdkakansdag": [
+      "Dia do Bolo de Chocolate Grudento"
+    ],
+    "surstrommingspremiar": [
+      "Estreia do Surströmming"
+    ],
+    "lucia": [
+      "Lucia",
+      "Dia de Santa Lúcia"
+    ],
+    "julafton": [
+      "Véspera de Natal"
+    ],
+    "nyarsafton": [
+      "Véspera de Ano Novo"
+    ],
+    "kottonsdag": [
+      "Quarta da Carne"
+    ],
+    "fisktorsdag": [
+      "Quinta do Peixe"
+    ],
+    "marmeladfredag": [
+      "Sexta da Marmelada"
+    ]
+  },
+  "celebrations": {
+    "allahjartansdag": {
+      "title": "Dia dos Namorados, pelo amor de Deus",
+      "subtitle": "Um toque de congelamento no tom já é mais do que suficiente.",
+      "kicker": "Romance no Escritório",
+      "blurbs": [
+        "Um dia perfeitamente razoável para açúcar, flerte desajeitado no Teams e corações na copa.",
+        "Espalhe um pouco de calor, escreva algo legal e não finja que não quer chocolate também.",
+        "Amor no trabalho geralmente significa café, gentileza e nenhuma reunião marcada às 16h30.",
+        "É o dia em que um 'bom fim de semana' meio desanimado ganha cerca de dois por cento a mais de emoção.",
+        "Nenhum gesto grandioso é necessário. Uma flor, um pãozinho ou um tom decente vão mais longe do que o usual.",
+        "O Dia dos Namorados no trabalho é principalmente sobre ser marginalmente menos frio que o habitual.",
+        "Não é a Olimpíada do romance. É só um lembrete de que você pode ser gentil por um tempo.",
+        "O dia exige pouco: um pouco de açúcar, cuidado e zero cinismo antes do almoço.",
+        "Um dia perfeito para responder calorosamente a uma mensagem e então se sentir realizado como humano.",
+        "O Dia dos Namorados no escritório é basicamente deixar a ironia quietinha em uma ou duas reuniões.",
+        "Se alguém oferece chocolate hoje, de repente isso conta como inteligência emocional.",
+        "É a data em que até o colega mais sisudo tenta parecer um pouco humano.",
+        "O dia é para charme discreto, açúcar estratégico e absolutamente nada de agressão passiva."
+      ],
+      "theme": "jam"
+    },
+    "fettisdag": {
+      "title": "Terça-feira Gorda. Agora é deixar ir.",
+      "subtitle": "O pãozinho tomou conta e o RH não consegue impedir.",
+      "kicker": "Pasta de Amêndoa e Colapso",
+      "alt": "Terça-feira Gorda",
+      "blurbs": [
+        "Semlor são permitidos. Levar só um é quase uma falha de caráter.",
+        "Chantilly no rosto, pasta de amêndoa na alma e produtividade derretendo. Do jeito que deveria ser.",
+        "Este é o dia em que o almoço é substituído por um pãozinho e ninguém ousa fingir que é estranho.",
+        "Todo item na agenda após as 13h deveria ser substituído por passividade relacionada ao semla.",
+        "Há dias para disciplina. Terça-feira Gorda não é um deles.",
+        "Pasta de amêndoa é agora uma questão do ambiente de trabalho e eu não vou debater isso.",
+        "O semla tomou o comando. O resto de nós apenas acompanha e concorda com a cabeça.",
+        "Ninguém vai lembrar o que foi dito na reunião, mas vão lembrar quem pegou o último semla.",
+        "A coisa mais profissional que você pode fazer hoje é aceitar que o dia pertence ao pãozinho.",
+        "Terça-feira Gorda é um raro dia em que excesso de chantilly na verdade fortalece o negócio.",
+        "Toda disciplina ainda existente hoje é puro teatro e deve ser tratada assim.",
+        "Se alguém sugerir fruta no fika na Terça-feira Gorda, isso deve ser documentado como desvio de valores.",
+        "É difícil levar a responsabilidade a sério quando a pasta de amêndoa já tomou o controle.",
+        "O dia tem só dois desfechos realistas: semla agora ou semla em breve."
+      ],
+      "primaryImage": "/semla-1.webp",
+      "secondaryImage": "/520321381_10234349504453830_7039877959207209298_n.jpg",
+      "theme": "cream"
+    },
+    "paskafton": {
+      "title": "Véspera de Páscoa. Arenque, doces e liberdade total.",
+      "subtitle": "Nenhuma supervisão adulta sobrevive a ovos e guloseimas.",
+      "kicker": "Trégua Movida a Ovo",
+      "blurbs": [
+        "A Véspera de Páscoa é o dia em que ovos, doces e penas estranhas sustentam a sociedade por um tempo.",
+        "É um feriado para arenque, cor e baixa ambição, o que na verdade parece muito saudável.",
+        "A Véspera de Páscoa permite que adultos legitimizem montanhas de doces dizendo ‘é tradição’ e sigam em frente.",
+        "É perfeitamente razoável deixar o fim de semana cheiroso de ovos, café e confusão social leve hoje.",
+        "A Véspera de Páscoa é o jeito do calendário dizer que estrutura é superestimada quando chocolate e folga se juntam.",
+        "Ninguém acredita em eficiência aqui. É só ovo, açúcar e aceitação silenciosa da situação.",
+        "A Véspera de Páscoa é um feriado baseado em adultos aceitando penas como estratégia de decoração.",
+        "O dia parece que alguém deixou a tigela de doces comandar o projeto e, honestamente, funciona.",
+        "É uma data para mesas longas, consumo errático de chocolate e completa falta de estrutura sóbria.",
+        "A Véspera de Páscoa não faz questão de dignidade. Fica satisfeita com arenque e choque açucarado."
+      ],
+      "visualBadge": "Modo Páscoa",
+      "visualTitle": "Ovos, Penas e Ausência Tática",
+      "visualBody": "Alguns dias exigem mais rigor. A Véspera de Páscoa se contenta com cor, açúcar e ninguém tentando parecer adulto desnecessariamente.",
+      "primaryImage": "/images/paskafton.jpg",
+      "theme": "gold"
+    },
+    "vaffeldagen": {
+      "title": "O Dia da Waffle Assumiu o Controle",
+      "subtitle": "A crocância venceu a batalha contra o autocontrole logo cedo.",
+      "kicker": "Crocância Antes do Foco",
+      "blurbs": [
+        "É o tipo de dia em que chantilly de repente parece planejamento.",
+        "Crocante, quente e totalmente incompatível com reuniões secas. Lindo.",
+        "Se alguém diz que waffles são só sobremesa, falta visão.",
+        "É um dia para geleia, chantilly e total falta de vergonha.",
+        "A prensa de waffles tem mais liderança que muitos grupos de direção.",
+        "A textura importa mais que os KPIs agora, e temos que lidar com isso.",
+        "Estala um pouco, gruda um pouco e melhora o clima mais que qualquer kickoff.",
+        "O Dia da Waffle mostra de novo que manteiga e disciplina não andam juntas.",
+        "É o dia em que a geleia ganha mais credibilidade que a maioria das atualizações de status.",
+        "Se aparece waffle antes do almoço, é só sinal de bom julgamento operacional.",
+        "O Dia da Waffle é tão claramente certo que dá até desconfiança.",
+        "Crocância faz mais pelo moral que um PowerPoint estratégico cheio de verbosidade."
+      ],
+      "visualBadge": "Modo Crocância",
+      "visualTitle": "Chantilly Antes da Gravidade",
+      "visualBody": "Uma vez que a prensa de waffles tem o mandato, não adianta fingir que o dia é sobre outra coisa.",
+      "primaryImage": "/images/vaffeldagen.jpg",
+      "theme": "gold"
+    },
+    "valborg": {
+      "title": "Noite de Walpurgis, aka primavera com juízo ruim",
+      "subtitle": "A fogueira é quente. O planejamento, não.",
+      "kicker": "30 de abril",
+      "blurbs": [
+        "Cheira a primavera, fogueiras e uma decisão coletiva de que a produtividade pode esperar até amanhã.",
+        "30 de abril é para sentimentos de primavera, uma jaqueta leve no tempo precoce e uma agenda meio vergonhosa.",
+        "Tecnicamente, você ainda está trabalhando, mas sua alma já está perto da fogueira com café na mão.",
+        "Tudo depois do almoço é basicamente uma batalha logística entre o calendário e os sentimentos de primavera.",
+        "É dia em que ninguém realmente acredita no trabalho, mas todos continuam digitando no Slack como se acreditassem.",
+        "A fogueira chama, o pólen ataca, e o senso de responsabilidade perde terreno minuto a minuto.",
+        "A Noite de Walpurgis é basicamente uma admissão nacional de que abril não pode terminar sóbrio na alma.",
+        "Este é o 30 de abril. A agenda permanece, mas o respeito por ela sumiu.",
+        "Noite de Walpurgis é quando o país todo decide que uma fogueira é planejamento suficiente.",
+        "Nenhum adulto parece totalmente sensato na Noite de Walpurgis, e essa é parte da graça.",
+        "O sentimento de primavera está forte, o juízo vacilante, e estranhamente parece certo.",
+        "Toda lógica após o meio do expediente deve ser tratada como sugestiva, não mandatória."
+      ],
+      "primaryImage": "/images/valborg.jpg",
+      "theme": "ember"
+    },
+    "nationaldagen": {
+      "title": "Dia Nacional, bem, vamos celebrar então",
+      "subtitle": "Dignidade azul e amarela com claro potencial para fika.",
+      "kicker": "Bandeira e Fika",
+      "blurbs": [
+        "Um pouco de azul, um pouco de amarelo e muito patriotismo meia-boca com café.",
+        "É o dia em que uma bandeira no canto de repente conta como clima.",
+        "Você celebra a Suécia como celebra um colega confiável: silenciosamente, mas com respeito.",
+        "Não é o feriado mais animado, mas oferece bandeiras e uma desculpa razoável para relaxar.",
+        "O Dia Nacional é como o país em si: relativamente arrumado, meio sério e melhor com fika.",
+        "Nem todo mundo canta o hino, mas todo mundo aceita que o ritmo desacelere um pouco.",
+        "O dia não exige muito. Só dignidade, um pouco de azul e amarelo e reclamações mínimas.",
+        "Um bom dia para apreciar transporte público funcional, bem-estar decente e doces.",
+        "O Dia Nacional nunca é maluco, mas é confiável, e isso é mais sueco do que se pensa.",
+        "É uma data que pede bandeira, café e confiança silenciosa. Nem mais, nem menos.",
+        "O tecido azul e amarelo exerce uma autoridade estranhamente alta sobre o clima hoje.",
+        "Ninguém precisa ser patriota em tempo integral. Basta ser temporariamente gentil com o país."
+      ],
+      "primaryImage": "/images/nationaldagen.jpg",
+      "theme": "forest"
+    },
+    "midsommarafton": {
+      "title": "Véspera de Midsommar. Ninguém está realmente trabalhando.",
+      "subtitle": "A resposta mental de fora do escritório ativa antes do almoço.",
+      "kicker": "Ausência Movida a Arenque",
+      "blurbs": [
+        "Tudo depois do almoço é cosmético. Todo mundo sabe disso. Ninguém fala em voz alta.",
+        "Esta é a sexta em que a resposta mental de fora do escritório ativa muito antes do computador desligar.",
+        "Arenque, morangos e um calendário cheio de mentiras sobre disponibilidade. Perfeição sueca.",
+        "Não sobrou produtividade significativa aqui. Só coroas de flores em incubação mental.",
+        "A Véspera de Midsommar é o dia em que até o teclado quer desligar cedo.",
+        "O Excel está oficialmente aberto, mas a nação já está no gramado.",
+        "Você pode chamar de dia de trabalho se quiser, mas isso não vai torná-lo verdade.",
+        "O arenque está planejado, os morangos gelados, e todas as ambições estacionadas.",
+        "A única entrega realista hoje é as pessoas saírem na hora certa.",
+        "A Véspera de Midsommar tem a mesma relação com o trabalho que a chuva tem com decorações de papel: formalmente possível, praticamente impossível.",
+        "É o dia em que calendários ficam abertos por pura superstição.",
+        "Ninguém quer ser quem finge estar disponível depois do almoço e realmente pensar nisso.",
+        "Tecnicamente a sociedade continua, mas tudo que importa já está numa caixa térmica em algum lugar."
+      ],
+      "primaryImage": "/images/midsommarafton.jpg",
+      "theme": "forest"
+    },
+    "kanelbullensdag": {
+      "title": "Dia do Pão de Canela Sustenta a Nação",
+      "subtitle": "Cardamomo, culpa e pressão colegial em equilíbrio fino.",
+      "kicker": "Fika como Dever",
+      "blurbs": [
+        "A celebração mais compatível com o escritório que a Suécia já inventou. Fika é praticamente obrigatório.",
+        "Não se deixe enganar: o pão de canela não é um doce hoje, é uma responsabilidade.",
+        "Quem chega sem pãozinho hoje vai conviver com olhares. Duro, mas justo.",
+        "Esta é a liturgia máxima da vida profissional: café, pão, migalhas no teclado.",
+        "Se existe uma religião estatal sueca, ela cheira a cardamomo hoje.",
+        "O Dia do Pão de Canela une as pessoas por meio de manteiga, açúcar e pressão moral discreta.",
+        "Não há apoio corporativo mais forte que um pãozinho morno no lado certo do almoço.",
+        "Ninguém quer ser a pessoa que 'não é muito de pão' hoje. Isso seria suicídio social.",
+        "O dia é medido não em horas, mas pelo número de pães misteriosamente desaparecidos da cozinha.",
+        "Esse é o único feriado em que migalhas no teclado parecem dever patriótico.",
+        "Você nem precisa estar com fome. Basta entender a situação e pegar um pãozinho mesmo assim.",
+        "Poucos sinais sociais são tão fortes quanto aparecer com pães fresquinhos só hoje.",
+        "O Dia do Pão de Canela deixa o país um pouco mais mole nas bordas e visivelmente mais amanteigado."
+      ],
+      "primaryImage": "/images/kanelbullensdag.jpg",
+      "theme": "gold"
+    },
+    "kladdkakansdag": {
+      "title": "Dia do Bolo de Chocolate Grudento, estrutura odeia isso",
+      "subtitle": "O meio deveria desistir. Esse é o ponto todo.",
+      "kicker": "Grudento mas Certo",
+      "blurbs": [
+        "Se alguém trouxer bolo seco hoje, deveria ficar meio envergonhado.",
+        "Bolo de chocolate grudento prova que estrutura nem sempre é o bem maior.",
+        "Deve ser grudento, um pouco demais de creme e zero autodepreciação. Ponto.",
+        "Um bolo firme hoje seria falha de caráter e possivelmente questão de RH.",
+        "O Dia do Bolo de Chocolate Grudento é um argumento contra o perfeccionismo servido com chantilly.",
+        "O meio deveria desistir. As bordas apenas seguram justo o suficiente. Como o resto de nós.",
+        "É o dia em que pouco batido se torna virtude e ninguém se preocupa em fingir o contrário.",
+        "O bolo deve ser grudento, a porção absurda e a culpa adiada.",
+        "O Dia do Bolo de Chocolate Grudento prova de novo que controle é superestimado quando o chocolate fala livremente.",
+        "Se o bolo mantém a forma demais, alguém entendeu a missão quase filosoficamente errado.",
+        "É o equivalente da sobremesa a dizer ‘bom o bastante’ com convicção total.",
+        "Bolo de chocolate grudento tem a rara qualidade de melhorar quanto menos disciplina teve no fim."
+      ],
+      "primaryImage": "/images/kladdkakansdag.jpg",
+      "theme": "jam"
+    },
+    "surstrommingspremiar": {
+      "title": "Estreia do Surströmming. Nossas desculpas.",
+      "subtitle": "A ventilação precisa carregar mais responsabilidade do que o normal.",
+      "kicker": "Terceira Quinta de Agosto",
+      "blurbs": [
+        "Essa é a tradição que cheira mais a determinação do que a bom gosto.",
+        "Em algum lugar uma lata é aberta e a moral do ambiente toma um dano físico.",
+        "Surströmming é o que acontece quando o patrimônio cultural recusa críticas.",
+        "É o dia em que a ventilação de repente vira infraestrutura crítica.",
+        "Ninguém acha o cheiro bom. Alguns só acham o dever maior.",
+        "A estreia do Surströmming é um teste de amizade, varandas e vizinhos próximos.",
+        "Esta celebração se baseia em três coisas: tradição, teimosia e um limite de cheiro absolutamente irracional.",
+        "Você não precisa entender. Só aceitar que alguém no país abre uma lata de propósito.",
+        "O dia cheira fortemente a história, sal e a capacidade humana de romantizar ideias ruins.",
+        "A estreia do Surströmming é um exercício nacional de defender o indefensável com a cabeça erguida.",
+        "É a data em que ‘é um gosto adquirido’ tem que esforçar tanto que quase desaba.",
+        "Ninguém abre uma lata de surströmming por acidente. Sempre é intencional e geralmente um aviso.",
+        "A tradição é tão forte que o cheiro aparentemente teve que aceitar ser informação secundária."
+      ],
+      "primaryImage": "/images/surstrommingspremiar.jpg",
+      "theme": "midnight"
+    },
+    "lucia": {
+      "title": "Lucia no Inferno das Luzes do Escritório",
+      "subtitle": "Açafrão, privação de sono e uma forte necessidade de café.",
+      "kicker": "Açafrão Contra a Escuridão",
+      "blurbs": [
+        "Biscoito de gengibre, café e uma escuridão matinal fraca que ninguém pediu, mas todo mundo reconhece.",
+        "É o dia em que velas parecem mais uma medida de segurança do trabalho que clima.",
+        "Um pouco de açafrão, uma privação de sono e a esperança desesperada de que as férias de Natal estejam próximas.",
+        "Lucia é a última gaslighting da escuridão antes do Natal dominar completamente.",
+        "Há lussekatter, canto calmo e uma necessidade coletiva de cafeína.",
+        "Todo mundo finge ser calmo e reverente até alguém abrir o café e o escritório inteiro acordar.",
+        "Não é só tradição. É uma forma de sobreviver a dezembro com alguma dignidade.",
+        "As velas tremulam, o açafrão funciona e a escuridão temporariamente recua.",
+        "Lucia é a única manhã do ano em que o pessoal aceita cera como estratégia.",
+        "É um feriado onde canção, açafrão e privação de sono formam uma aliança incomumente estável.",
+        "O escritório fica estranhamente reverente até a primeira garrafa térmica de café abrir e tudo voltar ao normal.",
+        "Lucia deixa dezembro menos brutal exatamente na medida que café e doces permitem."
+      ],
+      "primaryImage": "/images/lucia.jpg",
+      "theme": "cream"
+    },
+    "julafton": {
+      "title": "Véspera de Natal. Ninguém age normal mais.",
+      "subtitle": "Tradições, estresse e lógica do vinho quente na desordem perfeita.",
+      "kicker": "Kalle, Café e Regressão Coletiva",
+      "blurbs": [
+        "Véspera de Natal é o tipo de dia em que horários são substituídos pela lógica do vinho quente e ninguém tem energia para reclamar.",
+        "É perfeitamente normal que o dia inteiro seja dominado por café, jantar natalino e exatamente quando alguém acha que o Kalle deve começar.",
+        "A Véspera de Natal transforma pessoas razoáveis em operadores de tradição com fortes opiniões sobre presunto e velas.",
+        "É a data em que sofás, papel de presente e interações familiares tensas carregam a nação.",
+        "Véspera de Natal funciona porque todos aceitam que lógica, pontualidade e autoconsciência tiram folga.",
+        "Você pode chamar de feriado. Também pode chamar de colapso organizado com açafrão na lateral.",
+        "Nada é particularmente eficiente, mas tudo é muito carregado, o que praticamente define o Natal.",
+        "Véspera de Natal é quando a agenda é substituída por tradições que ninguém sabe de onde vieram mas todos temem quebrar.",
+        "Não há uma pessoa calma na véspera de Natal, só graus variados de estresse bem vestido.",
+        "É a data em que café, logística da cozinha e diplomacia familiar sustentam todo o contrato social.",
+        "O Natal funciona por uma mistura de nostalgia, açúcar e pessoas que decidiram não comentar tudo que pensam."
+      ],
+      "primaryImage": "carltonChristmasGif",
+      "visualBadge": "Modo Natal",
+      "visualTitle": "Modo Sofá com Alta Densidade Simbólica",
+      "visualBody": "Véspera de Natal não precisa de imagens para parecer cheia. Já está sobrecarregada de rituais, cheiros e gente tentando se comportar.",
+      "theme": "cream"
+    },
+    "nyarsafton": {
+      "title": "Véspera de Ano Novo. Ambição encontra fogos de artifício.",
+      "subtitle": "Confiança exagerada, espumante e relação cara com a meia-noite.",
+      "kicker": "Meia-noite como Projeto",
+      "blurbs": [
+        "Véspera de Ano Novo é o ritual anual em que as pessoas fingem que a meia-noite melhora automaticamente o caráter.",
+        "É a noite em que espumante, promessas e otimismo meio superestimado devem coexistir na mesma sala.",
+        "Véspera de Ano Novo funciona melhor se ninguém fizer muitas perguntas sobre planejamento, sapatos ou amanhã.",
+        "Tudo culmina em alguns minutos de barulho, luz e decisão coletiva de que o próximo ano provavelmente será melhor.",
+        "Véspera de Ano Novo é a forma mais cara do calendário dizer que o tempo passa, esteja você pronto ou não.",
+        "Você deve ser festivo, esperançoso e meio frio ao mesmo tempo. Um arranjo estranho, mas estabelecido.",
+        "Véspera de Ano Novo é a noite em que todo mundo finge que o espumante automaticamente transforma incerteza em visão.",
+        "É uma data que exige contagem regressiva, confiança exagerada e sapatos que ninguém consegue realmente aguentar.",
+        "Pode chamar de recomeço. O calendário vai mostrar que você é a mesma pessoa amanhã.",
+        "Véspera de Ano Novo vive da combinação de ambições caras e fogos bem curtos."
+      ],
+      "visualBadge": "Meia-noite",
+      "visualTitle": "Brilho, Promessas e Confiança Controlada",
+      "visualBody": "Véspera de Ano Novo tem seu próprio cenário. O único requisito real é alguém fazendo a contagem regressiva e ninguém pirando cedo demais.",
+      "primaryImage": "/images/nyarsafton.jpg",
+      "theme": "midnight"
+    },
+    "kottonsdag": {
+      "title": "Quarta da Carne",
+      "subtitle": "Sem perguntas. Só proteína e finesse desligada.",
+      "kicker": "Proteína Contra a Semana",
+      "alt": "Quarta da Carne",
+      "blurbs": [
+        "Corrida da carne no meio da semana. Não vai ser bonito, mas vai ser algo.",
+        "Quarta exige proteína, teimosia e sutileza mínima.",
+        "Não é elegante. É robusto, e às vezes isso basta.",
+        "A semana perdeu a finesse agora. O que resta é carne e pura resistência.",
+        "Quarta da Carne não é filosofia. É estado mental para sobreviver à quarta.",
+        "Ninguém pediu graça. É só energia, sal e aceitação rígida da situação.",
+        "Meio da semana precisa de algo robusto. Hoje a resposta foi carne, óbvio.",
+        "É direto, gorduroso e funcional. Do jeito que uma quarta competente deveria ser.",
+        "Carne pode não ser a resposta para tudo, mas é para este dia.",
+        "É o jeito da quarta dizer que salada foi ideia ingênua desde o começo.",
+        "Quarta da Carne nunca se disse sofisticada e é por isso que inspira confiança.",
+        "Meio da semana precisa de algo que morda de volta. Hoje foi carne.",
+        "Quarta da Carne faz o que está no prato parecer coisa de enfeite.",
+        "Não é dia para decisões leves ou fontes de proteína aéreas.",
+        "Quarta parou de pedir desculpas e pediu mais churrasqueira.",
+        "Meio da semana parece menos ideia e mais uma frigideira de grelha hoje.",
+        "O único refinado na Quarta da Carne é o quanto pouco ela tenta ser refinada."
+      ],
+      "primaryImage": "/meatwednesday.gif",
+      "theme": "ember"
+    },
+    "fisktorsdag": {
+      "title": "Quinta do Peixe",
+      "subtitle": "Segurando a civilização com endro e teimosia institucional.",
+      "kicker": "Rotina Triunfa de Novo",
+      "alt": "Quinta do Peixe",
+      "blurbs": [
+        "Quintas aparentemente querem ter gosto de refeitório escolar e tradição. Respeite o ofício.",
+        "Hoje peixe. Amanhã senso. Assim as nações se mantêm há séculos.",
+        "Um pouco de limão, um pouco de endro e muita rotina aceita coletivamente.",
+        "Há algo reconfortante na quinta ainda acreditar no peixe como modelo social.",
+        "Quinta do Peixe é o jeito da tradição dizer que variedade é superestimada.",
+        "Pode protestar, mas no fundo todo mundo sabe que a quinta já escolheu o cardápio.",
+        "Cheira um pouco a mar, um pouco a memórias da escola e bastante a estrutura sueca do dia a dia.",
+        "Peixe pode não ser sexy, mas é confiável, e as quintas valorizam isso.",
+        "Quinta não quer surpreender. Quer servir peixe e seguir com a vida.",
+        "Quinta do Peixe não está aqui para impressionar. Está para criar ordem com bacalhau.",
+        "É dia em que empanado e contrato social parecem parentes próximos.",
+        "Peixe na quinta não é inovação. É infraestrutura.",
+        "Quinta confia mais no peixe empanado que em muitas ideias modernas e você tem que respeitar.",
+        "Esta é a vida cotidiana sueca em sua forma mais pura: meio pálida, meio salgada e estranhamente reconfortante.",
+        "Quinta do Peixe segura a semana sem fingir ser mais divertida do que é.",
+        "Há uma estabilidade particular na quinta ainda achando que peixe resolve muita coisa.",
+        "O gomo de limão fica lá como se realmente pretenda dar elegância ao conjunto. Corajoso."
+      ],
+      "primaryImage": "/fisktorsdag-fixed-composite.png",
+      "theme": "midnight"
+    },
+    "marmeladfredag": {
+      "title": "Sexta da Marmelada",
+      "subtitle": "A semana desistiu primeiro, mas a doçura disfarça.",
+      "kicker": "Açúcar com Dignidade",
+      "alt": "Carlton",
+      "blurbs": [
+        "A semana acabou. Agora só resta fingir que tudo está feito.",
+        "A sexta é carregada por açúcar, pânico leve e um tom profissional no último minuto.",
+        "É hora de fechar o laptop com dignidade e abrir o fim de semana com marmelada nos olhos.",
+        "Tudo que ficou incompleto agora tem que virar algo que parece terminado no chat.",
+        "Sexta da Marmelada é a cor na linha tênue entre responsabilidade e fuga.",
+        "Esta é a sexta em que você resume a semana com doçura por fora e caos por dentro.",
+        "O fim de semana está na porta. O computador zune. A marmelada sussurra que provavelmente vai dar certo na segunda.",
+        "Você não precisa estar pronto. Só parecer que estará em breve.",
+        "Há uma dignidade de sexta que só surge quando se desiste com estilo.",
+        "Agora é encerrar a semana com a mesma energia de uma sobremesa gasta, mas funcionando.",
+        "Sexta da Marmelada é quando o profissionalismo aparece com a camisa grudenta e ainda consegue.",
+        "Está tudo um pouco doce demais, um pouco tarde demais e justo convincente para carregar uma sexta.",
+        "A semana não morreu heroicamente. Morreu grudenta e com tom bom.",
+        "Sexta da Marmelada é o jeito da sexta implorar por misericórdia com o açúcar já servido.",
+        "Este é o dia em que você encerra a semana com a mesma integridade de um pote de geleia meio aberto.",
+        "Só resta deixar a conversa doce esconder o quanto pouco foi feito de verdade.",
+        "A sexta quer acabar com estilo, mas se contenta com marmelada e tom razoável.",
+        "Sexta da Marmelada é quando o fim de semana já se vê na porta e a consciência tenta segurar com açúcar."
+      ],
+      "primaryImage": "carltonGif",
+      "theme": "jam"
+    }
+  }
+}

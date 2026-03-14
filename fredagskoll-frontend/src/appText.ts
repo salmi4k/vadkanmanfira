@@ -21,6 +21,16 @@ export const ordinaryThemeDayTitleEndingsByLocale: Record<Locale, string[]> = {
     "We'll take it and move on.",
     "It's still better than pure emptiness.",
   ],
+  'pt-BR': [
+    'Vai ter que sustentar o dia, então.',
+    'Pelo menos já existe algo em que pôr a culpa.',
+    'O escritório vai simplesmente ter que aceitar.',
+    'É mais do que o calendário costuma oferecer.',
+    'Hoje não vai ficar melhor do que isso.',
+    'Serve como desculpa profissional do dia.',
+    'A gente aceita e segue em frente.',
+    'Ainda é melhor do que vazio absoluto.',
+  ],
 };
 
 export const ordinaryThemeDayCardNotesByLocale: Record<Locale, string[]> = {
@@ -44,11 +54,81 @@ export const ordinaryThemeDayCardNotesByLocale: Record<Locale, string[]> = {
     'Someone took the trouble to give the day some content, and it would be petty not to build on that.',
     "This will do as a piece of public initiative. Not majestic, but clearly better than calendar desert.",
   ],
+  'pt-BR': [
+    'Não é oficial, mas claramente gente suficiente resolveu que essa data merecia algum conteúdo.',
+    'O calendário trabalha com o material que tem, e hoje saiu algo surpreendentemente aproveitável.',
+    'Não é exatamente assunto de Estado, mas basta para a data parecer ligeiramente mais importante do que parecia no início.',
+    'Nenhum governo assina isso, mas alguém ao menos teve o bom senso de dar algum corpo ao dia.',
+    'É nichado, meio frouxo e ainda assim suficiente para dar alguma espinha dorsal à data.',
+    'Oficialmente é pouco. Extraoficialmente já basta para poupar o dia da humilhação completa.',
+    'Alguém se deu ao trabalho de dar algum conteúdo ao dia, e seria mesquinho não aproveitar isso.',
+    'Serve como iniciativa popular. Nada majestoso, mas nitidamente melhor do que um deserto de calendário.',
+  ],
 };
 
-export const appText = {
+export const appText: Record<
+  Locale,
+  {
+    languageMenuLabel: string;
+    darkMode: string;
+    lightMode: string;
+    eyebrow: string;
+    title: string;
+    lede: string;
+    pickDate: string;
+    nameday: string;
+    namedayLoading: string;
+    namedayError: string;
+    namedayNone: string;
+    weeklyHoliday: string;
+    nowCard: string;
+    upcoming: string;
+    collapseShow: string;
+    collapseHide: string;
+    mobileWeeklyHolidaySummary: string;
+    mobileSeasonSummary: (count: number) => string;
+    mobileUpcomingSummary: (count: number) => string;
+    mobileExtraThemeDaysSummary: (count: number) => string;
+    mobileWorldDaysSummary: (count: number) => string;
+    worldNationalDays: string;
+    worldNationalDaysBadge: string;
+    worldNationalDaysMore: (count: number) => string;
+    buildInfoLabel: string;
+    imageCredits: string;
+    themeDaySource: string;
+    previousDay: string;
+    nextDay: string;
+    reroll: string;
+    unofficialThemeDay: string;
+    unofficialThemeDays: (count: number) => string;
+    noOfficialEnergy: string;
+    ordinaryTitle: string;
+    extraThemeDays: string;
+    asIfThatWasNotEnough: (leadDay: string, days: string) => string;
+    noImageBadge: string;
+    noImageTitle: string;
+    noImageBody: string;
+    todayThemeDays: string;
+    noHit: string;
+    ordinaryThemeDayLead: (days: string, note: string) => string;
+    ordinaryNoHitBody: string;
+    close: string;
+    creditsEyebrow: string;
+    creditsTitle: string;
+    creditsLead: string;
+    creator: string;
+    license: string;
+    source: string;
+    commonsFilePage: string;
+    upcomingTomorrow: string;
+    upcomingInDays: (days: number) => string;
+    seasonLabel: string;
+    dateNavigationAria: string;
+    untilLabel: string;
+  }
+> = {
   sv: {
-    languageButton: 'English',
+    languageMenuLabel: 'Språk',
     darkMode: 'Mörkt läge',
     lightMode: 'Ljust läge',
     eyebrow: 'Svensk kalenderlogik',
@@ -111,9 +191,11 @@ export const appText = {
     upcomingTomorrow: 'I morgon',
     upcomingInDays: (days: number) => `Om ${days} dagar`,
     seasonLabel: 'Säsong',
+    dateNavigationAria: 'Datumnavigering',
+    untilLabel: 'till',
   },
   en: {
-    languageButton: 'Svenska',
+    languageMenuLabel: 'Language',
     darkMode: 'Dark mode',
     lightMode: 'Light mode',
     eyebrow: 'Swedish calendar logic',
@@ -126,7 +208,7 @@ export const appText = {
     namedayError:
       'The name day lookup failed for now. The internet, naturally, also has to feel like cooperating.',
     namedayNone: 'No registered name day for this date.',
-    weeklyHoliday: "This Week's Holiday",
+    weeklyHoliday: "This week's holiday",
     nowCard: 'Season in progress',
     upcoming: 'Coming up',
     collapseShow: 'Show',
@@ -176,5 +258,73 @@ export const appText = {
     upcomingTomorrow: 'Tomorrow',
     upcomingInDays: (days: number) => `In ${days} days`,
     seasonLabel: 'Season',
+    dateNavigationAria: 'Date navigation',
+    untilLabel: 'until',
   },
-} as const;
+  'pt-BR': {
+    languageMenuLabel: 'Idioma',
+    darkMode: 'Modo escuro',
+    lightMode: 'Modo claro',
+    eyebrow: 'Lógica sueca de calendário',
+    title: 'O que se pode comemorar?',
+    lede:
+      'Escolha uma data e deixe o app decidir se o dia merece bandeiras, doces, solenidade ou apenas um comentário seco sobre as limitações do calendário.',
+    pickDate: 'Escolher data',
+    nameday: 'Nome do dia',
+    namedayLoading: 'Carregando nome do dia pela API aberta.',
+    namedayError:
+      'Não foi possível buscar o nome do dia agora. A internet, naturalmente, também precisa querer colaborar.',
+    namedayNone: 'Nenhum nome do dia registrado para esta data.',
+    weeklyHoliday: 'Feriado da semana',
+    nowCard: 'Temporada em curso',
+    upcoming: 'A caminho',
+    collapseShow: 'Mostrar',
+    collapseHide: 'Ocultar',
+    mobileWeeklyHolidaySummary: 'Feriado da semana',
+    mobileSeasonSummary: (count: number) => `Temporadas agora${count > 1 ? ` (${count})` : ''}`,
+    mobileUpcomingSummary: (count: number) => `A caminho${count > 1 ? ` (${count})` : ''}`,
+    mobileExtraThemeDaysSummary: (count: number) =>
+      `Mais datas temáticas${count > 1 ? ` (${count})` : ''}`,
+    mobileWorldDaysSummary: (count: number) =>
+      `Datas nacionais pelo mundo${count > 1 ? ` (${count})` : ''}`,
+    worldNationalDays: 'Datas nacionais pelo mundo hoje',
+    worldNationalDaysBadge: 'Também hoje',
+    worldNationalDaysMore: (count: number) => `E mais ${count}.`,
+    buildInfoLabel: 'Build',
+    imageCredits: 'Créditos das imagens',
+    themeDaySource: 'Datas temáticas inspiradas em temadagar.se',
+    previousDay: 'Dia anterior',
+    nextDay: 'Próximo dia',
+    reroll: 'Nova desculpa',
+    unofficialThemeDay: 'Data temática não oficial',
+    unofficialThemeDays: (count: number) => `Datas temáticas não oficiais x${count}`,
+    noOfficialEnergy: 'Nenhum senso oficial de ocasião',
+    ordinaryTitle: 'Só um dia comum. Triste, mas é isso.',
+    extraThemeDays: 'Mais datas temáticas hoje',
+    asIfThatWasNotEnough: (leadDay: string, days: string) =>
+      `Como se ${leadDay.toLowerCase()} não bastasse, ${days} também está rondando a data ao fundo.`,
+    noImageBadge: 'Zona sem imagem',
+    noImageTitle: 'Essa comemoração vai ter que se sustentar sem prova fotográfica.',
+    noImageBody: 'Ainda não existe imagem, mas pelo menos o dia não precisa mais ficar parecendo vazio.',
+    todayThemeDays: 'Datas temáticas de hoje',
+    noHit: 'Nenhum acerto',
+    ordinaryThemeDayLead: (days: string, note: string) =>
+      `O motor de datas temáticas encontrou ${days}. ${note}`,
+    ordinaryNoHitBody:
+      'A data foi verificada. O sistema não encontrou semla, arenque, obrigação de bolo nem desculpa coletiva para perder o foco.',
+    close: 'Fechar',
+    creditsEyebrow: 'Créditos das imagens',
+    creditsTitle: 'Créditos do Wikimedia Commons',
+    creditsLead:
+      'As imagens baixadas do Commons são creditadas publicamente aqui com autor, página de origem e licença. As versões no app foram reduzidas.',
+    creator: 'Autor',
+    license: 'Licença',
+    source: 'Fonte',
+    commonsFilePage: 'Página do arquivo no Commons',
+    upcomingTomorrow: 'Amanhã',
+    upcomingInDays: (days: number) => `Em ${days} dias`,
+    seasonLabel: 'Temporada',
+    dateNavigationAria: 'Navegação de datas',
+    untilLabel: 'até',
+  },
+};
