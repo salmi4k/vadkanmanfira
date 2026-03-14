@@ -379,6 +379,48 @@
   background: rgba(255, 255, 255, 0.05);
 }
 
+.upcoming-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.upcoming-header .eyebrow {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding-top: 0.04rem;
+}
+
+.upcoming-toggle {
+  flex: 0 0 auto;
+  min-width: 1rem;
+  height: 1rem;
+  display: inline-grid;
+  place-items: center;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  padding: 0;
+  font-size: 0.9rem;
+  font-weight: 800;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    color 220ms ease,
+    filter 220ms ease,
+    transform 220ms ease;
+}
+
+.upcoming-toggle:hover {
+  color: var(--accent);
+  filter: none;
+}
+
+.upcoming-toggle:active {
+  transform: translateY(1px);
+}
+
 .nameday-text {
   margin: 0;
   color: var(--muted);
@@ -566,6 +608,12 @@
   padding: 0;
   cursor: pointer;
   font: inherit;
+}
+
+.build-stamp {
+  color: var(--muted);
+  font-size: 0.8rem;
+  letter-spacing: 0.02em;
 }
 
 .mobile-section {

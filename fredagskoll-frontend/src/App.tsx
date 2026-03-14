@@ -6,6 +6,7 @@ import {
   ordinaryThemeDayCardNotesByLocale,
   ordinaryThemeDayTitleEndingsByLocale,
 } from './appText';
+import { buildInfo } from './buildInfo.generated';
 import { usesCompactPrimaryMedia, formatTitle, hasLongTitleWord } from './celebrationPresentation';
 import {
   getCelebrations,
@@ -125,11 +126,26 @@ function MobileSection({
   );
 }
 
+function formatBuildStamp(locale: Locale): string {
+  const builtAt = new Date(buildInfo.builtAt);
+  const formattedTime = new Intl.DateTimeFormat(locale === 'en' ? 'en-GB' : 'sv-SE', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  }).format(builtAt);
+
+  return `${buildInfo.gitSha} | ${formattedTime}`;
+}
+
 function App({ initialDate = new Date() }: AppProps) {
   const [locale, setLocale] = useState<Locale>(getInitialLocale);
   const [darkMode, setDarkMode] = useState(false);
   const [showImageCredits, setShowImageCredits] = useState(false);
   const [isMobileLayout, setIsMobileLayout] = useState(getInitialMobileLayout);
+  const [showUpcoming, setShowUpcoming] = useState(true);
   const [expandedMobileSections, setExpandedMobileSections] = useState<
     Record<MobileSectionKey, boolean>
   >({
@@ -151,6 +167,7 @@ function App({ initialDate = new Date() }: AppProps) {
   );
 
   const text = appText[locale];
+  const buildStamp = useMemo(() => formatBuildStamp(locale), [locale]);
   const celebrations = useMemo(() => getCelebrations(locale), [locale]);
   const ordinaryBlurb = useMemo(() => getOrdinaryBlurb(locale), [locale]);
   const selectedDateObject = useMemo(
@@ -174,6 +191,10 @@ function App({ initialDate = new Date() }: AppProps) {
   const displayThemeDays = useMemo(
     () => visibleThemeDays.map((themeDay) => translateThemeDayName(themeDay, locale)),
     [locale, visibleThemeDays]
+  );
+  const extraDisplayThemeDays = useMemo(
+    () => displayThemeDays,
+    [displayThemeDays]
   );
   const hasThemeDays = displayThemeDays.length > 0;
   const humanDate = formatForHumans(selectedDateObject, locale);
@@ -226,6 +247,14 @@ function App({ initialDate = new Date() }: AppProps) {
         : text.unofficialThemeDay
       : text.noOfficialEnergy;
   const themeDayDisplayTitle = hasThemeDays ? displayThemeDays[0] : null;
+  const extraThemeDayLead = useMemo(() => {
+    if (celebration && dayStatus.dayType !== 'ordinary') {
+      const aliases = getCelebrationThemeAliases(dayStatus.dayType, locale);
+      return aliases[0] ?? celebration.title;
+    }
+
+    return themeDayDisplayTitle;
+  }, [celebration, dayStatus.dayType, locale, themeDayDisplayTitle]);
   const celebrationSubtitle = celebration?.subtitle ?? null;
   const mainTitle = celebration
     ? celebration.title
@@ -439,22 +468,37 @@ function App({ initialDate = new Date() }: AppProps) {
               summary={text.mobileUpcomingSummary(upcomingNotables.length)}
             >
               <div className="upcoming-card">
-                <p className="eyebrow">{text.upcoming}</p>
-                <div className="upcoming-list">
-                  {upcomingNotables.map((item) => (
-                    <article key={item.dateLabel} className="upcoming-item">
-                      <div className="upcoming-item-top">
-                        <span className="upcoming-label">{item.label}</span>
-                        <span className="upcoming-days">
-                          {item.daysUntil === 1 ? text.upcomingTomorrow : text.upcomingInDays(item.daysUntil)}
-                        </span>
-                      </div>
-                      <p className="upcoming-title">{item.title}</p>
-                      <p className="upcoming-date">{formatShortSwedishDate(item.date, locale)}</p>
-                      <p className="upcoming-note">{item.note}</p>
-                    </article>
-                  ))}
+                <div className="upcoming-header">
+                  <p className="eyebrow">{text.upcoming}</p>
+                  {!isMobileLayout ? (
+                    <button
+                      type="button"
+                      className="upcoming-toggle"
+                      aria-label={showUpcoming ? text.collapseHide : text.collapseShow}
+                      title={showUpcoming ? text.collapseHide : text.collapseShow}
+                      onClick={() => setShowUpcoming((current) => !current)}
+                    >
+                      <span aria-hidden="true">{showUpcoming ? '−' : '+'}</span>
+                    </button>
+                  ) : null}
                 </div>
+                {isMobileLayout || showUpcoming ? (
+                  <div className="upcoming-list">
+                    {upcomingNotables.map((item) => (
+                      <article key={item.dateLabel} className="upcoming-item">
+                        <div className="upcoming-item-top">
+                          <span className="upcoming-label">{item.label}</span>
+                          <span className="upcoming-days">
+                            {item.daysUntil === 1 ? text.upcomingTomorrow : text.upcomingInDays(item.daysUntil)}
+                          </span>
+                        </div>
+                        <p className="upcoming-title">{item.title}</p>
+                        <p className="upcoming-date">{formatShortSwedishDate(item.date, locale)}</p>
+                        <p className="upcoming-note">{item.note}</p>
+                      </article>
+                    ))}
+                  </div>
+                ) : null}
               </div>
             </MobileSection>
           ) : null}
@@ -475,6 +519,9 @@ function App({ initialDate = new Date() }: AppProps) {
             >
               {text.themeDaySource}
             </a>
+            <span className="build-stamp">
+              {text.buildInfoLabel} {buildStamp}
+            </span>
           </footer>
         </header>
 
@@ -569,23 +616,23 @@ function App({ initialDate = new Date() }: AppProps) {
                 ) : null}
               </div>
 
-              {hasThemeDays ? (
+              {extraDisplayThemeDays.length > 0 ? (
                 <MobileSection
                   isMobile={isMobileLayout}
                   expanded={expandedMobileSections.extraThemeDays}
                   onToggle={() => toggleMobileSection('extraThemeDays')}
-                  summary={text.mobileExtraThemeDaysSummary(displayThemeDays.length)}
+                  summary={text.mobileExtraThemeDaysSummary(extraDisplayThemeDays.length)}
                 >
                   <div className="theme-day-panel">
                     <span className="ordinary-badge">{text.extraThemeDays}</span>
                     <p>
                       {text.asIfThatWasNotEnough(
-                        themeDayDisplayTitle ?? '',
-                        joinWithAnd(displayThemeDays, locale)
+                        extraThemeDayLead ?? '',
+                        joinWithAnd(extraDisplayThemeDays, locale)
                       )}
                     </p>
                     <ul className="theme-day-list">
-                      {displayThemeDays.map((themeDay) => (
+                      {extraDisplayThemeDays.map((themeDay) => (
                         <li key={themeDay}>{themeDay}</li>
                       ))}
                     </ul>
