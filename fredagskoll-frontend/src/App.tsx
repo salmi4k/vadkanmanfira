@@ -49,9 +49,19 @@ function formatShortSwedishDate(date: Date): string {
   }).format(date);
 }
 
-function getRandomItem(options: string[]): string {
-  const index = Math.floor(Math.random() * options.length);
-  return options[index];
+function getRandomItem(options: string[], current?: string): string {
+  if (options.length === 0) {
+    return ordinaryBlurb;
+  }
+
+  if (options.length === 1) {
+    return options[0];
+  }
+
+  const candidates = current ? options.filter((option) => option !== current) : options;
+  const pool = candidates.length > 0 ? candidates : options;
+  const index = Math.floor(Math.random() * pool.length);
+  return pool[index];
 }
 
 function formatTitle(title: string): string {
@@ -376,7 +386,7 @@ function App({ initialDate = new Date() }: AppProps) {
               <button
                 type="button"
                 className="reroll-button"
-                onClick={() => setBlurb(getRandomItem(currentBlurbs))}
+                onClick={() => setBlurb(getRandomItem(currentBlurbs, blurb))}
               >
                 Ny ursäkt
               </button>
