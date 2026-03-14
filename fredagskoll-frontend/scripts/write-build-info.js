@@ -15,10 +15,15 @@ function getEnvSha() {
   return match ? match.trim().slice(0, 7) : null;
 }
 
-function getGitSha() {
+function getBuildRef() {
   const envSha = getEnvSha();
   if (envSha) {
     return envSha;
+  }
+
+  const runNumber = process.env.GITHUB_RUN_NUMBER || process.env.BUILD_BUILDID;
+  if (typeof runNumber === 'string' && runNumber.trim().length > 0) {
+    return `run-${runNumber.trim()}`;
   }
 
   try {
@@ -29,13 +34,18 @@ function getGitSha() {
       .toString()
       .trim();
   } catch {
-    return 'unknown';
+    return 'local-build';
   }
+}
+
+function getGitSha() {
+  return getEnvSha() ?? getBuildRef();
 }
 
 const buildInfo = {
   version: require('../package.json').version,
   gitSha: getGitSha(),
+  buildRef: getBuildRef(),
   builtAt: new Date().toISOString(),
 };
 

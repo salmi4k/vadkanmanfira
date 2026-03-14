@@ -140,7 +140,7 @@ function formatBuildStamp(locale: Locale): string {
     hour12: false,
   }).format(builtAt);
 
-  return `${buildInfo.gitSha} | ${formattedTime}`;
+  return `v${buildInfo.version} | ${buildInfo.buildRef} | ${formattedTime}`;
 }
 
 function App({
