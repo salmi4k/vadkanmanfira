@@ -1,6 +1,7 @@
 import React from 'react';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import App from './App';
+import { buildInfo } from './buildInfo.generated';
 
 async function renderAppAt(date: Date): Promise<void> {
   render(<App initialDate={date} />);
@@ -252,6 +253,11 @@ test('renders namnsdag data from the open API lookup', async () => {
   expect(screen.getByText(/Matilda och Maud/i)).toBeInTheDocument();
 });
 
+test('renders a subtle build stamp in the footer', async () => {
+  await renderAppAt(new Date(2026, 2, 14));
+  expect(screen.getByText(new RegExp(buildInfo.gitSha, 'i'))).toBeInTheDocument();
+});
+
 test('renders public image credits when opening the credits dialog', async () => {
   await renderAppAt(new Date(2026, 2, 25));
 
@@ -280,6 +286,17 @@ test('renders upcoming notable dates with major celebrations ahead of random fil
   expect(screen.getByText(/^Valborg$/i)).toBeInTheDocument();
   expect(screen.getAllByText(/^Första maj$/i).length).toBeGreaterThan(0);
   expect(screen.getAllByText(/Om 3 dagar/i).length).toBeGreaterThan(0);
+});
+
+test('allows collapsing the upcoming panel', async () => {
+  await renderAppAt(new Date(2026, 3, 27));
+
+  expect(screen.getByText(/^Valborg$/i)).toBeInTheDocument();
+
+  fireEvent.click(screen.getByRole('button', { name: /Dölj/i }));
+
+  expect(screen.queryByText(/^Valborg$/i)).not.toBeInTheDocument();
+  expect(screen.getByRole('button', { name: /Visa/i })).toBeInTheDocument();
 });
 
 test('renders bokrean as a seasonal sidebar note during the sale window', async () => {
