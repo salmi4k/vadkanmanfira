@@ -235,7 +235,7 @@ test('renders filtered temadagar for an otherwise ordinary date', async () => {
       name: /Matlådans dag\.\s*Det får väl bära dagen då\./i,
     })
   ).toBeInTheDocument();
-  expect(screen.getByRole('list')).toBeInTheDocument();
+  expect(screen.getAllByRole('list').length).toBeGreaterThan(0);
   expect(screen.getAllByText(/Nordens dag/i).length).toBeGreaterThan(0);
   expect(screen.getAllByText(/Världsmeteorologidagen/i).length).toBeGreaterThan(0);
   expect(screen.queryByText(/Internationella barnreumatikerdagen/i)).not.toBeInTheDocument();

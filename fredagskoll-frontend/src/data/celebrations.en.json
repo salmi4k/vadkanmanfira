@@ -1,0 +1,483 @@
+{
+  "ordinaryBlurb": "No, today is not a Swedish celebration worth mentioning here.",
+  "ordinaryWeekdayBlurbs": [
+    "It's a regular workday. You get to create your own vibe, which is frankly questionable.",
+    "No holiday has saved this day. It's just you, the calendar, and a quiet dissatisfaction.",
+    "There’s no official excuse today, just the usual kind of everyday resignation.",
+    "A completely ordinary weekday has arrived. Our condolences.",
+    "This date offers no semla, no herring, no national camaraderie. Just work.",
+    "No Swedish theme day is carrying you today. You’ll have to carry yourself, which feels unnecessary.",
+    "The day is utterly ordinary, as if the universe actively opted out of entertainment.",
+    "No party, no tradition, not even a hint of bun obligation. Just routine operation.",
+    "One of those days that mostly exists to hold the week together between better dates.",
+    "Nothing special happens today, which unfortunately doesn’t stop people from scheduling meetings.",
+    "It’s a straightforward weekday without cultural support. A rather cold setup.",
+    "Everything points to you getting through this day without any festive energy to help.",
+    "This is a workday without a theme, meaning all responsibility embarrassingly still rests on you.",
+    "The calendar looked at this date and decided absolutely not to help out.",
+    "No semla, no herring, no collective euphoria. Just quiet office hum and an uninspired keyboard.",
+    "It’s one of those weekdays that makes coffee feel like the only adult in the room.",
+    "The day completely lacks momentum from tradition, which is bold given how little else it offers.",
+    "Some dates arrive with trumpet fanfares. This one sneaked in carrying an Excel sheet.",
+    "It’s not a day you remember. It’s a day you administrate through.",
+    "Everything about this day signals 'just keep going,' which isn’t poetry but, sadly, effective guidance.",
+    "No tradition has touched this weekday. It stands completely unprotected against status meetings and dry air.",
+    "This date has the same energy as a meeting that could have been a message but is still going on.",
+    "A pure standard day. No flags, no pastries, just the usual battle against 2:37 PM.",
+    "The calendar sent out a completely bare weekday and apparently thought that was enough content.",
+    "This is the day you have to create your own spark even though everything around leans toward fluorescent lights and resignation.",
+    "Nothing in the cultural heritage thought to show up today. It’s you, the chair, and a series of moderately inspired decisions.",
+    "A regular workday, yes. But in such a way that even the printer seems to have given up a bit in advance.",
+    "There are days you celebrate. There are days you endure with coffee and civic silence. This is the latter.",
+    "The day is so ordinary it could be the default setting for the entire quarter.",
+    "The whole setup smells like 'we’ll take it after lunch,' and then no one does anything worthy after lunch either.",
+    "No minor Swedish theme day will break the fall here. You’ll have to land in the everyday on your own.",
+    "This is administration’s little work victory: a day that neither disturbs, delights, nor excuses anything at all."
+  ],
+  "ordinaryWeekendBlurbs": [
+    "It’s the weekend, but not in the slightest glittery way. Just freedom with a faint scent of chores in the background.",
+    "No holiday governs this weekend. It’s you, a couch, and a vague feeling that something should get done.",
+    "The date offers no official party, just the usual weekend peace mixed with discreet guilt.",
+    "This is a completely ordinary weekend day, meaning ambitions start negotiating themselves down already.",
+    "No tradition will come to save the mood. It’s personal responsibility, which always feels unnecessary on weekends.",
+    "It’s a weekend without festive support. You have to entertain yourself with coffee, walks, and low-grade procrastination.",
+    "A regular Saturday or Sunday has arrived and basically only asks that you don’t impress yourself too much.",
+    "The calendar has no big plans for this weekend. It mostly hopes you’ll sort out the rest yourself.",
+    "No official fanfares today, just the quiet weekend feeling that time should be used wisely but probably won’t be.",
+    "It’s one of those weekend days that mostly exists to show that free time can also be a bit empty.",
+    "No semla, no herring, no national ritual. Just typical Swedish weekend slog and a fridge with unclear ambitions.",
+    "The day has peace but no direction. That’s actually quite a lot of weekend in a nutshell.",
+    "This date completely lacks ceremonial weight and instead leans heavily on sweatpants.",
+    "Regular weekend, regular air, regular silence. Not bad, just completely un-festive.",
+    "The weekend is free of traditions today, which sounds nice until you realize you have to invent your own meaning.",
+    "There are no historical layers here, just the usual contemporary mix of coffee, scrolling, and postponed structure.",
+    "A completely neutral weekend day. The closest thing to a celebration might be that no one actively wants anything from you.",
+    "It’s one of those days when you can do exactly what you want and therefore mostly drift around in mild decision paralysis.",
+    "No official reason to gather, toast, or bake. Just a free date with frighteningly much personal responsibility.",
+    "The weekend’s main content today is that it’s happening. Apparently, you’re supposed to be grateful for that."
+  ],
+  "celebrationThemeAliases": {
+    "allahjartansdag": [
+      "Valentine's Day"
+    ],
+    "fettisdag": [
+      "Shrove Tuesday",
+      "Semla Day"
+    ],
+    "paskafton": [
+      "Easter Eve"
+    ],
+    "vaffeldagen": [
+      "Waffle Day"
+    ],
+    "valborg": [
+      "Walpurgis Night",
+      "Valborg Eve"
+    ],
+    "nationaldagen": [
+      "National Day"
+    ],
+    "midsommarafton": [
+      "Midsummer Eve"
+    ],
+    "kanelbullensdag": [
+      "Cinnamon Bun Day"
+    ],
+    "kladdkakansdag": [
+      "Sticky Chocolate Cake Day"
+    ],
+    "surstrommingspremiar": [
+      "Surströmming Premiere"
+    ],
+    "lucia": [
+      "Lucia",
+      "St. Lucia Day"
+    ],
+    "julafton": [
+      "Christmas Eve"
+    ],
+    "nyarsafton": [
+      "New Year's Eve"
+    ],
+    "kottonsdag": [
+      "Meat Wednesday"
+    ],
+    "fisktorsdag": [
+      "Fish Thursday"
+    ],
+    "marmeladfredag": [
+      "Marmalade Friday"
+    ]
+  },
+  "celebrations": {
+    "allahjartansdag": {
+      "title": "Valentine's Day, for heaven's sake",
+      "subtitle": "A touch of frostbite in the tone is more than enough.",
+      "kicker": "Office Romance",
+      "blurbs": [
+        "A perfectly reasonable day for sugar, awkward Teams flirtation, and hearts in the break room.",
+        "Spread some warmth, write something nice, and don’t pretend you don’t want chocolate too.",
+        "Love at work usually means coffee, kindness, and no meetings booked at 4:30 PM.",
+        "It's the day when a half-hearted 'have a nice weekend' gets bumped up by about two percent emotion.",
+        "No grand gestures required. A flower, a bun, or a decent tone goes further than usual.",
+        "Valentine's Day at work is mostly about being marginally less cold than usual.",
+        "This isn’t the Olympics of romance. It’s just a reminder you can be nice for a bit.",
+        "The day demands little: some sugar, some care, and zero cynicism before lunch.",
+        "A perfect day to reply unusually warmly to a message and then feel done as a human.",
+        "Valentine's Day at the office is mostly about letting irony sit quietly in a meeting or two.",
+        "If someone puts out chocolate today, it suddenly counts as emotional intelligence.",
+        "This is the date when even the stiffest colleague tries to look a bit human.",
+        "The day is for low-key charm, strategic sugar, and absolutely no passive aggression."
+      ],
+      "theme": "jam"
+    },
+    "fettisdag": {
+      "title": "Shrove Tuesday. Letting go now.",
+      "subtitle": "The bun has taken over and HR can’t stop it.",
+      "kicker": "Almond Paste and Meltdown",
+      "alt": "Shrove Tuesday",
+      "blurbs": [
+        "Semlor are allowed. Taking just one is practically a character flaw.",
+        "Cream on your face, almond paste in your soul, and productivity slipping away. Just as it should be.",
+        "This is the day when lunch is replaced by a bun and no one dares pretend it’s odd.",
+        "Every calendar item after 1 PM should really be replaced by semla-related passivity.",
+        "There are days for discipline. Shrove Tuesday is not one of them.",
+        "Almond paste is now a workplace issue and I’m not debating it.",
+        "The semla has taken command. The rest of us just follow along and nod.",
+        "No one will remember what was said in the meeting, but they’ll remember who took the last semla.",
+        "The most professional thing you can do today is accept that the day belongs to the bun.",
+        "Shrove Tuesday is a rare day when excessive cream actually strengthens the business.",
+        "All discipline still existing today is pure theater and should be treated as such.",
+        "If someone suggests fruit fika on Shrove Tuesday, it should be documented as a value deviation.",
+        "It’s hard to take responsibility seriously when almond paste has already taken over control.",
+        "The day has only two realistic outcomes: semla now or semla soon."
+      ],
+      "primaryImage": "/semla-1.webp",
+      "secondaryImage": "/520321381_10234349504453830_7039877959207209298_n.jpg",
+      "theme": "cream"
+    },
+    "paskafton": {
+      "title": "Easter Eve. Herring, candy, and free rein.",
+      "subtitle": "No adult supervision survives eggs and sweets.",
+      "kicker": "Egg-powered Truce",
+      "blurbs": [
+        "Easter Eve is the day when eggs, candy, and odd little feathers carry society for a while.",
+        "This is a holiday for herring, color, and low ambition, which actually feels very healthy.",
+        "Easter Eve lets adults legitimize candy mountains by mentioning tradition and moving on.",
+        "It’s perfectly reasonable to let the weekend smell of eggs, coffee, and mild social confusion today.",
+        "Easter Eve is the calendar’s way of saying structure is overrated when chocolate and time off team up.",
+        "No one believes in efficiency here. It’s just eggs, sugar, and quiet acceptance of the situation.",
+        "Easter Eve is a holiday built on adults accepting feathers as a decorating strategy.",
+        "The day feels like someone let the candy bowl take over project management and honestly it works.",
+        "This is a date for long tables, misprioritized chocolate consumption, and complete lack of sober structure.",
+        "Easter Eve doesn’t make a big deal about dignity. It settles for herring and sugar shock."
+      ],
+      "visualBadge": "Easter Mode",
+      "visualTitle": "Eggs, Feathers, and Tactical Absence",
+      "visualBody": "Some days demand more rigor. Easter Eve settles for color, sugar, and no one trying to sound grown-up unnecessarily.",
+      "primaryImage": "/images/paskafton.jpg",
+      "theme": "gold"
+    },
+    "vaffeldagen": {
+      "title": "Waffle Day Has Taken Over",
+      "subtitle": "Crispiness won the battle against self-control early on.",
+      "kicker": "Crunch Over Focus",
+      "blurbs": [
+        "It’s the kind of day when whipped cream suddenly sounds like planning.",
+        "Crispy, warm, and totally incompatible with dry meetings. Beautiful.",
+        "If someone says waffles are just dessert, they lack vision.",
+        "This is a day for jam, cream, and complete lack of shame.",
+        "The waffle iron has more leadership in it than many steering groups.",
+        "Texture matters more than KPIs right now, and we just have to live with that.",
+        "It crackles a bit, gets sticky a bit, and improves the mood more than any kickoff.",
+        "Waffle Day shows once again that butter and discipline can’t be prioritized simultaneously.",
+        "This is the day when jam gains more credibility than most status updates.",
+        "If waffles appear before lunch, it’s just a sign of strong operational judgment.",
+        "Waffle Day is so clearly right you almost get suspicious.",
+        "Crunch does more for morale than another verbose strategy PowerPoint ever could."
+      ],
+      "visualBadge": "Crunch Mode",
+      "visualTitle": "Cream Before Gravitas",
+      "visualBody": "Once the waffle iron has the mandate, there’s no point pretending the day is about anything else.",
+      "primaryImage": "/images/vaffeldagen.jpg",
+      "theme": "gold"
+    },
+    "valborg": {
+      "title": "Walpurgis Night, aka spring with bad judgment",
+      "subtitle": "The bonfire is warm. The planning is not.",
+      "kicker": "April 30th",
+      "blurbs": [
+        "It smells like spring, bonfires, and a collective decision that productivity can wait until tomorrow.",
+        "April 30th is for spring feelings, a light jacket in premature weather, and a slightly shameful schedule.",
+        "Technically, you’re still working, but your soul is already by a bonfire with coffee in hand.",
+        "Everything after lunch is mostly a logistical battle between the calendar and spring feelings.",
+        "It’s a day when no one really believes in work, but everyone keeps typing in Slack as if they do.",
+        "The bonfire calls, pollen attacks, and the sense of responsibility loses ground minute by minute.",
+        "Walpurgis Night is basically a national admission that April can’t end sober in the soul.",
+        "This is April 30th. The schedule remains, but respect for it is gone.",
+        "Walpurgis Night is when the whole country collectively decides a bonfire is sufficient project planning.",
+        "No adult looks entirely reasonable on Walpurgis Night and that’s part of the charm.",
+        "The spring feeling is strong, judgment shaky, and strangely enough, it feels just right.",
+        "All logic after the workday’s midpoint should be treated as advisory rather than binding."
+      ],
+      "primaryImage": "/images/valborg.jpg",
+      "theme": "ember"
+    },
+    "nationaldagen": {
+      "title": "National Day, well, let’s celebrate then",
+      "subtitle": "Blue and yellow dignity with clear fika potential.",
+      "kicker": "Flag and Fika",
+      "blurbs": [
+        "A little blue, a little yellow, and a lot of half-hearted patriotism over a cup of coffee.",
+        "This is the day when a flag in the corner suddenly counts as atmosphere.",
+        "You celebrate Sweden like you celebrate a reliable colleague: quietly but with some respect.",
+        "Not the wildest holiday, but it offers flags and a reasonable excuse to lean back.",
+        "National Day is like the country itself: fairly orderly, a bit stiff, and better with fika.",
+        "Not everyone sings the anthem, but everyone accepts that the pace slows down a bit.",
+        "The day doesn’t demand much. Just some dignity, a bit of blue and yellow, and minimal complaining.",
+        "A good day to appreciate functioning public transport, decent welfare, and pastries.",
+        "National Day is never wild, but it’s reliable and that’s more Swedish than you might think.",
+        "It’s a date that asks for a flag, coffee, and quiet confidence. No more, no less.",
+        "Blue and yellow fabric suddenly wields oddly high authority over the mood today.",
+        "No one needs to be patriotic full-time. It’s enough to be temporarily kind to the country."
+      ],
+      "primaryImage": "/images/nationaldagen.jpg",
+      "theme": "forest"
+    },
+    "midsommarafton": {
+      "title": "Midsummer Eve. No one’s really working.",
+      "subtitle": "The mental out-of-office reply activates before lunch.",
+      "kicker": "Herring-Powered Absence",
+      "blurbs": [
+        "Everything after lunch is cosmetic. Everyone knows it. No one says it out loud.",
+        "This is the Friday when the mental out-of-office activates long before the computer shuts down.",
+        "Herring, strawberries, and a calendar full of lies about availability. Swedish perfection.",
+        "No meaningful productivity remains here. Just flower crowns in mental incubation.",
+        "Midsummer Eve is the day when even the keyboard wants to shut down early.",
+        "Excel is formally open, but the nation is already out on the lawn.",
+        "You can call it a workday if you want, but that won’t make it true.",
+        "The herring is planned, strawberries chilled, and all ambitions parked.",
+        "The only realistic delivery today is people making it out the door on time.",
+        "Midsummer Eve has the same relation to work as rain has to paper decorations: formally possible, practically hopeless.",
+        "This is the day when calendars stay open out of pure superstition.",
+        "No one wants to be the one pretending to be available after lunch and actually meaning it.",
+        "Society technically continues, but everything important is already in a cooler somewhere."
+      ],
+      "primaryImage": "/images/midsommarafton.jpg",
+      "theme": "forest"
+    },
+    "kanelbullensdag": {
+      "title": "Cinnamon Bun Day Holds Up the Nation",
+      "subtitle": "Cardamom, guilt, and collegial pressure in fine balance.",
+      "kicker": "Fika as Duty",
+      "blurbs": [
+        "The most office-compatible celebration Sweden has ever invented. Fika is basically mandatory.",
+        "Don’t let anyone fool you: the cinnamon bun is not a pastry today, it’s a responsibility.",
+        "Anyone showing up without a bun today will live with the stares. Harsh but fair.",
+        "This is the highest liturgy of working life: coffee, bun, crumbs in the keyboard.",
+        "If there’s a Swedish state religion, it smells like cardamom today.",
+        "Cinnamon Bun Day unites the people through butter, sugar, and discreet moral pressure.",
+        "There’s no stronger business support than a lukewarm bun on the right side of lunch.",
+        "No one wants to be the person who 'isn’t much for buns' today. That would be social suicide.",
+        "The day is measured not in hours but in the number of buns mysteriously disappearing from the kitchen.",
+        "Cinnamon Bun Day is the only holiday where crumbs in the keyboard feel like patriotic duty.",
+        "You don’t even have to be hungry. It’s enough to get the situation and take a bun anyway.",
+        "Few social signals are stronger than showing up with freshly baked buns just today.",
+        "Cinnamon Bun Day makes the whole country a bit softer around the edges and noticeably more butter-based."
+      ],
+      "primaryImage": "/images/kanelbullensdag.jpg",
+      "theme": "gold"
+    },
+    "kladdkakansdag": {
+      "title": "Sticky Chocolate Cake Day, the structure hates it",
+      "subtitle": "The middle should give up. That’s the whole point.",
+      "kicker": "Sticky but Right",
+      "blurbs": [
+        "If someone brings dry cake today, they should actually be a little ashamed.",
+        "Sticky chocolate cake proves structure isn’t always the highest good.",
+        "It should be sticky, a bit too much cream, and zero self-loathing. Period.",
+        "A firm cake today would be a character failure and possibly an HR issue.",
+        "Sticky Chocolate Cake Day is an argument against perfectionism served with whipped cream.",
+        "The middle should give up. The edges just hold it together just enough. Like the rest of us.",
+        "This is the day when under-whipped becomes a virtue and no one can be bothered to pretend otherwise.",
+        "The cake should be sticky, the portion size unreasonable, and guilt postponed.",
+        "Sticky Chocolate Cake Day proves once again that control is overrated when chocolate gets to speak freely.",
+        "If the cake holds its shape too well, someone has misunderstood the mission on an almost philosophical level.",
+        "This is dessert’s equivalent of saying 'good enough' with full conviction.",
+        "Sticky chocolate cake has the rare quality of getting better the less discipline was applied at the end."
+      ],
+      "primaryImage": "/images/kladdkakansdag.jpg",
+      "theme": "jam"
+    },
+    "surstrommingspremiar": {
+      "title": "Surströmming Premiere. Our apologies.",
+      "subtitle": "Ventilation has to carry more responsibility than usual.",
+      "kicker": "Third Thursday in August",
+      "blurbs": [
+        "This is the tradition that smells more like determination than good taste.",
+        "Somewhere a can is opened and workplace morale takes physical damage.",
+        "Surströmming is what happens when cultural heritage refuses criticism.",
+        "It’s a day when ventilation suddenly becomes critical infrastructure.",
+        "No one thinks the smell is good. Some just think the duty is greater.",
+        "Surströmming premiere is a litmus test for friendships, porches, and nearby neighbors.",
+        "This celebration is built on three things: tradition, stubbornness, and an utterly unreasonable smell threshold.",
+        "You don’t have to understand it. Just accept that someone in the country opens a can on purpose.",
+        "The day smells strongly of history, salt, and humanity’s ability to romanticize bad ideas.",
+        "Surströmming premiere is a national exercise in defending the indefensible with a straight back.",
+        "This is the date when 'it’s an acquired taste' has to work so hard it almost collapses.",
+        "No one opens a can of surströmming by accident. It’s always intentional and often a warning.",
+        "The tradition is so strong the smell apparently had to accept being secondary information."
+      ],
+      "primaryImage": "/images/surstrommingspremiar.jpg",
+      "theme": "midnight"
+    },
+    "lucia": {
+      "title": "Lucia in the Office Lighting Inferno",
+      "subtitle": "Saffron, sleep deprivation, and a strong need for coffee.",
+      "kicker": "Saffron Against Darkness",
+      "blurbs": [
+        "Gingerbread, coffee, and a faint morning darkness no one asked for but everyone recognizes.",
+        "It’s the day when candles feel more like a workplace safety measure than ambiance.",
+        "A bit of saffron, some sleep deprivation, and a desperate hope that Christmas break is near.",
+        "Lucia is darkness’s last gaslighting before Christmas takes over completely.",
+        "There are lussekatter, quiet singing, and a collective need for caffeine.",
+        "Everyone plays calm and reverent until someone puts out coffee and the whole office wakes up.",
+        "It’s not just a tradition. It’s a way to survive December with some dignity.",
+        "The candles flicker, saffron works, and darkness temporarily backs off.",
+        "Lucia is the only morning of the year when people accept wax as a strategy.",
+        "This is a holiday where song, saffron, and sleep deprivation form an unusually stable alliance.",
+        "The office feels oddly reverent until the first coffee thermos opens and everything goes back to normal.",
+        "Lucia makes December less brutal exactly as much as coffee and pastries allow."
+      ],
+      "primaryImage": "/images/lucia.jpg",
+      "theme": "cream"
+    },
+    "julafton": {
+      "title": "Christmas Eve. No one acts normal anymore.",
+      "subtitle": "Traditions, stress, and mulled wine logic in perfect disorder.",
+      "kicker": "Kalle, Coffee, and Collective Regression",
+      "blurbs": [
+        "Christmas Eve is the kind of day when timetables are replaced by mulled wine logic and no one has the energy to object.",
+        "It’s perfectly normal for the whole day to be ruled by coffee, Christmas dinner, and exactly when someone thinks Kalle must start.",
+        "Christmas Eve turns otherwise sane people into tradition operators with strong opinions about ham and candles.",
+        "This is the date when sofas, wrapping paper, and slightly tense family interactions carry the nation.",
+        "Christmas Eve works because everyone accepts that logic, punctuality, and self-awareness get the day off.",
+        "You can call it a holiday. You can also call it a well-organized meltdown with saffron on the sidelines.",
+        "Nothing is particularly efficient, but everything is highly charged, which practically defines Christmas.",
+        "Christmas Eve is when the schedule is replaced by traditions no one really remembers the origin of but everyone fears breaking.",
+        "There isn’t a single calm person on Christmas Eve, just varying degrees of well-dressed stress.",
+        "This is the date when coffee, kitchen logistics, and family diplomacy carry the entire social contract.",
+        "Christmas works through a mix of nostalgia, sugar, and people who have decided not to comment on everything they think."
+      ],
+      "primaryImage": "carltonChristmasGif",
+      "visualBadge": "Christmas Mode",
+      "visualTitle": "Sofa Mode with High Symbolic Density",
+      "visualBody": "Christmas Eve doesn’t need pictures to feel full. It’s already overloaded with rituals, scents, and people trying to behave reasonably.",
+      "theme": "cream"
+    },
+    "nyarsafton": {
+      "title": "New Year's Eve. Ambition meets fireworks.",
+      "subtitle": "Overconfidence, bubbly, and an expensive relationship with midnight.",
+      "kicker": "Midnight as a Project",
+      "blurbs": [
+        "New Year's Eve is the annual ritual where people pretend midnight automatically improves character.",
+        "This is the evening when bubbly, promises, and slightly overrated optimism must coexist in the same room.",
+        "New Year's Eve works best if no one asks too many questions about planning, shoes, or tomorrow.",
+        "Everything culminates in a few minutes of noise, light, and a collective decision that next year will probably be better.",
+        "New Year's Eve is the calendar’s most expensive way of saying time moves on whether you’re ready or not.",
+        "You’re supposed to be festive, hopeful, and a bit chilly at the same time. A strange but established setup.",
+        "New Year's Eve is the night when everyone pretends bubbly automatically turns uncertainty into vision.",
+        "This is a date that demands countdowns, overconfidence, and shoes no one can really stand in.",
+        "Feel free to call it a fresh start. The calendar will still note you’re the same person tomorrow.",
+        "New Year's Eve thrives on the combination of expensive ambitions and very short fireworks."
+      ],
+      "visualBadge": "Midnight",
+      "visualTitle": "Glitter, Promises, and Controlled Overconfidence",
+      "visualBody": "New Year's Eve carries its own stage design. The only real requirement is someone counting down and no one losing it too early.",
+      "primaryImage": "/images/nyarsafton.jpg",
+      "theme": "midnight"
+    },
+    "kottonsdag": {
+      "title": "Meat Wednesday",
+      "subtitle": "No questions. Just protein and switched-off finesse.",
+      "kicker": "Protein Against the Week",
+      "alt": "Meat Wednesday",
+      "blurbs": [
+        "Midweek meat rush. It won’t be pretty, but it’ll be something.",
+        "Wednesday demands protein, stubbornness, and minimal subtlety.",
+        "This isn’t elegant. It’s just hearty, and sometimes that’s enough.",
+        "The week has lost finesse now. What remains is meat and pure endurance.",
+        "Meat Wednesday isn’t a philosophy. It’s a state you enter to survive Wednesday.",
+        "No one asked for grace. This is about energy, salt, and a stiff acceptance of the situation.",
+        "Midweek needs something robust. Today’s answer was obviously meat.",
+        "It’s straightforward, greasy, and functional. About how a competent Wednesday should be.",
+        "Meat may not be the answer to everything, but it’s the answer for this day.",
+        "This is Wednesday’s way of saying salad was a naive idea from the start.",
+        "Meat Wednesday has never claimed to be nuanced and that’s why it inspires some confidence.",
+        "Midweek needs something that bites back. Today it was meat.",
+        "Meat Wednesday makes everything else on the plate look like decorative side material.",
+        "This is not a day for mild decisions or airy protein sources.",
+        "Wednesday has stopped apologizing and started ordering more grill surface.",
+        "Midweek feels less like an idea and more like a grill pan today.",
+        "The only refined thing about Meat Wednesday is how little it tries to be refined."
+      ],
+      "primaryImage": "/meatwednesday.gif",
+      "theme": "ember"
+    },
+    "fisktorsdag": {
+      "title": "Fish Thursday",
+      "subtitle": "Holding civilization together with dill and institutional stubbornness.",
+      "kicker": "Routine Triumphs Again",
+      "alt": "Fish Thursday",
+      "blurbs": [
+        "Thursdays apparently want to taste like school cafeteria and tradition. Respect the craft.",
+        "Fish today. Sense tomorrow. That’s how nations have held together for centuries.",
+        "A bit of lemon, a bit of dill, and a whole lot of collectively accepted routine.",
+        "There’s something comforting about Thursday still believing in fish as a social model.",
+        "Fish Thursday is tradition’s way of saying variety is overrated.",
+        "You can protest, but deep down everyone knows Thursday already decided the menu.",
+        "It smells a bit like sea, a bit like school memories, and quite a lot like Swedish everyday structure.",
+        "Fish might not be sexy, but it’s reliable, and Thursdays appreciate that.",
+        "Thursday doesn’t want to surprise. It wants to serve fish and move on with life.",
+        "Fish Thursday isn’t here to impress. It’s here to create order with the help of cod.",
+        "This is the day when breading and social contract suddenly feel like close relatives.",
+        "Fish on Thursday isn’t innovation. It’s infrastructure.",
+        "Thursday trusts breaded fish more than most modern ideas and you have to respect that.",
+        "This is Swedish everyday life in its purest form: a bit pale, a bit salty, and oddly reassuring.",
+        "Fish Thursday holds up the week by never pretending to be more fun than it is.",
+        "There’s a particular kind of stability in Thursday still thinking fish solves a lot.",
+        "The lemon wedge stands there as if it actually intends to make the whole setup elegant. Brave."
+      ],
+      "primaryImage": "/fisktorsdag-fixed-composite.png",
+      "theme": "midnight"
+    },
+    "marmeladfredag": {
+      "title": "Marmalade Friday",
+      "subtitle": "The week gave up first, but the sweetness keeps up appearances.",
+      "kicker": "Sugar with Dignity",
+      "alt": "Carlton",
+      "blurbs": [
+        "The week is over. Now all that remains is pretending everything’s done.",
+        "Friday is carried by sugar, mild panic, and a professional tone at the last minute.",
+        "It’s time to close the laptop with dignity and open the weekend with marmalade in your eyes.",
+        "Everything unfinished now has to be turned into something that sounds completed in chat.",
+        "Marmalade Friday is the color on the thin line between responsibility and escape.",
+        "This is the Friday when you sum up the week with sweetness outside and chaos inside.",
+        "The weekend is at the door. The computer hums. Marmalade whispers it’ll probably work out Monday.",
+        "You don’t have to be done. You just have to look like someone who will be soon.",
+        "There’s a kind of Friday dignity that only arises when you give up with style.",
+        "Now it’s about wrapping up the week with the same energy as a worn but well-functioning dessert.",
+        "Marmalade Friday is when professionalism shows up with a sticky shirt and still manages.",
+        "Everything is a bit too sweet, a bit too late, and just convincing enough to carry a Friday.",
+        "The week didn’t die heroically. It died sticky and with good tone.",
+        "Marmalade Friday is Friday’s way of begging for mercy with the sugar already served.",
+        "This is the day you round off the week with the same integrity as a half-open jam jar.",
+        "All that remains now is letting sweet talk hide how little actually got done.",
+        "Friday wants to end with style but settles for marmalade and a reasonable tone.",
+        "Marmalade Friday is when the weekend is visible in the doorway and the conscience tries to hold together with sugar."
+      ],
+      "primaryImage": "carltonGif",
+      "theme": "jam"
+    }
+  }
+}

@@ -1,10 +1,11 @@
-import { celebrations, getCelebrationThemeAliases } from './celebrations';
+import { getCelebrationThemeAliases, getCelebrations } from './celebrations';
 import {
   DayType,
   OfficialHoliday,
   getDayStatus,
   getOfficialHolidays,
 } from './dayLogic';
+import { Locale, translateOfficialHolidayName, translateThemeDayName } from './locale';
 import { getThemeDaysForDate } from './temadagar';
 import { joinWithAnd } from './themeDayBlurbs';
 
@@ -20,7 +21,151 @@ export interface UpcomingNotable {
   note: string;
 }
 
+type TimingTemplates = {
+  waitsTomorrow: string;
+  waitsInDays: (days: number) => string;
+  arrivesTomorrow: string;
+  arrivesInDays: (days: number) => string;
+  comesTomorrow: string;
+  comesInDays: (days: number) => string;
+  liesAheadTomorrow: string;
+  liesAheadInDays: (days: number) => string;
+};
+
+type UpcomingCopySet = {
+  labels: {
+    holiday: string;
+    celebration: string;
+    themeDay: string;
+    themeDays: (count: number) => string;
+  };
+  timing: TimingTemplates;
+  notes: {
+    holidayWithExtras: string[];
+    holidaySolo: string;
+    celebrationWithExtras: string[];
+    celebrationSolo: string[];
+    themeDayWithExtras: string[];
+    themeDaySolo: string[];
+  };
+};
+
 const recurringWeekdayTypes: DayType[] = ['kottonsdag', 'fisktorsdag', 'marmeladfredag'];
+
+const upcomingCopyByLocale: Record<Locale, UpcomingCopySet> = {
+  sv: {
+    labels: {
+      holiday: 'Helgdag',
+      celebration: 'Firardag',
+      themeDay: 'Temadag',
+      themeDays: (count: number) => `Temadagar x${count}`,
+    },
+    timing: {
+      waitsTomorrow: 'väntar i morgon',
+      waitsInDays: (days: number) => `väntar om ${days} dagar`,
+      arrivesTomorrow: 'dyker upp i morgon',
+      arrivesInDays: (days: number) => `dyker upp om ${days} dagar`,
+      comesTomorrow: 'kommer i morgon',
+      comesInDays: (days: number) => `kommer om ${days} dagar`,
+      liesAheadTomorrow: 'ligger i morgon',
+      liesAheadInDays: (days: number) => `ligger ${days} dagar bort`,
+    },
+    notes: {
+      holidayWithExtras: [
+        '{title} {arrives}, och {extras} skramlar med på köpet.',
+        '{title} {waits}. Som bonus har även {extras} lyckats klämma sig in i samma datum.',
+        '{title} {comes}, och {extras} hänger på som ett märkligt litet förband.',
+        '{title} {liesAhead}. Samtidigt vägrar {extras} att hålla en låg profil.',
+      ],
+      holidaySolo:
+        '{title} {arrives}, så veckan har åtminstone ett officiellt alibi på väg.',
+      celebrationWithExtras: [
+        '{title} {waits}. Samtidigt smyger {extras} runt i bakgrunden och vill också bli sedd.',
+        '{title} {arrives}, och {extras} tänker tydligen inte stå tyst bredvid.',
+        '{title} {comes}. Som vanligt räckte inte det, så {extras} har också lagt sig i.',
+        '{title} {liesAhead}, medan {extras} fladdrar runt som bonusmaterial ingen bett om men ändå får.',
+        '{title} {waits}, och {extras} står redan där och fingrar på ridån.',
+        '{title} {comes}. Dessutom har {extras} bestämt sig för att dela strålkastaren.',
+      ],
+      celebrationSolo: [
+        '{title} {waits}, vilket ändå är bättre än att blicka rakt in i rå vardag.',
+        '{title} {arrives}, och veckan får därmed något som åtminstone liknar personlighet.',
+        '{title} {comes}. Det är inte storslaget kanske, men det slår absolut kalendermässigt dödläge.',
+        '{title} {liesAhead}, vilket räcker för att hela veckan ska kännas marginellt mindre grå.',
+      ],
+      themeDayWithExtras: [
+        '{title} {waits}, och {extras} klamrar sig också fast vid datumet.',
+        '{title} {arrives}. Dessutom lyckades {extras} få plats i samma lilla kalenderspricka.',
+        '{title} {liesAhead}, och {extras} tänker tydligen inte lämna scenen ensam.',
+        '{title} {comes}. Som om det inte räckte så hasar även {extras} in från sidan.',
+      ],
+      themeDaySolo: [
+        '{title} {waits}. Kalendern försöker åtminstone se mindre livlös ut än vanligt.',
+        '{title} {arrives}, vilket är oväntat mycket personlighet för ett helt vanligt datum.',
+        '{title} {waits}. Det är exakt den sortens smala värdighet man får arbeta med ibland.',
+        '{title} {comes}, och det är ändå mer kultur än veckan först gav sken av.',
+        '{title} {liesAhead}. Smalt, ja, men fortfarande märkbart bättre än total kalendertorka.',
+        '{title} {waits}. Någon tog sig tid att ge datumet en egen liten nisch, och det får man respektera.',
+      ],
+    },
+  },
+  en: {
+    labels: {
+      holiday: 'Holiday',
+      celebration: 'Celebration',
+      themeDay: 'Theme day',
+      themeDays: (count: number) => `Theme days x${count}`,
+    },
+    timing: {
+      waitsTomorrow: 'waits tomorrow',
+      waitsInDays: (days: number) => `waits in ${days} days`,
+      arrivesTomorrow: 'shows up tomorrow',
+      arrivesInDays: (days: number) => `shows up in ${days} days`,
+      comesTomorrow: 'arrives tomorrow',
+      comesInDays: (days: number) => `arrives in ${days} days`,
+      liesAheadTomorrow: 'sits there tomorrow',
+      liesAheadInDays: (days: number) => `sits ${days} days ahead`,
+    },
+    notes: {
+      holidayWithExtras: [
+        '{title} {arrives}, and {extras} comes rattling along with it.',
+        '{title} {waits}. As a bonus, {extras} also managed to squeeze into the same date.',
+        '{title} {comes}, and {extras} tags along like a strange little opening act.',
+        '{title} {liesAhead}. Meanwhile, {extras} refuses to keep a low profile.',
+      ],
+      holidaySolo:
+        '{title} {arrives}, so the week at least has one official breach in the wall coming.',
+      celebrationWithExtras: [
+        '{title} {waits}. At the same time, {extras} is already lurking in the background demanding to be seen.',
+        '{title} {arrives}, and {extras} clearly has no intention of standing quietly off to the side.',
+        '{title} {comes}. As usual that was not enough, so {extras} has inserted itself as well.',
+        '{title} {liesAhead}, while {extras} flutters around like bonus material no one requested but still gets.',
+        '{title} {waits}, and {extras} is already there fingering the curtain.',
+        '{title} {comes}. On top of that, {extras} has decided it deserves a share of the spotlight.',
+      ],
+      celebrationSolo: [
+        '{title} {waits}, which is still better than staring straight into raw weekday matter.',
+        '{title} {arrives}, and the week therefore acquires something faintly resembling personality.',
+        '{title} {comes}. Not monumental, perhaps, but still vastly better than calendar deadlock.',
+        '{title} {liesAhead}, which is enough to make the whole week feel marginally less grey.',
+      ],
+      themeDayWithExtras: [
+        '{title} {waits}, and {extras} is also clinging stubbornly to the date.',
+        '{title} {arrives}. On top of that, {extras} somehow secured room in the same tiny calendar crack.',
+        '{title} {liesAhead}, and {extras} apparently has no intention of leaving the stage alone.',
+        '{title} {comes}. As if that were not enough, {extras} also shuffles in from the side.',
+      ],
+      themeDaySolo: [
+        '{title} {waits}. The calendar is at least trying to look less lifeless than usual.',
+        '{title} {arrives}, which is an unexpectedly large amount of personality for an otherwise ordinary date.',
+        '{title} {waits}. Exactly the sort of narrow little dignity one has to work with sometimes.',
+        '{title} {comes}, and that is still more culture than the week first suggested.',
+        '{title} {liesAhead}. Niche, yes, but still markedly better than total calendar drought.',
+        '{title} {waits}. Someone took the trouble to give the date its own little niche, and one has to respect that.',
+      ],
+    },
+  },
+};
 
 function toLocalDateOnly(date: Date): Date {
   return new Date(date.getFullYear(), date.getMonth(), date.getDate());
@@ -47,8 +192,12 @@ function getOfficialHolidayForDate(date: Date): OfficialHoliday | null {
   );
 }
 
-function getCelebrationDisplayName(dayType: Exclude<DayType, 'ordinary'>): string {
-  const aliases = getCelebrationThemeAliases(dayType);
+function getCelebrationDisplayName(
+  dayType: Exclude<DayType, 'ordinary'>,
+  locale: Locale
+): string {
+  const celebrations = getCelebrations(locale);
+  const aliases = getCelebrationThemeAliases(dayType, locale);
   if (aliases.length > 0) {
     return aliases[0];
   }
@@ -61,115 +210,95 @@ function pickCopyVariant(seed: string, options: string[]): string {
   return options[value % options.length];
 }
 
-function getWaitsPhrase(daysUntil: number): string {
-  return daysUntil === 1 ? 'väntar i morgon' : `väntar om ${daysUntil} dagar`;
+function getTimingPhrases(daysUntil: number, locale: Locale) {
+  const timing = upcomingCopyByLocale[locale].timing;
+
+  return {
+    waits: daysUntil === 1 ? timing.waitsTomorrow : timing.waitsInDays(daysUntil),
+    arrives: daysUntil === 1 ? timing.arrivesTomorrow : timing.arrivesInDays(daysUntil),
+    comes: daysUntil === 1 ? timing.comesTomorrow : timing.comesInDays(daysUntil),
+    liesAhead:
+      daysUntil === 1 ? timing.liesAheadTomorrow : timing.liesAheadInDays(daysUntil),
+  };
 }
 
-function getArrivesPhrase(daysUntil: number): string {
-  return daysUntil === 1 ? 'dyker upp i morgon' : `dyker upp om ${daysUntil} dagar`;
-}
-
-function getComesPhrase(daysUntil: number): string {
-  return daysUntil === 1 ? 'kommer i morgon' : `kommer om ${daysUntil} dagar`;
-}
-
-function getLiesAheadPhrase(daysUntil: number): string {
-  return daysUntil === 1 ? 'ligger i morgon' : `ligger ${daysUntil} dagar bort`;
+function interpolate(
+  template: string,
+  values: Record<'title' | 'extras' | 'waits' | 'arrives' | 'comes' | 'liesAhead', string>
+): string {
+  return template
+    .replaceAll('{title}', values.title)
+    .replaceAll('{extras}', values.extras)
+    .replaceAll('{waits}', values.waits)
+    .replaceAll('{arrives}', values.arrives)
+    .replaceAll('{comes}', values.comes)
+    .replaceAll('{liesAhead}', values.liesAhead);
 }
 
 function getUpcomingNote(
   kind: UpcomingNotableKind,
   title: string,
   daysUntil: number,
-  extras: string[]
+  extras: string[],
+  locale: Locale
 ): string {
-  const waitsPhrase = getWaitsPhrase(daysUntil);
-  const arrivesPhrase = getArrivesPhrase(daysUntil);
-  const comesPhrase = getComesPhrase(daysUntil);
-  const liesAheadPhrase = getLiesAheadPhrase(daysUntil);
+  const copy = upcomingCopyByLocale[locale];
+  const timing = getTimingPhrases(daysUntil, locale);
+  const values = {
+    title,
+    extras: joinWithAnd(extras, locale).toLowerCase(),
+    waits: timing.waits,
+    arrives: timing.arrives,
+    comes: timing.comes,
+    liesAhead: timing.liesAhead,
+  };
 
   if (kind === 'holiday') {
     if (extras.length > 0) {
-      return pickCopyVariant(`${title}-${daysUntil}-holiday-extras`, [
-        `${title} ${arrivesPhrase}, och ${joinWithAnd(
-          extras
-        ).toLowerCase()} skramlar med på köpet.`,
-        `${title} ${waitsPhrase}. Som bonus har även ${joinWithAnd(
-          extras
-        ).toLowerCase()} lyckats klämma sig in i samma datum.`,
-        `${title} ${comesPhrase}, och ${joinWithAnd(
-          extras
-        ).toLowerCase()} hänger på som ett märkligt litet förband.`,
-        `${title} ${liesAheadPhrase}. Samtidigt vägrar ${joinWithAnd(
-          extras
-        ).toLowerCase()} att hålla en låg profil.`,
-      ]);
+      return interpolate(
+        pickCopyVariant(`${title}-${daysUntil}-holiday-extras-${locale}`, copy.notes.holidayWithExtras),
+        values
+      );
     }
 
-    return `${title} ${arrivesPhrase}, så veckan har åtminstone ett officiellt alibi på väg.`;
+    return interpolate(copy.notes.holidaySolo, values);
   }
 
   if (kind === 'celebration') {
     if (extras.length > 0) {
-      return pickCopyVariant(`${title}-${daysUntil}-celebration-extras`, [
-        `${title} ${waitsPhrase}. Samtidigt smyger ${joinWithAnd(
-          extras
-        ).toLowerCase()} runt i bakgrunden och vill också bli sedd.`,
-        `${title} ${arrivesPhrase}, och ${joinWithAnd(
-          extras
-        ).toLowerCase()} tänker tydligen inte stå tyst bredvid.`,
-        `${title} ${comesPhrase}. Som vanligt räckte inte det, så ${joinWithAnd(
-          extras
-        ).toLowerCase()} har också lagt sig i.`,
-        `${title} ${liesAheadPhrase}, medan ${joinWithAnd(
-          extras
-        ).toLowerCase()} fladdrar runt som bonusmaterial ingen bett om men ändå får.`,
-        `${title} ${waitsPhrase}, och ${joinWithAnd(
-          extras
-        ).toLowerCase()} står redan där och fingrar på ridån.`,
-        `${title} ${comesPhrase}. Dessutom har ${joinWithAnd(
-          extras
-        ).toLowerCase()} bestämt sig för att dela strålkastaren.`,
-      ]);
+      return interpolate(
+        pickCopyVariant(
+          `${title}-${daysUntil}-celebration-extras-${locale}`,
+          copy.notes.celebrationWithExtras
+        ),
+        values
+      );
     }
 
-    return pickCopyVariant(`${title}-${daysUntil}-celebration`, [
-      `${title} ${waitsPhrase}, vilket ändå är bättre än att blicka rakt in i rå vardag.`,
-      `${title} ${arrivesPhrase}, och veckan får därmed något som åtminstone liknar personlighet.`,
-      `${title} ${comesPhrase}. Det är inte storslaget kanske, men det slår absolut kalendermässigt dödläge.`,
-      `${title} ${liesAheadPhrase}, vilket räcker för att hela veckan ska kännas marginellt mindre grå.`,
-    ]);
+    return interpolate(
+      pickCopyVariant(`${title}-${daysUntil}-celebration-${locale}`, copy.notes.celebrationSolo),
+      values
+    );
   }
 
   if (extras.length > 0) {
-    return pickCopyVariant(`${title}-${daysUntil}-extras`, [
-      `${title} ${waitsPhrase}, och ${joinWithAnd(extras).toLowerCase()} klamrar sig också fast vid datumet.`,
-      `${title} ${arrivesPhrase}. Dessutom lyckades ${joinWithAnd(
-        extras
-      ).toLowerCase()} få plats i samma lilla kalenderspricka.`,
-      `${title} ${liesAheadPhrase}, och ${joinWithAnd(
-        extras
-      ).toLowerCase()} tänker tydligen inte lämna scenen ensam.`,
-      `${title} ${comesPhrase}. Som om det inte räckte så hasar även ${joinWithAnd(
-        extras
-      ).toLowerCase()} in från sidan.`,
-    ]);
+    return interpolate(
+      pickCopyVariant(`${title}-${daysUntil}-themeday-extras-${locale}`, copy.notes.themeDayWithExtras),
+      values
+    );
   }
 
-  return pickCopyVariant(`${title}-${daysUntil}`, [
-    `${title} ${waitsPhrase}. Kalendern försöker åtminstone se mindre livlös ut än vanligt.`,
-    `${title} ${arrivesPhrase}, vilket är oväntat mycket personlighet för ett helt vanligt datum.`,
-    `${title} ${waitsPhrase}. Det är exakt den sortens smala värdighet man får arbeta med ibland.`,
-    `${title} ${comesPhrase}, och det är ändå mer kultur än veckan först gav sken av.`,
-    `${title} ${liesAheadPhrase}. Smalt, ja, men fortfarande märkbart bättre än total kalendertorka.`,
-    `${title} ${waitsPhrase}. Någon tog sig tid att ge datumet en egen liten nisch, och det får man respektera.`,
-  ]);
+  return interpolate(
+    pickCopyVariant(`${title}-${daysUntil}-themeday-${locale}`, copy.notes.themeDaySolo),
+    values
+  );
 }
 
 export function getUpcomingNotables(
   inputDate: Date,
   maxItems = 4,
-  lookaheadDays = 21
+  lookaheadDays = 21,
+  locale: Locale = 'sv'
 ): UpcomingNotable[] {
   const startDate = toLocalDateOnly(inputDate);
   const priorityItems: UpcomingNotable[] = [];
@@ -194,20 +323,26 @@ export function getUpcomingNotables(
 
     if (officialHoliday) {
       kind = 'holiday';
-      label = 'Helgdag';
-      title = officialHoliday.name;
+      label = upcomingCopyByLocale[locale].labels.holiday;
+      title = translateOfficialHolidayName(officialHoliday.name, locale);
     } else if (hasMajorCelebration) {
       const celebrationDayType = dayStatus.dayType as Exclude<DayType, 'ordinary'>;
       kind = 'celebration';
-      label = 'Firardag';
-      title = getCelebrationDisplayName(celebrationDayType);
+      label = upcomingCopyByLocale[locale].labels.celebration;
+      title = getCelebrationDisplayName(celebrationDayType, locale);
     } else {
       kind = 'themeday';
-      label = themeDays.length > 1 ? `Temadagar x${themeDays.length}` : 'Temadag';
-      title = themeDays[0];
+      label =
+        themeDays.length > 1
+          ? upcomingCopyByLocale[locale].labels.themeDays(themeDays.length)
+          : upcomingCopyByLocale[locale].labels.themeDay;
+      title = translateThemeDayName(themeDays[0], locale);
     }
 
-    const extras = themeDays.filter((themeDay) => themeDay !== title).slice(0, 2);
+    const extras = themeDays
+      .map((themeDay) => translateThemeDayName(themeDay, locale))
+      .filter((themeDay) => themeDay !== title)
+      .slice(0, 2);
 
     const item = {
       date,
@@ -216,7 +351,7 @@ export function getUpcomingNotables(
       kind,
       label,
       title,
-      note: getUpcomingNote(kind, title, offset, extras),
+      note: getUpcomingNote(kind, title, offset, extras, locale),
     };
 
     if (kind === 'themeday') {

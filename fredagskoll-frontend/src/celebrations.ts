@@ -1,6 +1,8 @@
 import carltonGif from './gifs/carlton.gif';
 import carltonChristmasGif from './gifs/carltonchristmas.gif';
+import celebrationsEn from './data/celebrations.en.json';
 import { DayType } from './dayLogic';
+import { Locale } from './locale';
 export type CelebrationTheme =
   | 'ordinary'
   | 'jam'
@@ -22,10 +24,34 @@ export type CelebrationContent = {
   visualBody?: string;
   theme: CelebrationTheme;
 };
-export const ordinaryBlurb =
+type CelebrationLocalePayload = {
+  ordinaryBlurb: string;
+  ordinaryWeekdayBlurbs: string[];
+  ordinaryWeekendBlurbs: string[];
+  celebrationThemeAliases: Record<Exclude<DayType, 'ordinary'>, string[]>;
+  celebrations: Record<
+    Exclude<DayType, 'ordinary'>,
+    Pick<
+      CelebrationContent,
+      | 'title'
+      | 'subtitle'
+      | 'kicker'
+      | 'alt'
+      | 'blurbs'
+      | 'visualBadge'
+      | 'visualTitle'
+      | 'visualBody'
+      | 'theme'
+    >
+  >;
+};
+
+const englishCelebrationContent = celebrationsEn as CelebrationLocalePayload;
+
+const ordinaryBlurbSv =
   'Nej, idag är det inte någon svensk firardag som platsar här.';
 
-export const ordinaryWeekdayBlurbs = [
+const ordinaryWeekdayBlurbsSv = [
   'Det är en vanlig arbetsdag. Du får skapa din egen stämning, och det känns ju tveksamt.',
   'Ingen högtid har räddat den här dagen. Det är bara du, kalendern och ett stilla missnöje.',
   'Det finns ingen officiell ursäkt idag, bara den vanliga sortens vardaglig uppgivenhet.',
@@ -60,7 +86,7 @@ export const ordinaryWeekdayBlurbs = [
   'Det här är administrationens egen lilla arbetsseger: en dag som inte stör, gläder eller ursäktar något alls.',
 ];
 
-export const ordinaryWeekendBlurbs = [
+const ordinaryWeekendBlurbsSv = [
   'Det är helg, men inte på det minsta glittriga sättet. Bara frihet med lätt städsmak i bakgrunden.',
   'Ingen högtid styr den här helgen. Det är du, en soffa och en vag känsla av att något borde bli gjort.',
   'Datumet erbjuder ingen officiell fest, bara den vanliga helgfriden blandad med diskret dåligt samvete.',
@@ -83,7 +109,7 @@ export const ordinaryWeekendBlurbs = [
   'Helgens stora innehåll idag är att den pågår. Man får tydligen vara tacksam för det.',
 ];
 
-export function getCelebrationThemeAliases(dayType: Exclude<DayType, 'ordinary'>): string[] {
+function getCelebrationThemeAliasesSv(dayType: Exclude<DayType, 'ordinary'>): string[] {
   switch (dayType) {
     case 'allahjartansdag':
       return ['Alla hjärtans dag'];
@@ -122,7 +148,7 @@ export function getCelebrationThemeAliases(dayType: Exclude<DayType, 'ordinary'>
   }
 }
 
-export const celebrations: Record<Exclude<DayType, 'ordinary'>, CelebrationContent> = {
+const celebrationsSv: Record<Exclude<DayType, 'ordinary'>, CelebrationContent> = {
   allahjartansdag: {
     title: 'Alla hjärtans dag, för fan',
     subtitle: 'Minimal frostskada i tonen är fullt tillräckligt.',
@@ -497,3 +523,43 @@ export const celebrations: Record<Exclude<DayType, 'ordinary'>, CelebrationConte
     theme: 'jam',
   },
 };
+
+const celebrationsEnLocalized = Object.fromEntries(
+  (Object.keys(celebrationsSv) as Array<Exclude<DayType, 'ordinary'>>).map((dayType) => [
+    dayType,
+    {
+      ...celebrationsSv[dayType],
+      ...englishCelebrationContent.celebrations[dayType],
+      primaryImage: celebrationsSv[dayType].primaryImage,
+      secondaryImage: celebrationsSv[dayType].secondaryImage,
+      theme: celebrationsSv[dayType].theme,
+    },
+  ])
+) as Record<Exclude<DayType, 'ordinary'>, CelebrationContent>;
+
+export function getOrdinaryBlurb(locale: Locale): string {
+  return locale === 'en' ? englishCelebrationContent.ordinaryBlurb : ordinaryBlurbSv;
+}
+
+export function getOrdinaryDayBlurbs(locale: Locale, isWeekend: boolean): string[] {
+  if (locale === 'en') {
+    return isWeekend
+      ? englishCelebrationContent.ordinaryWeekendBlurbs
+      : englishCelebrationContent.ordinaryWeekdayBlurbs;
+  }
+
+  return isWeekend ? ordinaryWeekendBlurbsSv : ordinaryWeekdayBlurbsSv;
+}
+
+export function getCelebrationThemeAliases(
+  dayType: Exclude<DayType, 'ordinary'>,
+  locale: Locale = 'sv'
+): string[] {
+  return locale === 'en'
+    ? englishCelebrationContent.celebrationThemeAliases[dayType]
+    : getCelebrationThemeAliasesSv(dayType);
+}
+
+export function getCelebrations(locale: Locale): Record<Exclude<DayType, 'ordinary'>, CelebrationContent> {
+  return locale === 'en' ? celebrationsEnLocalized : celebrationsSv;
+}
