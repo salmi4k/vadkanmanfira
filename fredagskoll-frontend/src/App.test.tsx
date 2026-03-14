@@ -94,6 +94,18 @@ test('renders Surströmmingspremiär ahead of the generic Thursday fallback', as
   expect(screen.queryByText(/FISKTORSDAG/i)).not.toBeInTheDocument();
 });
 
+test('renders Fisktorsdag using the cleaned non-branded image', async () => {
+  await renderAppAt(new Date(2026, 2, 19));
+
+  expect(
+    screen.getByRole('heading', { level: 2, name: /Fisktorsdag håller ihop civilisationen/i })
+  ).toBeInTheDocument();
+  expect(screen.getByAltText(/Fisktorsdag/i)).toHaveAttribute(
+    'src',
+    '/fisktorsdag-fixed-composite.png'
+  );
+});
+
 test('does not render Fettisdag content on a random Tuesday', async () => {
   await renderAppAt(new Date(2026, 2, 30));
   expect(screen.queryByText(/FETTISDAG/i)).not.toBeInTheDocument();
