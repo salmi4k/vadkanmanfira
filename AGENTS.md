@@ -1,4 +1,4 @@
-# Fredagskoll Agent Notes
+# Vad kan man fira? Agent Notes
 
 ## Scope
 
@@ -6,12 +6,19 @@
   `fredagskoll-frontend`.
 - Media files such as `.gif`, `.png`, `.jpg`, and `.webp` are intentionally
   committed because they are part of the app experience.
+- The app has two content packs:
+  - `public` is the default and should stay safe for public deployment
+  - `team` contains private recurring weekday lore and the Mojo branding
+- `main` is intended to deploy both variants from the same codebase with
+  different `REACT_APP_CONTENT_PACK` values.
 
 ## Runbook
 
 - Run the frontend from `fredagskoll-frontend` with `npm start`.
 - The frontend day classification lives in
   `fredagskoll-frontend/src/dayLogic.ts`.
+- Content-pack boundaries live in
+  `fredagskoll-frontend/src/contentPack.ts`.
 - Use `CI=true npm test -- --runInBand` semantics when sandboxed test runners
   complain about watch mode or process spawning.
 
@@ -20,6 +27,8 @@
 - If you add or rename a built-in celebration, update both
   `fredagskoll-frontend/src/dayLogic.ts` and
   `fredagskoll-frontend/src/celebrations.ts`.
+- If a change is team-only, keep it behind the `team` content pack instead of
+  leaking it into the shared public default.
 - Keep date formatting, holiday presentation, and other pure helpers out of
   `App.tsx` when practical.
 - Keep frontend tests aligned with the day classification rules. The current

@@ -2,9 +2,10 @@ import React from 'react';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import App from './App';
 import { buildInfo } from './buildInfo.generated';
+import { ContentPack } from './contentPack';
 
-async function renderAppAt(date: Date): Promise<void> {
-  render(<App initialDate={date} />);
+async function renderAppAt(date: Date, contentPack?: ContentPack): Promise<void> {
+  render(<App initialDate={date} contentPack={contentPack} />);
   await waitFor(() =>
     expect(
       screen.queryByText(/Laddar namnsdag från öppet API/i)
@@ -41,8 +42,16 @@ afterEach(() => {
   jest.restoreAllMocks();
 });
 
-test('renders Wednesday content for an ordinary Wednesday', async () => {
+test('renders ordinary public content for a regular Wednesday', async () => {
   await renderAppAt(new Date(2026, 6, 8));
+  expect(screen.queryByRole('heading', { level: 2, name: /KÖTTONSDAG/i })).not.toBeInTheDocument();
+  expect(
+    screen.getByRole('heading', { level: 2, name: /En vanlig dag/i })
+  ).toBeInTheDocument();
+});
+
+test('renders team-pack Wednesday content when the team pack is active', async () => {
+  await renderAppAt(new Date(2026, 6, 8), 'team');
   expect(
     screen.getByRole('heading', { level: 2, name: /KÖTTONSDAG/i })
   ).toBeInTheDocument();
@@ -96,7 +105,7 @@ test('renders Surströmmingspremiär ahead of the generic Thursday fallback', as
 });
 
 test('renders Fisktorsdag using the cleaned non-branded image', async () => {
-  await renderAppAt(new Date(2026, 2, 19));
+  await renderAppAt(new Date(2026, 2, 19), 'team');
 
   expect(
     screen.getByRole('heading', { level: 2, name: /Fisktorsdag/i })
@@ -329,7 +338,7 @@ test('rerolls the excuse when clicking Ny ursäkt', async () => {
     .mockReturnValueOnce(0)
     .mockReturnValueOnce(0.99);
 
-  await renderAppAt(new Date(2026, 2, 13));
+  await renderAppAt(new Date(2026, 2, 13), 'team');
 
   expect(
     screen.getByText(/Veckan är över\. Nu återstår bara att låtsas vara klar med allt\./i)

@@ -204,6 +204,26 @@
   gap: 1.4rem;
 }
 
+.brand-block--text-only {
+  gap: 0.85rem;
+}
+
+.brand-mark {
+  display: inline-grid;
+  justify-items: center;
+  width: fit-content;
+  gap: 0.55rem;
+}
+
+.brand-mark-label {
+  font-size: 0.9rem;
+  font-weight: 900;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: var(--accent);
+  padding-left: 0.42em;
+}
+
 .brand-logo {
   width: min(100%, 250px);
   border-radius: 28px;
@@ -218,6 +238,23 @@
   transform: translateY(-2px) scale(1.015);
   box-shadow: 0 22px 56px rgba(0, 0, 0, 0.34);
   filter: saturate(0.95) brightness(0.98);
+}
+
+.brand-logo--public {
+  background:
+    radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.52), transparent 30%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.46), rgba(255, 255, 255, 0.18)),
+    linear-gradient(135deg, var(--accent-soft), rgba(255, 255, 255, 0.12));
+  border: 1px solid var(--panel-border);
+  padding: 0.5rem;
+}
+
+.App.dark .brand-logo--public {
+  background:
+    radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.12), transparent 30%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03)),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02));
+  box-shadow: 0 22px 56px rgba(0, 0, 0, 0.26);
 }
 
 .brand-copy {
@@ -1071,6 +1108,11 @@
 
   .brand-logo {
     width: min(100%, 180px);
+  }
+
+  .brand-mark-label {
+    font-size: 0.82rem;
+    letter-spacing: 0.36em;
   }
 
   .brand-title {

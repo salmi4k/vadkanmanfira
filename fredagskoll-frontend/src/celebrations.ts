@@ -1,5 +1,11 @@
 import carltonGif from './gifs/carlton.gif';
 import carltonChristmasGif from './gifs/carltonchristmas.gif';
+import {
+  ContentPack,
+  TeamWeekdayDayType,
+  getActiveContentPack,
+  isTeamWeekdayDayType,
+} from './contentPack';
 import celebrationsEn from './data/celebrations.en.json';
 import { DayType } from './dayLogic';
 import { Locale } from './locale';
@@ -537,6 +543,37 @@ const celebrationsEnLocalized = Object.fromEntries(
   ])
 ) as Record<Exclude<DayType, 'ordinary'>, CelebrationContent>;
 
+function splitCelebrationsByPack<T extends Record<Exclude<DayType, 'ordinary'>, unknown>>(
+  celebrations: T
+): {
+  shared: Omit<T, TeamWeekdayDayType>;
+  teamOnly: Pick<T, TeamWeekdayDayType>;
+} {
+  const entries = Object.entries(celebrations) as Array<[Exclude<DayType, 'ordinary'>, T[keyof T]]>;
+  const sharedEntries = entries.filter(([dayType]) => !isTeamWeekdayDayType(dayType));
+  const teamEntries = entries.filter(([dayType]) => isTeamWeekdayDayType(dayType));
+
+  return {
+    shared: Object.fromEntries(sharedEntries) as Omit<T, TeamWeekdayDayType>,
+    teamOnly: Object.fromEntries(teamEntries) as Pick<T, TeamWeekdayDayType>,
+  };
+}
+
+const celebrationAliasesSv = Object.fromEntries(
+  (
+    Object.keys(celebrationsSv) as Array<Exclude<DayType, 'ordinary'>>
+  ).map((dayType) => [dayType, getCelebrationThemeAliasesSv(dayType)])
+) as Record<Exclude<DayType, 'ordinary'>, string[]>;
+
+const { shared: sharedCelebrationsSv, teamOnly: teamCelebrationsSv } =
+  splitCelebrationsByPack(celebrationsSv);
+const { shared: sharedCelebrationsEn, teamOnly: teamCelebrationsEn } =
+  splitCelebrationsByPack(celebrationsEnLocalized);
+const { shared: sharedAliasesSv, teamOnly: teamAliasesSv } =
+  splitCelebrationsByPack(celebrationAliasesSv);
+const { shared: sharedAliasesEn, teamOnly: teamAliasesEn } =
+  splitCelebrationsByPack(englishCelebrationContent.celebrationThemeAliases);
+
 export function getOrdinaryBlurb(locale: Locale): string {
   return locale === 'en' ? englishCelebrationContent.ordinaryBlurb : ordinaryBlurbSv;
 }
@@ -553,13 +590,35 @@ export function getOrdinaryDayBlurbs(locale: Locale, isWeekend: boolean): string
 
 export function getCelebrationThemeAliases(
   dayType: Exclude<DayType, 'ordinary'>,
-  locale: Locale = 'sv'
+  locale: Locale = 'sv',
+  contentPack: ContentPack = getActiveContentPack()
 ): string[] {
-  return locale === 'en'
-    ? englishCelebrationContent.celebrationThemeAliases[dayType]
-    : getCelebrationThemeAliasesSv(dayType);
+  if (isTeamWeekdayDayType(dayType) && contentPack !== 'team') {
+    return [];
+  }
+
+  const aliases = (locale === 'en'
+    ? contentPack === 'team'
+      ? { ...sharedAliasesEn, ...teamAliasesEn }
+      : sharedAliasesEn
+    : contentPack === 'team'
+      ? { ...sharedAliasesSv, ...teamAliasesSv }
+      : sharedAliasesSv) as Partial<Record<Exclude<DayType, 'ordinary'>, string[]>>;
+
+  return aliases[dayType] ?? [];
 }
 
-export function getCelebrations(locale: Locale): Record<Exclude<DayType, 'ordinary'>, CelebrationContent> {
-  return locale === 'en' ? celebrationsEnLocalized : celebrationsSv;
+export function getCelebrations(
+  locale: Locale,
+  contentPack: ContentPack = getActiveContentPack()
+): Record<Exclude<DayType, 'ordinary'>, CelebrationContent> {
+  if (locale === 'en') {
+    return (contentPack === 'team'
+      ? { ...sharedCelebrationsEn, ...teamCelebrationsEn }
+      : sharedCelebrationsEn) as Record<Exclude<DayType, 'ordinary'>, CelebrationContent>;
+  }
+
+  return (contentPack === 'team'
+    ? { ...sharedCelebrationsSv, ...teamCelebrationsSv }
+    : sharedCelebrationsSv) as Record<Exclude<DayType, 'ordinary'>, CelebrationContent>;
 }

@@ -1,6 +1,6 @@
-# Fredagskoll Frontend
+# Vad kan man fira? Frontend
 
-This folder contains the actual product application for Fredagskoll.
+This folder contains the actual product application for `Vad kan man fira?`.
 
 ## What it does
 
@@ -9,6 +9,7 @@ This folder contains the actual product application for Fredagskoll.
 - fetches namnsdag data from the `sholiday` API
 - shows upcoming official holidays and notable dates
 - renders themed media, blurbs, and public image credits
+- supports separate `public` and `team` content packs on the same shared core
 
 ## Local development
 
@@ -18,6 +19,13 @@ npm start
 ```
 
 The dev server runs on `http://localhost:3000`.
+
+Run the team variant locally:
+
+```sh
+$env:REACT_APP_CONTENT_PACK="team"
+npm start
+```
 
 ## Quality checks
 
@@ -31,10 +39,12 @@ npm run build
 
 - `src/App.tsx`
   Main composition layer
+- `src/contentPack.ts`
+  Public/team pack selection and recurring weekday rules
 - `src/dayLogic.ts`
   Day classification and official holiday calculations
 - `src/celebrations.ts`
-  Built-in celebration content
+  Built-in celebration content with pack-aware exports
 - `src/themeDaySpecificBlurbs.ts`
   Handwritten temadag overrides
 - `src/themeDayCategoryBlurbs.ts`
@@ -49,4 +59,9 @@ npm run build
 The app is deployed via Azure Static Web Apps from the repository root
 workflow:
 
-- `.github/workflows/azure-static-web-apps-delightful-ground-0b3aa2b03.yml`
+- `.github/workflows/deploy-static-apps.yml`
+
+That workflow builds the same app twice from `main`:
+
+- `REACT_APP_CONTENT_PACK=public` -> `vadkanmanfira`
+- `REACT_APP_CONTENT_PACK=team` -> `fredagskoll`

@@ -2,7 +2,7 @@ import themeDayTranslationsEn from './data/themeDayTranslations.en.json';
 
 export type Locale = 'sv' | 'en';
 
-export const LOCALE_STORAGE_KEY = 'fredagskoll.locale';
+export const LOCALE_STORAGE_KEY = 'vadkanmanfira.locale';
 
 const officialHolidayTranslations: Record<string, string> = {
   Nyårsdagen: "New Year's Day",
