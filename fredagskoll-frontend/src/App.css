@@ -110,9 +110,11 @@
 .app-grid {
   min-height: 100vh;
   display: grid;
-  grid-template-columns: minmax(280px, 330px) minmax(0, 870px);
-  gap: 3.4rem;
+  grid-template-columns: minmax(280px, 330px) minmax(0, 1fr);
+  gap: clamp(1.5rem, 3vw, 3.4rem);
   padding: 2rem;
+  max-width: 1320px;
+  margin: 0 auto;
   align-items: stretch;
   position: relative;
   z-index: 1;
@@ -542,6 +544,15 @@
   overflow-wrap: normal;
   hyphens: manual;
   text-wrap: pretty;
+}
+
+.celebration-title--longword {
+  font-size: clamp(1.95rem, 3.9vw, 3.2rem);
+  max-width: none;
+  line-height: 0.92;
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: manual;
 }
 
 .media-grid {
