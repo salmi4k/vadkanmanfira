@@ -26,3 +26,21 @@ test('localizes significance labels in English mode', () => {
     significance: 'Independence Day',
   });
 });
+
+test('localizes nation and significance labels in Brazilian Portuguese', () => {
+  const panel = getNationalDayPanel(new Date(2026, 2, 17), 'pt-BR', 10);
+
+  expect(panel).not.toBeNull();
+  expect(panel?.items).toEqual(
+    expect.arrayContaining([
+      expect.objectContaining({
+        nation: 'Irlanda',
+        significance: 'Dia de São Patrício',
+      }),
+      expect.objectContaining({
+        nation: 'Irlanda do Norte (Reino Unido)',
+        significance: 'Dia de São Patrício',
+      }),
+    ])
+  );
+});

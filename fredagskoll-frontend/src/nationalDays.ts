@@ -1,4 +1,6 @@
 import nationalDaysByDate from './data/nationalDaysByDate.json';
+import nationalDayNationsPtBr from './data/nationalDayNations.pt-BR.json';
+import nationalDaySignificancesPtBr from './data/nationalDaySignificances.pt-BR.json';
 import { Locale } from './locale';
 
 type NationalDayRecord = {
@@ -102,6 +104,9 @@ const significanceTranslations: Record<string, Partial<Record<Locale, string>>> 
   },
 };
 
+const portugueseNationTranslations = nationalDayNationsPtBr as Record<string, string>;
+const portugueseSignificanceTranslations = nationalDaySignificancesPtBr as Record<string, string>;
+
 const summaryTemplates: Record<Locale, string[]> = {
   sv: [
     '{lead} har uppenbarligen högre ceremoniell ambition än den här kalendern först antydde.',
@@ -143,7 +148,20 @@ function localizeSignificance(significance: string, locale: Locale): string {
   if (locale === 'en') {
     return significance;
   }
+
+  if (locale === 'pt-BR') {
+    return portugueseSignificanceTranslations[significance] ?? significance;
+  }
+
   return significanceTranslations[significance]?.[locale] ?? significanceTranslations[significance]?.sv ?? significance;
+}
+
+function localizeNation(nation: string, locale: Locale): string {
+  if (locale === 'pt-BR') {
+    return portugueseNationTranslations[nation] ?? nation;
+  }
+
+  return nation;
 }
 
 function pickVariant(seed: string, options: string[]): string {
@@ -263,7 +281,7 @@ export function getNationalDayPanel(
   const rawItems = ((nationalDaysByDate as Record<string, NationalDayRecord[]>)[dateKey] ?? [])
     .filter((item) => item.nation !== 'Sweden')
     .map((item) => ({
-      nation: item.nation,
+      nation: localizeNation(item.nation, locale),
       significance: localizeSignificance(item.significance, locale),
       description: item.description,
     }));
