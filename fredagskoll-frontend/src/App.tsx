@@ -8,7 +8,18 @@ import {
   ordinaryBlurb,
   ordinaryWeekdayBlurbs,
 } from './celebrations';
+import { usesCompactPrimaryMedia, formatTitle, hasLongTitleWord } from './celebrationPresentation';
+import {
+  addDays,
+  formatCenterDate,
+  formatForHumans,
+  formatForInput,
+  formatShortSwedishDate,
+  getDaysUntil,
+} from './dateUtils';
+import { formatDaysUntilLabel, getUpcomingHolidayBlurb } from './holidayPresentation';
 import { imageCredits } from './imageCredits';
+import { fetchNameDays } from './nameDays';
 import { buildThemeDayBlurbs, filterThemeDays, joinWithAnd } from './themeDayBlurbs';
 import { getThemeDaysForDate } from './temadagar';
 import { getUpcomingNotables } from './upcomingNotables';
@@ -18,58 +29,6 @@ type AppProps = {
 };
 
 type NameDayState = 'loading' | 'ready' | 'error';
-
-interface SholidayResponse {
-  dagar?: Array<{
-    namnsdag?: string[];
-  }>;
-}
-
-function formatForInput(date: Date): string {
-  const year = date.getFullYear();
-  const month = `${date.getMonth() + 1}`.padStart(2, '0');
-  const day = `${date.getDate()}`.padStart(2, '0');
-  return `${year}-${month}-${day}`;
-}
-
-function formatForHumans(date: Date): string {
-  return new Intl.DateTimeFormat('sv-SE', {
-    weekday: 'long',
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  }).format(date);
-}
-
-function formatShortSwedishDate(date: Date): string {
-  return new Intl.DateTimeFormat('sv-SE', {
-    weekday: 'long',
-    day: 'numeric',
-    month: 'long',
-  }).format(date);
-}
-
-function getSwedishOrdinalDay(day: number): string {
-  const tens = day % 100;
-  const ones = day % 10;
-
-  if (tens !== 11 && (ones === 1 || ones === 2)) {
-    return `${day}:a`;
-  }
-
-  return `${day}:e`;
-}
-
-function formatCenterDate(date: Date): string {
-  const weekday = new Intl.DateTimeFormat('sv-SE', {
-    weekday: 'long',
-  }).format(date);
-  const month = new Intl.DateTimeFormat('sv-SE', {
-    month: 'long',
-  }).format(date);
-
-  return `${weekday} ${getSwedishOrdinalDay(date.getDate())} ${month}`;
-}
 
 function getRandomItem(options: string[], current?: string): string {
   if (options.length === 0) {
@@ -86,16 +45,6 @@ function getRandomItem(options: string[], current?: string): string {
   return pool[index];
 }
 
-function formatTitle(title: string): string {
-  return title.replaceAll('. ', '.\n');
-}
-
-function hasLongTitleWord(title: string): boolean {
-  return title
-    .split(/\s+/)
-    .some((word) => word.replace(/[^\p{L}\p{N}-]/gu, '').length >= 18);
-}
-
 function hasOrdinaryWeekdayExcuses(date: Date, dayType: DayType): boolean {
   if (dayType !== 'ordinary') {
     return false;
@@ -103,64 +52,6 @@ function hasOrdinaryWeekdayExcuses(date: Date, dayType: DayType): boolean {
 
   const weekday = date.getDay();
   return weekday >= 1 && weekday <= 5;
-}
-
-function getDaysUntil(date: Date, target: Date): number {
-  const millisecondsPerDay = 24 * 60 * 60 * 1000;
-  return Math.round((target.getTime() - date.getTime()) / millisecondsPerDay);
-}
-
-function addDays(date: Date, days: number): Date {
-  const result = new Date(date);
-  result.setDate(result.getDate() + days);
-  return result;
-}
-
-function getUpcomingHolidayBlurb(holidayName: string, daysUntil: number): string {
-  if (daysUntil <= 1) {
-    return `${holidayName} väntar imorgon, så veckan är i praktiken redan perforerad.`;
-  }
-
-  if (daysUntil === 2) {
-    return `${holidayName} ligger bara två dagar bort. Ambitionsnivån bör därefter justeras försiktigt nedåt.`;
-  }
-
-  if (daysUntil === 3) {
-    return `${holidayName} dyker upp om tre dagar, vilket är nära nog för att sabotera seriös framförhållning.`;
-  }
-
-  return `${holidayName} ligger senare i veckan. Håll ut, det finns åtminstone en officiell lucka i systemet.`;
-}
-
-function formatDaysUntilLabel(daysUntil: number): string {
-  return `${daysUntil} ${daysUntil === 1 ? 'dag' : 'dagar'} kvar`;
-}
-
-function usesCompactPrimaryMedia(dayType: DayType): boolean {
-  return (
-    dayType === 'kottonsdag' ||
-    dayType === 'fisktorsdag' ||
-    dayType === 'marmeladfredag'
-  );
-}
-
-async function fetchNameDays(dateLabel: string): Promise<string[]> {
-  const [year, month, day] = dateLabel.split('-');
-  const response = await fetch(
-    `https://sholiday.faboul.se/dagar/v2.1/${year}/${month}/${day}`
-  );
-
-  if (!response.ok) {
-    throw new Error(`Namnsdag lookup failed for ${dateLabel}`);
-  }
-
-  const payload = (await response.json()) as SholidayResponse;
-
-  if (!Array.isArray(payload.dagar) || !Array.isArray(payload.dagar[0]?.namnsdag)) {
-    return [];
-  }
-
-  return payload.dagar[0].namnsdag;
 }
 
 function App({ initialDate = new Date() }: AppProps) {

@@ -4,8 +4,6 @@
 
 - This repo is now primarily a React + TypeScript frontend in
   `fredagskoll-frontend`.
-- `Fredagskoll.Api` still exists in the repo, but the current app behavior no
-  longer depends on it.
 - Media files such as `.gif`, `.png`, `.jpg`, and `.webp` are intentionally
   committed because they are part of the app experience.
 
@@ -19,9 +17,11 @@
 
 ## Cross-file conventions
 
-- If you add or rename a celebration, update both
+- If you add or rename a built-in celebration, update both
   `fredagskoll-frontend/src/dayLogic.ts` and
-  `fredagskoll-frontend/src/App.tsx`.
+  `fredagskoll-frontend/src/celebrations.ts`.
+- Keep date formatting, holiday presentation, and other pure helpers out of
+  `App.tsx` when practical.
 - Keep frontend tests aligned with the day classification rules. The current
   tests inject fixed dates through the `initialDate` prop.
 
