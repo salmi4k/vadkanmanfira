@@ -1,32 +1,31 @@
 # Fredagskoll
 
-A fullstack project to check if a given day (in Sweden/Swedish) is a Friday.
+Fredagskoll is being simplified into a frontend-only app that checks whether a
+date deserves celebration.
 
-## Backend (.NET 8 Web API)
-- Endpoint: `/friday?date=YYYY-MM-DD` (date optional, defaults to today)
-- Returns: `{ isFriday: true/false, date: "YYYY-MM-DD" }`
-- CORS enabled for frontend development
+## Current day logic
 
-### Run backend
-```sh
-dotnet run --project Fredagskoll.Api
-```
+- `allahjartansdag`: February 14
+- `fettisdag`: only on the real Fettisdag date for that year
+- `vaffeldagen`: March 25
+- `valborg`: April 30
+- `kanelbullensdag`: October 4
+- `kladdkakansdag`: November 7
+- `lucia`: December 13
+- `kottonsdag`: every Wednesday
+- `fisktorsdag`: every Thursday
+- `marmeladfredag`: every Friday
+- ordinary days: no special celebration
 
-## Frontend (React + TypeScript)
-- Asks for a date (or uses today)
-- Calls backend to check if it’s Friday
-- If Friday: shows a special page (placeholder for now)
-- If not: shows “nej, idag är det inte fredag :/”
+## Run the frontend
 
-### Run frontend
 ```sh
 cd fredagskoll-frontend
 npm start
 ```
 
-## Setup
-1. Start backend: `dotnet run --project Fredagskoll.Api`
-2. Start frontend: `cd fredagskoll-frontend && npm start`
+## Direction
 
----
-Replace placeholder content on the frontend for Fridays with your own gifs/pictures as needed.
+- keep weekday and celebration rules in the frontend
+- add more Swedish celebratory dates that can actually show up during work life
+- improve the visual design without bloating the app
