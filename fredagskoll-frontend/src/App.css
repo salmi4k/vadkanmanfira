@@ -303,6 +303,22 @@
   background: rgba(255, 255, 255, 0.05);
 }
 
+.upcoming-card {
+  display: grid;
+  gap: 0.8rem;
+  padding: 1rem;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.34);
+  border: 1px solid var(--panel-border);
+  transition:
+    background-color 260ms ease,
+    border-color 260ms ease;
+}
+
+.App.dark .upcoming-card {
+  background: rgba(255, 255, 255, 0.05);
+}
+
 .nameday-text {
   margin: 0;
   color: var(--muted);
@@ -310,7 +326,10 @@
 }
 
 .holiday-title,
-.holiday-meta {
+.holiday-meta,
+.upcoming-title,
+.upcoming-date,
+.upcoming-note {
   margin: 0;
 }
 
@@ -323,6 +342,78 @@
   color: var(--muted);
   font-size: 0.88rem;
   line-height: 1.4;
+}
+
+.upcoming-list {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.upcoming-item {
+  display: grid;
+  gap: 0.3rem;
+  padding: 0.9rem 0.95rem;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.4);
+  border: 1px solid var(--panel-border);
+}
+
+.App.dark .upcoming-item {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.upcoming-item-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.upcoming-label,
+.upcoming-days {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 0.26rem 0.58rem;
+  border-radius: 999px;
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.upcoming-label {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.upcoming-days {
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.App.dark .upcoming-days {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.upcoming-title {
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.upcoming-date,
+.upcoming-note {
+  color: var(--muted);
+  line-height: 1.42;
+}
+
+.upcoming-date {
+  font-size: 0.86rem;
+}
+
+.upcoming-note {
+  font-size: 0.9rem;
 }
 
 .intro-footer {
