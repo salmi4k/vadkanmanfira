@@ -56,35 +56,114 @@ function getCelebrationDisplayName(dayType: Exclude<DayType, 'ordinary'>): strin
   return celebrations[dayType].title.split('.')[0];
 }
 
+function pickCopyVariant(seed: string, options: string[]): string {
+  const value = seed.split('').reduce((sum, character) => sum + character.charCodeAt(0), 0);
+  return options[value % options.length];
+}
+
+function getWaitsPhrase(daysUntil: number): string {
+  return daysUntil === 1 ? 'väntar i morgon' : `väntar om ${daysUntil} dagar`;
+}
+
+function getArrivesPhrase(daysUntil: number): string {
+  return daysUntil === 1 ? 'dyker upp i morgon' : `dyker upp om ${daysUntil} dagar`;
+}
+
+function getComesPhrase(daysUntil: number): string {
+  return daysUntil === 1 ? 'kommer i morgon' : `kommer om ${daysUntil} dagar`;
+}
+
+function getLiesAheadPhrase(daysUntil: number): string {
+  return daysUntil === 1 ? 'ligger i morgon' : `ligger ${daysUntil} dagar bort`;
+}
+
 function getUpcomingNote(
   kind: UpcomingNotableKind,
   title: string,
   daysUntil: number,
   extras: string[]
 ): string {
-  const timing = daysUntil === 1 ? 'i morgon' : `om ${daysUntil} dagar`;
+  const waitsPhrase = getWaitsPhrase(daysUntil);
+  const arrivesPhrase = getArrivesPhrase(daysUntil);
+  const comesPhrase = getComesPhrase(daysUntil);
+  const liesAheadPhrase = getLiesAheadPhrase(daysUntil);
 
   if (kind === 'holiday') {
     if (extras.length > 0) {
-      return `${title} dyker upp ${timing}, och ${joinWithAnd(
-        extras
-      ).toLowerCase()} skramlar med på köpet.`;
+      return pickCopyVariant(`${title}-${daysUntil}-holiday-extras`, [
+        `${title} ${arrivesPhrase}, och ${joinWithAnd(
+          extras
+        ).toLowerCase()} skramlar med på köpet.`,
+        `${title} ${waitsPhrase}. Som bonus har även ${joinWithAnd(
+          extras
+        ).toLowerCase()} lyckats klämma sig in i samma datum.`,
+        `${title} ${comesPhrase}, och ${joinWithAnd(
+          extras
+        ).toLowerCase()} hänger på som ett märkligt litet förband.`,
+        `${title} ${liesAheadPhrase}. Samtidigt vägrar ${joinWithAnd(
+          extras
+        ).toLowerCase()} att hålla en låg profil.`,
+      ]);
     }
 
-    return `${title} dyker upp ${timing}, så veckan har åtminstone ett officiellt alibi på väg.`;
+    return `${title} ${arrivesPhrase}, så veckan har åtminstone ett officiellt alibi på väg.`;
   }
 
   if (kind === 'celebration') {
     if (extras.length > 0) {
-      return `${title} väntar ${timing}. Dessutom pågår ${joinWithAnd(
-        extras
-      ).toLowerCase()} i kulissen.`;
+      return pickCopyVariant(`${title}-${daysUntil}-celebration-extras`, [
+        `${title} ${waitsPhrase}. Samtidigt smyger ${joinWithAnd(
+          extras
+        ).toLowerCase()} runt i bakgrunden och vill också bli sedd.`,
+        `${title} ${arrivesPhrase}, och ${joinWithAnd(
+          extras
+        ).toLowerCase()} tänker tydligen inte stå tyst bredvid.`,
+        `${title} ${comesPhrase}. Som vanligt räckte inte det, så ${joinWithAnd(
+          extras
+        ).toLowerCase()} har också lagt sig i.`,
+        `${title} ${liesAheadPhrase}, medan ${joinWithAnd(
+          extras
+        ).toLowerCase()} fladdrar runt som bonusmaterial ingen bett om men ändå får.`,
+        `${title} ${waitsPhrase}, och ${joinWithAnd(
+          extras
+        ).toLowerCase()} står redan där och fingrar på ridån.`,
+        `${title} ${comesPhrase}. Dessutom har ${joinWithAnd(
+          extras
+        ).toLowerCase()} bestämt sig för att dela strålkastaren.`,
+      ]);
     }
 
-    return `${title} väntar ${timing}, vilket ändå är bättre än att blicka rakt in i rå vardag.`;
+    return pickCopyVariant(`${title}-${daysUntil}-celebration`, [
+      `${title} ${waitsPhrase}, vilket ändå är bättre än att blicka rakt in i rå vardag.`,
+      `${title} ${arrivesPhrase}, och veckan får därmed något som åtminstone liknar personlighet.`,
+      `${title} ${comesPhrase}. Det är inte storslaget kanske, men det slår absolut kalendermässigt dödläge.`,
+      `${title} ${liesAheadPhrase}, vilket räcker för att hela veckan ska kännas marginellt mindre grå.`,
+    ]);
   }
 
-  return `${title} väntar ${timing}. Det är inte officiellt, men det är mer än kalendern brukar bjuda på.`;
+  if (extras.length > 0) {
+    return pickCopyVariant(`${title}-${daysUntil}-extras`, [
+      `${title} ${waitsPhrase}, och ${joinWithAnd(extras).toLowerCase()} klamrar sig också fast vid datumet.`,
+      `${title} ${arrivesPhrase}. Dessutom lyckades ${joinWithAnd(
+        extras
+      ).toLowerCase()} få plats i samma lilla kalenderspricka.`,
+      `${title} ${liesAheadPhrase}, och ${joinWithAnd(
+        extras
+      ).toLowerCase()} tänker tydligen inte lämna scenen ensam.`,
+      `${title} ${comesPhrase}. Som om det inte räckte så hasar även ${joinWithAnd(
+        extras
+      ).toLowerCase()} in från sidan.`,
+    ]);
+  }
+
+  return pickCopyVariant(`${title}-${daysUntil}`, [
+    `${title} ${waitsPhrase}. Kalendern försöker åtminstone se mindre livlös ut än vanligt.`,
+    `${title} ${arrivesPhrase}, vilket är oväntat mycket personlighet för ett helt vanligt datum.`,
+    `${title} ${waitsPhrase}. Det är exakt den sortens smala värdighet man får arbeta med ibland.`,
+    `${title} ${comesPhrase}, och det är ändå mer kultur än veckan först gav sken av.`,
+    `${title} ${liesAheadPhrase}. Smalt, ja, men fortfarande märkbart bättre än total kalendertorka.`,
+    `${title} ${waitsPhrase}. Någon tog sig tid att ge datumet en egen liten nisch, och det får man respektera.`,
+  ]);
 }
 
 export function getUpcomingNotables(

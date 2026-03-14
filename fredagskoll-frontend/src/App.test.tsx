@@ -282,6 +282,30 @@ test('renders upcoming notable dates with major celebrations ahead of random fil
   expect(screen.getAllByText(/Om 3 dagar/i).length).toBeGreaterThan(0);
 });
 
+test('renders bokrean as a seasonal sidebar note during the sale window', async () => {
+  await renderAppAt(new Date(2026, 1, 24));
+
+  expect(screen.getAllByText(/Säsongen pågår/i).length).toBeGreaterThan(0);
+  expect(screen.getByText(/^Bokrean$/i)).toBeInTheDocument();
+  expect(
+    screen.getByText(
+      /Papper, impulsköp och den gamla svenska drömmen om att man plötsligt ska bli en människa som läser mer\./i
+    )
+  ).toBeInTheDocument();
+});
+
+test('renders kräftskivesäsong as a seasonal sidebar note during late summer', async () => {
+  await renderAppAt(new Date(2026, 7, 20));
+
+  expect(screen.getAllByText(/Säsongen pågår/i).length).toBeGreaterThan(0);
+  expect(screen.getByText(/^Kräftskivesäsong$/i)).toBeInTheDocument();
+  expect(
+    screen.getByText(
+      /Pappershattar, dill och ett kollektivt beslut att små kräftor tydligen är en fullgod plan för sensommaren\./i
+    )
+  ).toBeInTheDocument();
+});
+
 test('rerolls the excuse when clicking Ny ursäkt', async () => {
   const randomSpy = jest
     .spyOn(Math, 'random')
