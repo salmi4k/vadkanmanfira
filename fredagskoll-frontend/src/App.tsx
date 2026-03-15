@@ -47,7 +47,14 @@ import {
   getOrdinaryTitle,
 } from './editorialText';
 import { getSeasonalNotes } from './seasonalNotes';
-import { getInitialMood, getMoodLabel, moodOptions, MOOD_STORAGE_KEY, Mood } from './mood';
+import {
+  getInitialMood,
+  getMoodLabel,
+  getMoodNote,
+  moodOptions,
+  MOOD_STORAGE_KEY,
+  Mood,
+} from './mood';
 import { buildThemeDayBlurbs, filterThemeDays, joinWithAnd } from './themeDayBlurbs';
 import { getThemeDaysForDate } from './temadagar';
 import { getUpcomingNotables } from './upcomingNotables';
@@ -585,6 +592,7 @@ function App({
                 </option>
               ))}
             </select>
+            <p className="mood-note">{getMoodNote(mood, locale)}</p>
           </div>
 
           <div className="nameday-card">
@@ -729,7 +737,10 @@ function App({
               {text.nextDay}
             </button>
           </div>
-          <p className="eyebrow">{kicker}</p>
+          <div className="card-kicker-row">
+            <p className="eyebrow">{kicker}</p>
+            <span className="mood-pill">{getMoodLabel(mood, locale)}</span>
+          </div>
           {themeDayDisplayTitle && !celebration ? (
             <h2
               className={`celebration-title celebration-title--stacked${

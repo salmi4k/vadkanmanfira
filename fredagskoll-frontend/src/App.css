@@ -7,6 +7,11 @@
   --accent: #9d4b17;
   --accent-soft: rgba(157, 75, 23, 0.14);
   --shadow: 0 24px 80px rgba(73, 41, 14, 0.16);
+  --tone-accent: #6a5e89;
+  --tone-soft: rgba(106, 94, 137, 0.16);
+  --tone-ink: #433d58;
+  --mood-ui-font: "Trebuchet MS", "Segoe UI", sans-serif;
+  --mood-display-font: Georgia, "Times New Roman", serif;
   --mood-wash:
     radial-gradient(circle at 24% 18%, rgba(255, 255, 255, 0.2), transparent 24%),
     radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.08), transparent 22%);
@@ -26,10 +31,20 @@
   --mood-card-shift: 0px;
   --mood-pattern-opacity: 0.42;
   --mood-blurb-size: 1rem;
+  --mood-panel-stripe: linear-gradient(90deg, transparent, transparent);
+  --mood-card-decoration:
+    radial-gradient(circle at top right, color-mix(in srgb, var(--tone-accent) 16%, transparent), transparent 34%),
+    linear-gradient(140deg, transparent 58%, color-mix(in srgb, var(--tone-accent) 9%, transparent) 100%);
+  --mood-badge-shadow: 0 8px 22px rgba(40, 28, 64, 0.12);
+  --mood-badge-transform: none;
+  --mood-card-animation: card-settle 520ms cubic-bezier(0.22, 1, 0.36, 1);
+  --mood-badge-animation: none;
+  --mood-backdrop-animation: backdrop-drift 14s ease-in-out infinite alternate;
+  --mood-button-hover-rotate: 0deg;
   min-height: 100vh;
   color: var(--text);
   background: var(--bg);
-  font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+  font-family: var(--mood-ui-font);
   position: relative;
   overflow: hidden;
   transition:
@@ -53,6 +68,20 @@
     animation: theme-wash 420ms ease;
     z-index: 0;
   }
+
+  .app-backdrop {
+    animation: var(--mood-backdrop-animation);
+  }
+
+  .celebration-card {
+    animation: var(--mood-card-animation);
+  }
+
+  .mood-pill,
+  .ordinary-badge,
+  .placeholder-card span {
+    animation: var(--mood-badge-animation);
+  }
 }
 
 .App.dark {
@@ -68,6 +97,11 @@
 }
 
 .App[data-mood="dry"] {
+  --tone-accent: #625d7b;
+  --tone-soft: rgba(98, 93, 123, 0.16);
+  --tone-ink: #4d4865;
+  --mood-ui-font: "Trebuchet MS", "Segoe UI", sans-serif;
+  --mood-display-font: Georgia, "Times New Roman", serif;
   --mood-wash:
     radial-gradient(circle at 24% 18%, rgba(255, 255, 255, 0.16), transparent 24%),
     linear-gradient(180deg, rgba(84, 88, 119, 0.06), transparent 48%);
@@ -78,12 +112,19 @@
   --mood-chip-radius: 999px;
   --mood-chip-letter: 0.09em;
   --mood-button-bg: linear-gradient(135deg, rgba(93, 88, 119, 0.16), rgba(255, 255, 255, 0.26));
-  --mood-button-text: #4f4a68;
+  --mood-button-text: var(--tone-ink);
   --mood-title-spacing: -0.04em;
   --mood-blurb-size: 1rem;
+  --mood-panel-stripe: linear-gradient(90deg, rgba(98, 93, 123, 0.18), rgba(98, 93, 123, 0));
+  --mood-card-animation: card-settle 460ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .App[data-mood="cheerful"] {
+  --tone-accent: #d2701d;
+  --tone-soft: rgba(238, 170, 65, 0.22);
+  --tone-ink: #9d5316;
+  --mood-ui-font: "Trebuchet MS", "Arial Rounded MT Bold", sans-serif;
+  --mood-display-font: Georgia, "Palatino Linotype", serif;
   --mood-wash:
     radial-gradient(circle at 22% 18%, rgba(255, 249, 184, 0.36), transparent 24%),
     radial-gradient(circle at 78% 72%, rgba(255, 177, 98, 0.18), transparent 24%);
@@ -95,13 +136,27 @@
   --mood-chip-radius: 18px;
   --mood-chip-letter: 0.06em;
   --mood-button-bg: linear-gradient(135deg, rgba(255, 211, 113, 0.32), rgba(255, 255, 255, 0.42));
-  --mood-button-text: #8f5112;
+  --mood-button-text: var(--tone-ink);
   --mood-title-spacing: -0.025em;
   --mood-pattern-opacity: 0.52;
   --mood-blurb-size: 1.03rem;
+  --mood-card-decoration:
+    radial-gradient(circle at 18% 18%, rgba(255, 246, 183, 0.52), transparent 22%),
+    radial-gradient(circle at 82% 16%, rgba(255, 188, 91, 0.26), transparent 24%),
+    linear-gradient(135deg, rgba(255, 220, 146, 0.1), transparent 64%);
+  --mood-badge-transform: translateY(-2px);
+  --mood-panel-stripe: linear-gradient(90deg, rgba(255, 195, 92, 0.3), rgba(255, 195, 92, 0));
+  --mood-badge-animation: cheerful-bob 2.8s ease-in-out infinite;
+  --mood-card-animation: cheerful-arrive 620ms cubic-bezier(0.18, 0.9, 0.24, 1.1);
+  --mood-button-hover-rotate: -0.8deg;
 }
 
 .App[data-mood="formal"] {
+  --tone-accent: #29466f;
+  --tone-soft: rgba(41, 70, 111, 0.18);
+  --tone-ink: #203756;
+  --mood-ui-font: "Segoe UI", "Arial", sans-serif;
+  --mood-display-font: "Times New Roman", Georgia, serif;
   --mood-wash:
     linear-gradient(135deg, rgba(29, 44, 78, 0.1), transparent 48%),
     linear-gradient(0deg, rgba(255, 255, 255, 0.08), transparent 38%);
@@ -113,13 +168,23 @@
   --mood-chip-radius: 10px;
   --mood-chip-letter: 0.14em;
   --mood-button-bg: linear-gradient(135deg, rgba(31, 53, 93, 0.16), rgba(255, 255, 255, 0.2));
-  --mood-button-text: #22355d;
+  --mood-button-text: var(--tone-ink);
   --mood-title-spacing: -0.018em;
   --mood-title-case: uppercase;
   --mood-blurb-size: 0.98rem;
+  --mood-card-decoration:
+    linear-gradient(90deg, rgba(41, 70, 111, 0.22) 0, rgba(41, 70, 111, 0.22) 0.45rem, transparent 0.45rem),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.12), transparent 34%);
+  --mood-panel-stripe: linear-gradient(90deg, rgba(41, 70, 111, 0.24), rgba(41, 70, 111, 0));
+  --mood-card-animation: formal-arrive 420ms cubic-bezier(0.2, 0.84, 0.24, 1);
 }
 
 .App[data-mood="warm"] {
+  --tone-accent: #bf6b42;
+  --tone-soft: rgba(191, 107, 66, 0.18);
+  --tone-ink: #87482b;
+  --mood-ui-font: "Trebuchet MS", "Verdana", sans-serif;
+  --mood-display-font: Georgia, "Palatino Linotype", serif;
   --mood-wash:
     radial-gradient(circle at 20% 18%, rgba(255, 209, 170, 0.28), transparent 24%),
     radial-gradient(circle at 84% 74%, rgba(255, 235, 199, 0.18), transparent 24%);
@@ -131,12 +196,25 @@
   --mood-chip-radius: 22px;
   --mood-chip-letter: 0.05em;
   --mood-button-bg: linear-gradient(135deg, rgba(224, 158, 110, 0.24), rgba(255, 248, 238, 0.42));
-  --mood-button-text: #8b4f2b;
+  --mood-button-text: var(--tone-ink);
   --mood-title-spacing: -0.028em;
   --mood-blurb-size: 1.02rem;
+  --mood-card-decoration:
+    radial-gradient(circle at 18% 18%, rgba(255, 224, 196, 0.3), transparent 24%),
+    radial-gradient(circle at 86% 22%, rgba(223, 148, 102, 0.24), transparent 26%),
+    linear-gradient(135deg, rgba(255, 237, 221, 0.16), transparent 62%);
+  --mood-badge-transform: translateY(-1px);
+  --mood-panel-stripe: linear-gradient(90deg, rgba(223, 148, 102, 0.28), rgba(223, 148, 102, 0));
+  --mood-badge-animation: warm-breath 4.2s ease-in-out infinite;
+  --mood-card-animation: warm-arrive 680ms cubic-bezier(0.2, 0.9, 0.24, 1);
 }
 
 .App[data-mood="chaotic"] {
+  --tone-accent: #cb4d26;
+  --tone-soft: rgba(203, 77, 38, 0.22);
+  --tone-ink: #8f341d;
+  --mood-ui-font: "Trebuchet MS", "Verdana", sans-serif;
+  --mood-display-font: Georgia, "Times New Roman", serif;
   --mood-wash:
     radial-gradient(circle at 16% 20%, rgba(255, 134, 87, 0.24), transparent 24%),
     radial-gradient(circle at 82% 24%, rgba(255, 230, 92, 0.16), transparent 20%),
@@ -149,15 +227,29 @@
   --mood-chip-radius: 14px 24px 16px 22px;
   --mood-chip-letter: 0.07em;
   --mood-button-bg: linear-gradient(135deg, rgba(255, 132, 68, 0.24), rgba(255, 226, 122, 0.2));
-  --mood-button-text: #8b2f1a;
+  --mood-button-text: var(--tone-ink);
   --mood-title-spacing: -0.035em;
   --mood-title-skew: -1.3deg;
   --mood-card-shift: -6px;
   --mood-pattern-opacity: 0.58;
   --mood-blurb-size: 1.04rem;
+  --mood-card-decoration:
+    linear-gradient(128deg, rgba(255, 214, 84, 0.24) 0 14%, transparent 14% 38%, rgba(255, 112, 59, 0.18) 38% 52%, transparent 52%),
+    radial-gradient(circle at 84% 18%, rgba(255, 132, 68, 0.28), transparent 26%);
+  --mood-badge-transform: rotate(-2.4deg) translateY(-2px);
+  --mood-panel-stripe: linear-gradient(90deg, rgba(255, 132, 68, 0.34), rgba(255, 132, 68, 0));
+  --mood-badge-animation: chaotic-fidget 1.8s steps(2, end) infinite;
+  --mood-card-animation: chaotic-arrive 560ms cubic-bezier(0.18, 0.9, 0.24, 1);
+  --mood-backdrop-animation: chaotic-drift 9s linear infinite alternate;
+  --mood-button-hover-rotate: -1.4deg;
 }
 
 .App[data-mood="absurd"] {
+  --tone-accent: #8558d4;
+  --tone-soft: rgba(133, 88, 212, 0.22);
+  --tone-ink: #5f4297;
+  --mood-ui-font: "Trebuchet MS", "Verdana", sans-serif;
+  --mood-display-font: Georgia, "Palatino Linotype", serif;
   --mood-wash:
     radial-gradient(circle at 18% 18%, rgba(186, 122, 255, 0.2), transparent 24%),
     radial-gradient(circle at 80% 22%, rgba(123, 243, 195, 0.14), transparent 22%),
@@ -170,11 +262,20 @@
   --mood-chip-radius: 999px 999px 18px 999px;
   --mood-chip-letter: 0.1em;
   --mood-button-bg: linear-gradient(135deg, rgba(155, 116, 236, 0.2), rgba(175, 244, 214, 0.18));
-  --mood-button-text: #58407f;
+  --mood-button-text: var(--tone-ink);
   --mood-title-spacing: -0.04em;
   --mood-title-skew: 0.7deg;
   --mood-pattern-opacity: 0.6;
   --mood-blurb-size: 1.02rem;
+  --mood-card-decoration:
+    radial-gradient(circle at 14% 16%, rgba(163, 113, 243, 0.3), transparent 22%),
+    radial-gradient(circle at 84% 74%, rgba(132, 238, 198, 0.22), transparent 26%),
+    linear-gradient(145deg, transparent 48%, rgba(255, 219, 120, 0.2) 48% 58%, transparent 58%);
+  --mood-badge-transform: rotate(1.8deg) translateY(-2px);
+  --mood-panel-stripe: linear-gradient(90deg, rgba(155, 116, 236, 0.36), rgba(155, 116, 236, 0));
+  --mood-badge-animation: absurd-wobble 3.4s ease-in-out infinite;
+  --mood-card-animation: absurd-arrive 720ms cubic-bezier(0.19, 0.9, 0.24, 1);
+  --mood-button-hover-rotate: 1.2deg;
 }
 
 .theme-ordinary {
@@ -319,14 +420,14 @@
   align-items: center;
   gap: 0.45rem;
   background: transparent;
-  color: var(--text);
-  border: 1px solid var(--panel-border);
+  color: var(--tone-ink);
+  border: 1px solid color-mix(in srgb, var(--tone-accent) 28%, var(--panel-border));
   box-shadow: none;
   padding-inline: 0.75rem;
 }
 
 .theme-toggle--language:hover {
-  background: rgba(255, 255, 255, 0.42);
+  background: color-mix(in srgb, var(--tone-soft) 70%, rgba(255, 255, 255, 0.32));
 }
 
 .App.dark .theme-toggle {
@@ -487,14 +588,14 @@
   letter-spacing: 0.18em;
   font-size: 0.78rem;
   font-weight: 800;
-  color: var(--accent);
+  color: var(--tone-accent);
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.18);
 }
 
 .brand-title,
 .celebration-title {
   margin: 0;
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--mood-display-font);
   line-height: 0.96;
   letter-spacing: var(--mood-title-spacing);
   text-wrap: balance;
@@ -553,7 +654,9 @@
   font-weight: 800;
   letter-spacing: var(--mood-chip-letter);
   cursor: pointer;
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 16%, transparent);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--tone-accent) 24%, transparent),
+    var(--mood-badge-shadow);
   transition:
     background-color 220ms ease,
     color 220ms ease,
@@ -562,7 +665,8 @@
 }
 
 .reroll-button:hover {
-  filter: brightness(0.96);
+  filter: brightness(0.98) saturate(1.06);
+  transform: translateY(-1px) rotate(var(--mood-button-hover-rotate));
 }
 
 .reroll-button:active {
@@ -583,6 +687,7 @@
   border-radius: var(--mood-subpanel-radius);
   background:
     linear-gradient(135deg, var(--mood-panel-tint), transparent 70%),
+    linear-gradient(90deg, transparent 0 0.7rem, color-mix(in srgb, var(--tone-accent) 8%, transparent) 0.7rem 100%),
     var(--accent-soft);
   border: 1px solid color-mix(in srgb, var(--panel-border) 74%, var(--mood-panel-border) 26%);
   box-shadow: var(--mood-outline);
@@ -600,9 +705,17 @@
   width: 5rem;
   height: 5rem;
   border-radius: 999px;
-  background: radial-gradient(circle, color-mix(in srgb, var(--accent) 14%, transparent), transparent 68%);
+  background: radial-gradient(circle, color-mix(in srgb, var(--tone-accent) 18%, transparent), transparent 68%);
   transform: translate(28%, 28%);
   pointer-events: none;
+}
+
+.mood-note {
+  margin: 0;
+  color: color-mix(in srgb, var(--tone-ink) 82%, var(--muted));
+  font-size: 0.88rem;
+  line-height: 1.38;
+  max-width: 28ch;
 }
 
 .nameday-card {
@@ -611,6 +724,7 @@
   padding: 1rem;
   border-radius: var(--mood-subpanel-radius);
   background:
+    var(--mood-panel-stripe),
     linear-gradient(135deg, var(--mood-panel-tint), transparent 78%),
     rgba(255, 255, 255, 0.34);
   border: 1px solid var(--panel-border);
@@ -630,6 +744,7 @@
   padding: 1rem;
   border-radius: var(--mood-subpanel-radius);
   background:
+    var(--mood-panel-stripe),
     linear-gradient(135deg, var(--mood-panel-tint), transparent 78%),
     rgba(255, 255, 255, 0.34);
   border: 1px solid var(--panel-border);
@@ -649,6 +764,7 @@
   padding: 1rem;
   border-radius: var(--mood-subpanel-radius);
   background:
+    var(--mood-panel-stripe),
     linear-gradient(135deg, var(--mood-panel-tint), transparent 78%),
     rgba(255, 255, 255, 0.34);
   border: 1px solid var(--panel-border);
@@ -668,6 +784,7 @@
   padding: 1rem;
   border-radius: var(--mood-subpanel-radius);
   background:
+    var(--mood-panel-stripe),
     linear-gradient(135deg, var(--mood-panel-tint), transparent 78%),
     rgba(255, 255, 255, 0.34);
   border: 1px solid var(--panel-border);
@@ -973,6 +1090,162 @@
   }
 }
 
+@keyframes backdrop-drift {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  100% {
+    transform: translate3d(0.8rem, -0.6rem, 0) scale(1.02);
+  }
+}
+
+@keyframes card-settle {
+  0% {
+    opacity: 0;
+    transform: translateY(18px) scale(0.985);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(var(--mood-card-shift)) scale(1);
+  }
+}
+
+@keyframes cheerful-arrive {
+  0% {
+    opacity: 0;
+    transform: translateY(22px) scale(0.965) rotate(-0.6deg);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(var(--mood-card-shift)) scale(1) rotate(0deg);
+  }
+}
+
+@keyframes formal-arrive {
+  0% {
+    opacity: 0;
+    transform: translateY(14px) scale(0.99);
+    filter: saturate(0.92);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(var(--mood-card-shift)) scale(1);
+    filter: saturate(1);
+  }
+}
+
+@keyframes warm-arrive {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.975);
+    filter: blur(3px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(var(--mood-card-shift)) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes chaotic-arrive {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.96) rotate(-1.8deg);
+  }
+
+  45% {
+    transform: translateY(-4px) scale(1.01) rotate(0.8deg);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(var(--mood-card-shift)) scale(1) rotate(0deg);
+  }
+}
+
+@keyframes absurd-arrive {
+  0% {
+    opacity: 0;
+    transform: translateY(22px) scale(0.97) rotate(1.1deg);
+  }
+
+  60% {
+    transform: translateY(-2px) scale(1.01) rotate(-0.6deg);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(var(--mood-card-shift)) scale(1) rotate(0deg);
+  }
+}
+
+@keyframes cheerful-bob {
+  0%,
+  100% {
+    transform: var(--mood-badge-transform) translateY(0);
+  }
+
+  50% {
+    transform: var(--mood-badge-transform) translateY(-2px);
+  }
+}
+
+@keyframes warm-breath {
+  0%,
+  100% {
+    transform: var(--mood-badge-transform) scale(1);
+  }
+
+  50% {
+    transform: var(--mood-badge-transform) scale(1.03);
+  }
+}
+
+@keyframes chaotic-fidget {
+  0%,
+  100% {
+    transform: var(--mood-badge-transform) translate(0, 0);
+  }
+
+  25% {
+    transform: var(--mood-badge-transform) translate(-1px, -1px);
+  }
+
+  75% {
+    transform: var(--mood-badge-transform) translate(1px, 1px);
+  }
+}
+
+@keyframes absurd-wobble {
+  0%,
+  100% {
+    transform: var(--mood-badge-transform) rotate(0deg);
+  }
+
+  50% {
+    transform: var(--mood-badge-transform) rotate(1.4deg);
+  }
+}
+
+@keyframes chaotic-drift {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate3d(-0.4rem, 0.5rem, 0) scale(1.025);
+  }
+
+  100% {
+    transform: translate3d(0.9rem, -0.6rem, 0) scale(1.015);
+  }
+}
+
 .date-picker {
   appearance: none;
   width: 100%;
@@ -998,6 +1271,14 @@
   flex-wrap: wrap;
 }
 
+.card-kicker-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
 .celebration-card {
   padding: 3rem;
   display: grid;
@@ -1013,11 +1294,25 @@
   content: "";
   position: absolute;
   inset: 0;
-  background:
-    radial-gradient(circle at top right, color-mix(in srgb, var(--accent) 14%, transparent), transparent 32%),
-    linear-gradient(140deg, transparent 54%, color-mix(in srgb, var(--accent) 8%, transparent) 100%);
+  background: var(--mood-card-decoration);
   opacity: 0.9;
   pointer-events: none;
+}
+
+.celebration-card::after {
+  content: "";
+  position: absolute;
+  inset: 1rem 1rem auto auto;
+  width: 7rem;
+  height: 7rem;
+  border-radius: calc(var(--mood-subpanel-radius) + 12px);
+  background:
+    radial-gradient(circle at 30% 30%, color-mix(in srgb, var(--tone-accent) 18%, white), transparent 56%),
+    linear-gradient(135deg, color-mix(in srgb, var(--tone-accent) 18%, transparent), transparent 66%);
+  mix-blend-mode: screen;
+  opacity: 0.42;
+  pointer-events: none;
+  transform: rotate(6deg);
 }
 
 .celebration-card > * {
@@ -1066,10 +1361,14 @@
   min-width: 0;
   white-space: normal;
   text-align: center;
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--tone-accent) 24%, transparent),
+    var(--mood-badge-shadow);
 }
 
 .card-nav-button:hover {
-  filter: brightness(0.96);
+  filter: brightness(0.98) saturate(1.06);
+  transform: translateY(-1px) rotate(var(--mood-button-hover-rotate));
 }
 
 .card-nav-button:active {
@@ -1170,6 +1469,7 @@
   border-radius: var(--mood-subpanel-radius);
   overflow: hidden;
   background:
+    var(--mood-panel-stripe),
     linear-gradient(135deg, var(--mood-panel-tint), transparent 72%),
     rgba(255, 255, 255, 0.38);
   border: 1px solid color-mix(in srgb, var(--panel-border) 78%, var(--mood-panel-border) 22%);
@@ -1285,7 +1585,29 @@
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: var(--mood-chip-letter);
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 16%, transparent);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--tone-accent) 24%, transparent),
+    var(--mood-badge-shadow);
+  transform: var(--mood-badge-transform);
+}
+
+.mood-pill {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 0.38rem 0.78rem;
+  border-radius: var(--mood-chip-radius);
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--tone-soft) 92%, rgba(255, 255, 255, 0.36)), rgba(255, 255, 255, 0.18));
+  color: var(--tone-ink);
+  font-size: 0.76rem;
+  font-weight: 900;
+  letter-spacing: var(--mood-chip-letter);
+  text-transform: uppercase;
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--tone-accent) 24%, transparent),
+    var(--mood-badge-shadow);
+  transform: var(--mood-badge-transform);
 }
 
 .placeholder-card--visual strong {
