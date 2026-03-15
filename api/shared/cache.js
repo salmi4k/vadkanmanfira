@@ -3,6 +3,7 @@ const crypto = require('crypto');
 const CACHE_TABLE_NAME = 'blurbcache';
 const LIBRARY_TABLE_NAME = 'blurblibrary';
 const CACHE_MAX_AGE_MS = 15 * 60 * 1000;
+const GENERATION_COOLDOWN_MS = 15 * 60 * 1000;
 const MAX_VARIANTS_PER_KEY = 3;
 
 function loadTableClient() {
@@ -337,6 +338,14 @@ function buildCacheStateFromHotEntity(hotEntity, variants, requestHash) {
       typeof hotEntity.createdAt === 'string' && hotEntity.createdAt.length > 0
         ? hotEntity.createdAt
         : null,
+    lastGeneratedAt:
+      typeof hotEntity.lastGeneratedAt === 'string' && hotEntity.lastGeneratedAt.length > 0
+        ? hotEntity.lastGeneratedAt
+        : variants
+            .map((variant) => variant.generatedAt)
+            .filter((value) => typeof value === 'string' && value.length > 0)
+            .sort()
+            .at(-1) || null,
   };
 }
 
@@ -374,6 +383,7 @@ async function getCacheState(request) {
         lastUsedAt: null,
         lastBundleId: null,
         createdAt: null,
+        lastGeneratedAt: null,
       };
     }
 
@@ -397,6 +407,14 @@ async function saveCacheState(request, state) {
   const nowIso = new Date().toISOString();
   const createdAt =
     typeof state.createdAt === 'string' && state.createdAt.length > 0 ? state.createdAt : nowIso;
+  const lastGeneratedAt =
+    typeof state.lastGeneratedAt === 'string' && state.lastGeneratedAt.length > 0
+      ? state.lastGeneratedAt
+      : variants
+          .map((variant) => variant.generatedAt)
+          .filter((value) => typeof value === 'string' && value.length > 0)
+          .sort()
+          .at(-1) || null;
 
   for (const variant of variants) {
     variant.requestHash = requestHash;
@@ -428,6 +446,7 @@ async function saveCacheState(request, state) {
     kicker: request.kicker || null,
     createdAt,
     updatedAt: nowIso,
+    lastGeneratedAt,
     lastUsedAt:
       typeof state.lastUsedAt === 'string' && state.lastUsedAt.length > 0 ? state.lastUsedAt : null,
     useCount: Number.isFinite(state.useCount) ? Number(state.useCount) : 0,
@@ -468,10 +487,25 @@ function recordVariantUsage(state, variant, usedAt = new Date().toISOString()) {
   };
 }
 
+function canGenerateVariant(state, nowMs = Date.now()) {
+  if (!state || !state.lastGeneratedAt) {
+    return true;
+  }
+
+  const generatedAtMs = Date.parse(state.lastGeneratedAt);
+  if (Number.isNaN(generatedAtMs)) {
+    return true;
+  }
+
+  return nowMs - generatedAtMs >= GENERATION_COOLDOWN_MS;
+}
+
 module.exports = {
   CACHE_MAX_AGE_MS,
+  GENERATION_COOLDOWN_MS,
   MAX_VARIANTS_PER_KEY,
   buildRequestHash,
+  canGenerateVariant,
   chooseVariant,
   createVariant,
   getCacheState,

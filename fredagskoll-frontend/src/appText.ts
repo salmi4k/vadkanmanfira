@@ -95,6 +95,9 @@ export const appText: Record<
     worldNationalDaysBadge: string;
     worldNationalDaysMore: (count: number) => string;
     buildInfoLabel: string;
+    releaseNotesLabel: string;
+    releaseNotesTitle: string;
+    releaseNotesOpen: string;
     imageCredits: string;
     themeDaySource: string;
     previousDay: string;
@@ -160,6 +163,9 @@ export const appText: Record<
     worldNationalDaysBadge: 'Också idag',
     worldNationalDaysMore: (count: number) => `Och ${count} till.`,
     buildInfoLabel: 'Bygge',
+    releaseNotesLabel: 'Nytt i versionen',
+    releaseNotesTitle: 'Det här har ändrats i appen',
+    releaseNotesOpen: 'Visa alla ändringar',
     imageCredits: 'Bildkällor',
     themeDaySource: 'Temadagar inspirerade av temadagar.se',
     previousDay: 'Föregående dag',
@@ -229,6 +235,9 @@ export const appText: Record<
     worldNationalDaysBadge: 'Also today',
     worldNationalDaysMore: (count: number) => `And ${count} more.`,
     buildInfoLabel: 'Build',
+    releaseNotesLabel: 'New in this version',
+    releaseNotesTitle: 'What changed in the app',
+    releaseNotesOpen: 'Show all changes',
     imageCredits: 'Image credits',
     themeDaySource: 'Theme days inspired by temadagar.se',
     previousDay: 'Previous day',
@@ -298,6 +307,9 @@ export const appText: Record<
     worldNationalDaysBadge: 'Também hoje',
     worldNationalDaysMore: (count: number) => `E mais ${count}.`,
     buildInfoLabel: 'Build',
+    releaseNotesLabel: 'Novo nesta versão',
+    releaseNotesTitle: 'O que mudou no app',
+    releaseNotesOpen: 'Mostrar todas as mudanças',
     imageCredits: 'Créditos das imagens',
     themeDaySource: 'Datas temáticas inspiradas em temadagar.se',
     previousDay: 'Dia anterior',

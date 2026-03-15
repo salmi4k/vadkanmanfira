@@ -55,6 +55,7 @@ import {
   MOOD_STORAGE_KEY,
   Mood,
 } from './mood';
+import { getReleaseNote, releaseNotes } from './releaseNotes';
 import { buildThemeDayBlurbs, filterThemeDays, joinWithAnd } from './themeDayBlurbs';
 import { getThemeDaysForDate } from './temadagar';
 import { getUpcomingNotables } from './upcomingNotables';
@@ -170,6 +171,7 @@ function App({
   const [darkMode, setDarkMode] = useState(false);
   const [showLanguageMenu, setShowLanguageMenu] = useState(false);
   const [showImageCredits, setShowImageCredits] = useState(false);
+  const [showReleaseNotes, setShowReleaseNotes] = useState(false);
   const [isMobileLayout, setIsMobileLayout] = useState(getInitialMobileLayout);
   const [mood, setMood] = useState<Mood>(getInitialMood);
   const [showUpcoming, setShowUpcoming] = useState(true);
@@ -188,6 +190,7 @@ function App({
   const [aiBundle, setAiBundle] = useState<AiBlurbBundle | null>(null);
   const [aiBundleState, setAiBundleState] = useState<AiBundleState>('loading');
   const [resolvedAiRequestKey, setResolvedAiRequestKey] = useState<string | null>(null);
+  const [isAiRerolling, setIsAiRerolling] = useState(false);
   const [blurb, setBlurb] = useState(getOrdinaryBlurb(getInitialLocale(), getInitialMood()));
   const [themeDayTitleEnding, setThemeDayTitleEnding] = useState(
     getOrdinaryThemeDayTitleEndings(getInitialLocale(), getInitialMood())[0]
@@ -198,6 +201,7 @@ function App({
 
   const text = appText[locale];
   const buildStamp = useMemo(() => formatBuildStamp(locale), [locale]);
+  const currentReleaseNote = useMemo(() => getReleaseNote(buildInfo.version), []);
   const celebrations = useMemo(
     () => getCelebrations(locale, contentPack, mood),
     [contentPack, locale, mood]
@@ -300,6 +304,7 @@ function App({
       contentPack,
       kind: celebration ? 'celebration' : hasThemeDays ? 'themeDay' : 'ordinary',
       mood,
+      requestMode: 'default',
       date: selectedDate,
       dateLabel: dayStatus.dateLabel,
       dayType: dayStatus.dayType,
@@ -524,6 +529,48 @@ function App({
     }));
   }
 
+  async function handleReroll(): Promise<void> {
+    if (!currentBlurbs) {
+      return;
+    }
+
+    const canAskAiForAnotherVariant =
+      aiBundle !== null &&
+      resolvedAiRequestKey === aiRequestKey &&
+      aiBundleState === 'ready';
+
+    if (!canAskAiForAnotherVariant) {
+      setBlurb(getRandomItem(currentBlurbs, ordinaryBlurb, blurb));
+      return;
+    }
+
+    setIsAiRerolling(true);
+
+    try {
+      const rerolledBundle = await fetchAiBlurbBundle(
+        {
+          ...aiRequest,
+          requestMode: 'reroll',
+        },
+        undefined
+      );
+
+      if (rerolledBundle?.blurbs.length) {
+        setAiBundle(rerolledBundle);
+        setResolvedAiRequestKey(aiRequestKey);
+        setAiBundleState('ready');
+        setBlurb(getRandomItem(rerolledBundle.blurbs, ordinaryBlurb, blurb));
+        return;
+      }
+    } catch {
+      // Fall back to a local reroll when the extra AI fetch is unavailable.
+    } finally {
+      setIsAiRerolling(false);
+    }
+
+    setBlurb(getRandomItem(currentBlurbs, ordinaryBlurb, blurb));
+  }
+
   return (
     <div
       className={`App ${darkMode ? 'dark' : ''} theme-${theme} locale-${locale}`}
@@ -735,24 +782,39 @@ function App({
           ) : null}
 
           <footer className="intro-footer">
-            <button
-              type="button"
-              className="source-link source-link--button"
-              onClick={() => setShowImageCredits(true)}
-            >
-              {text.imageCredits}
-            </button>
-            <a
-              className="source-link"
-              href="https://temadagar.se/kalender/"
-              target="_blank"
-              rel="noreferrer"
-            >
-              {text.themeDaySource}
-            </a>
-            <span className="build-stamp">
-              {text.buildInfoLabel} {buildStamp}
-            </span>
+            <div className="intro-footer-links">
+              <button
+                type="button"
+                className="source-link source-link--button"
+                onClick={() => setShowImageCredits(true)}
+              >
+                {text.imageCredits}
+              </button>
+              <a
+                className="source-link"
+                href="https://temadagar.se/kalender/"
+                target="_blank"
+                rel="noreferrer"
+              >
+                {text.themeDaySource}
+              </a>
+              <span className="build-stamp">
+                {text.buildInfoLabel} {buildStamp}
+              </span>
+            </div>
+            <div className="release-note-card release-note-card--subtle">
+              <p className="eyebrow">{text.releaseNotesLabel}</p>
+              <p className="release-note-current">
+                {currentReleaseNote?.shortSummary[locale] ?? buildStamp}
+              </p>
+              <button
+                type="button"
+                className="source-link source-link--button release-note-button"
+                onClick={() => setShowReleaseNotes(true)}
+              >
+                {text.releaseNotesOpen}
+              </button>
+            </div>
           </footer>
         </header>
 
@@ -819,7 +881,10 @@ function App({
               <button
                 type="button"
                 className="reroll-button"
-                onClick={() => setBlurb(getRandomItem(currentBlurbs, ordinaryBlurb, blurb))}
+                onClick={() => {
+                  void handleReroll();
+                }}
+                disabled={isAiRerolling}
               >
                 {text.reroll}
               </button>
@@ -1006,6 +1071,47 @@ function App({
                   {credit.note ? (
                     <p className="credits-item-note">{getImageCreditNote(credit.note, locale)}</p>
                   ) : null}
+                </article>
+              ))}
+            </div>
+          </section>
+        </div>
+      ) : null}
+
+      {showReleaseNotes ? (
+        <div
+          className="credits-overlay"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="release-notes-title"
+        >
+          <div
+            className="credits-backdrop"
+            aria-hidden="true"
+            onClick={() => setShowReleaseNotes(false)}
+          />
+          <section className="credits-panel">
+            <div className="credits-header">
+              <div>
+                <p className="eyebrow">{text.releaseNotesLabel}</p>
+                <h2 id="release-notes-title" className="credits-title">
+                  {text.releaseNotesTitle}
+                </h2>
+              </div>
+              <button
+                type="button"
+                className="theme-toggle credits-close"
+                onClick={() => setShowReleaseNotes(false)}
+              >
+                {text.close}
+              </button>
+            </div>
+
+            <div className="release-notes-list">
+              {releaseNotes.map((note) => (
+                <article key={note.version} className="credits-item release-note-item">
+                  <p className="release-note-version">v{note.version}</p>
+                  <p className="credits-item-meta">{note.summary[locale]}</p>
                 </article>
               ))}
             </div>

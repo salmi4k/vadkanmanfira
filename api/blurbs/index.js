@@ -1,4 +1,5 @@
 const {
+  canGenerateVariant,
   MAX_VARIANTS_PER_KEY,
   chooseVariant,
   createVariant,
@@ -43,28 +44,12 @@ module.exports = async function blurbHandler(context, req) {
 
     let cacheState = await getCacheState(request);
     let responseSource = 'cache';
-
-    if (!cacheState) {
-      const generated = await generateBlurbBundle(request);
-      if (!generated.enabled || !generated.bundle) {
-        context.res = json(204, null);
-        return;
-      }
-
-      context.res = json(200, {
-        source: 'azure-openai',
-        titleEndings: generated.bundle.titleEndings,
-        cardNotes: generated.bundle.cardNotes,
-        blurbs: generated.bundle.blurbs,
-        model: generated.model,
-      });
-      return;
-    }
-
+    const wantsReroll = request.requestMode === 'reroll';
+    const canGenerateNow = canGenerateVariant(cacheState);
     const shouldGenerateVariant =
-      cacheState.freshVariants.length === 0 ||
-      cacheState.variants.length < MAX_VARIANTS_PER_KEY ||
-      cacheState.staleVariants.length > 0;
+      cacheState.freshVariants.length === 0
+        ? canGenerateNow
+        : wantsReroll && cacheState.variants.length < MAX_VARIANTS_PER_KEY && canGenerateNow;
 
     if (shouldGenerateVariant) {
       const generated = await tryGenerateVariant(request, cacheState);
@@ -93,9 +78,16 @@ module.exports = async function blurbHandler(context, req) {
         cacheState = {
           ...(cacheState || {}),
           variants: updatedVariants,
-          freshVariants: updatedVariants,
-          staleVariants: [],
+          freshVariants: updatedVariants.filter((variant) => {
+            const generatedAtMs = Date.parse(variant.generatedAt);
+            return !Number.isNaN(generatedAtMs) && Date.now() - generatedAtMs <= 15 * 60 * 1000;
+          }),
+          staleVariants: updatedVariants.filter((variant) => {
+            const generatedAtMs = Date.parse(variant.generatedAt);
+            return Number.isNaN(generatedAtMs) || Date.now() - generatedAtMs > 15 * 60 * 1000;
+          }),
           createdAt: cacheState?.createdAt || generatedVariant.createdAt,
+          lastGeneratedAt: generatedVariant.generatedAt,
         };
         responseSource = 'azure-openai';
       }

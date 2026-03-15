@@ -5,6 +5,7 @@ import { fetchAiBlurbBundle } from './aiBlurbs';
 import { buildInfo } from './buildInfo.generated';
 import { ContentPack } from './contentPack';
 import { MOOD_STORAGE_KEY } from './mood';
+import { getReleaseNote } from './releaseNotes';
 
 jest.mock('./aiBlurbs', () => ({
   fetchAiBlurbBundle: jest.fn().mockResolvedValue(null),
@@ -37,7 +38,8 @@ async function renderAppAt(
 
 beforeEach(() => {
   window.localStorage.clear();
-  mockedFetchAiBlurbBundle.mockClear();
+  mockedFetchAiBlurbBundle.mockReset();
+  mockedFetchAiBlurbBundle.mockResolvedValue(null);
 
   jest.spyOn(global, 'fetch').mockImplementation(async (input: RequestInfo | URL) => {
     const url = String(input);
@@ -300,6 +302,22 @@ test('renders a subtle build stamp in the footer', async () => {
   expect(screen.getByText(new RegExp(buildInfo.gitSha, 'i'))).toBeInTheDocument();
 });
 
+test('shows a simple current release note and opens the changelog history', async () => {
+  await renderAppAt(new Date(2026, 2, 14));
+
+  const currentRelease = getReleaseNote(buildInfo.version);
+  expect(currentRelease).not.toBeNull();
+  expect(screen.getByText(currentRelease!.shortSummary.sv)).toBeInTheDocument();
+
+  fireEvent.click(screen.getByRole('button', { name: /Visa alla ändringar/i }));
+
+  expect(
+    screen.getByRole('heading', { level: 2, name: /Det här har ändrats i appen/i })
+  ).toBeInTheDocument();
+  expect(screen.getByText(currentRelease!.summary.sv)).toBeInTheDocument();
+  expect(screen.getByText(/v0\.1\.12/i)).toBeInTheDocument();
+});
+
 test('renders public image credits when opening the credits dialog', async () => {
   await renderAppAt(new Date(2026, 2, 25));
 
@@ -338,7 +356,7 @@ test('allows collapsing the upcoming panel', async () => {
   fireEvent.click(screen.getByRole('button', { name: /Dölj/i }));
 
   expect(screen.queryByText(/^Valborg$/i)).not.toBeInTheDocument();
-  expect(screen.getByRole('button', { name: /Visa/i })).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: /^Visa$/i })).toBeInTheDocument();
 });
 
 test('renders bokrean as a seasonal sidebar note during the sale window', async () => {
@@ -523,5 +541,37 @@ test('sends the selected mood in ai blurb requests', async () => {
       expect.objectContaining({ mood: 'warm' }),
       expect.any(AbortSignal)
     )
+  );
+});
+
+test('only asks for another ai variant when reroll is clicked', async () => {
+  mockedFetchAiBlurbBundle
+    .mockResolvedValueOnce({
+      source: 'cache',
+      titleEndings: [],
+      cardNotes: [],
+      blurbs: ['Första ai-texten.'],
+    })
+    .mockResolvedValueOnce({
+      source: 'azure-openai',
+      titleEndings: [],
+      cardNotes: [],
+      blurbs: ['Ny ai-text efter reroll.'],
+    });
+
+  await renderAppAt(new Date(2026, 2, 14));
+
+  mockedFetchAiBlurbBundle.mockClear();
+
+  fireEvent.click(screen.getByRole('button', { name: /Ny ursäkt/i }));
+
+  await waitFor(() =>
+    expect(mockedFetchAiBlurbBundle).toHaveBeenLastCalledWith(
+      expect.objectContaining({ requestMode: 'reroll' }),
+      undefined
+    )
+  );
+  await waitFor(() =>
+    expect(screen.getByText(/Ny ai-text efter reroll\./i)).toBeInTheDocument()
   );
 });
