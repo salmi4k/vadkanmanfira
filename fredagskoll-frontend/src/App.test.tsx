@@ -14,13 +14,25 @@ const mockedFetchAiBlurbBundle = fetchAiBlurbBundle as jest.MockedFunction<
   typeof fetchAiBlurbBundle
 >;
 
-async function renderAppAt(date: Date, contentPack?: ContentPack): Promise<void> {
+async function renderAppAt(
+  date: Date,
+  contentPack?: ContentPack,
+  options: { waitForAi?: boolean } = {}
+): Promise<void> {
+  const { waitForAi = true } = options;
+
   render(<App initialDate={date} contentPack={contentPack} />);
   await waitFor(() =>
     expect(
       screen.queryByText(/Laddar namnsdag från öppet API/i)
     ).not.toBeInTheDocument()
   );
+
+  if (waitForAi) {
+    await waitFor(() =>
+      expect(screen.queryByText(/Hämtar dagens text\./i)).not.toBeInTheDocument()
+    );
+  }
 }
 
 beforeEach(() => {
@@ -400,6 +412,44 @@ test('steps between days from the center navigation buttons', async () => {
   expect(
     screen.getByRole('heading', { level: 2, name: /Våffeldagen har tagit över/i })
   ).toBeInTheDocument();
+});
+
+test('hides fallback blurbs until the ai request resolves', async () => {
+  let resolveBundle!: (value: {
+    source: 'cache';
+    titleEndings: string[];
+    cardNotes: string[];
+    blurbs: string[];
+  }) => void;
+
+  mockedFetchAiBlurbBundle.mockImplementationOnce(
+    () =>
+      new Promise((resolve) => {
+        resolveBundle = resolve;
+      })
+  );
+
+  await renderAppAt(new Date(2026, 1, 16), undefined, { waitForAi: false });
+
+  expect(screen.getByText(/Hämtar dagens text\./i)).toBeInTheDocument();
+  expect(
+    screen.queryByText(
+      /Det är en vanlig arbetsdag\. Du får skapa din egen stämning, och det känns ju tveksamt\./i
+    )
+  ).not.toBeInTheDocument();
+  expect(screen.queryByRole('button', { name: /Ny ursäkt/i })).not.toBeInTheDocument();
+
+  resolveBundle({
+    source: 'cache',
+    titleEndings: [],
+    cardNotes: [],
+    blurbs: ['AI-cachead text som faktiskt hör till datumet.'],
+  });
+
+  await waitFor(() =>
+    expect(screen.getByText(/AI-cachead text som faktiskt hör till datumet\./i)).toBeInTheDocument()
+  );
+  expect(screen.queryByText(/Hämtar dagens text\./i)).not.toBeInTheDocument();
 });
 
 test('persists the selected mood and exposes it on the app root', async () => {

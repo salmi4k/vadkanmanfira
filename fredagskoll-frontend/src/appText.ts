@@ -100,6 +100,7 @@ export const appText: Record<
     previousDay: string;
     nextDay: string;
     reroll: string;
+    blurbLoading: string;
     unofficialThemeDay: string;
     unofficialThemeDays: (count: number) => string;
     noOfficialEnergy: string;
@@ -164,6 +165,7 @@ export const appText: Record<
     previousDay: 'Föregående dag',
     nextDay: 'Nästa dag',
     reroll: 'Ny ursäkt',
+    blurbLoading: 'Hämtar dagens text.',
     unofficialThemeDay: 'Inofficiell temadag',
     unofficialThemeDays: (count: number) => `Inofficiella temadagar x${count}`,
     noOfficialEnergy: 'Ingen officiell stordådskänsla',
@@ -232,6 +234,7 @@ export const appText: Record<
     previousDay: 'Previous day',
     nextDay: 'Next day',
     reroll: 'New excuse',
+    blurbLoading: "Fetching today's copy.",
     unofficialThemeDay: 'Unofficial theme day',
     unofficialThemeDays: (count: number) => `Unofficial theme days x${count}`,
     noOfficialEnergy: 'No official sense of occasion',
@@ -300,6 +303,7 @@ export const appText: Record<
     previousDay: 'Dia anterior',
     nextDay: 'Próximo dia',
     reroll: 'Nova desculpa',
+    blurbLoading: 'Buscando o texto do dia.',
     unofficialThemeDay: 'Data temática não oficial',
     unofficialThemeDays: (count: number) => `Datas temáticas não oficiais x${count}`,
     noOfficialEnergy: 'Nenhum senso oficial de ocasião',

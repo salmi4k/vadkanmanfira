@@ -65,6 +65,7 @@ type AppProps = {
 };
 
 type NameDayState = 'loading' | 'ready' | 'error';
+type AiBundleState = 'loading' | 'ready' | 'fallback';
 type MobileSectionKey =
   | 'holiday'
   | 'season'
@@ -185,6 +186,7 @@ function App({
   const [nameDays, setNameDays] = useState<string[]>([]);
   const [nameDayState, setNameDayState] = useState<NameDayState>('loading');
   const [aiBundle, setAiBundle] = useState<AiBlurbBundle | null>(null);
+  const [aiBundleState, setAiBundleState] = useState<AiBundleState>('loading');
   const [blurb, setBlurb] = useState(getOrdinaryBlurb(getInitialLocale(), getInitialMood()));
   const [themeDayTitleEnding, setThemeDayTitleEnding] = useState(
     getOrdinaryThemeDayTitleEndings(getInitialLocale(), getInitialMood())[0]
@@ -254,9 +256,14 @@ function App({
     () => (!celebration && hasThemeDays ? buildThemeDayBlurbs(visibleThemeDays, locale, mood) : null),
     [celebration, hasThemeDays, locale, mood, visibleThemeDays]
   );
+  const isAiBundleLoading = aiBundleState === 'loading';
   const currentBlurbs = useMemo(() => {
     if (aiBundle?.blurbs.length) {
       return aiBundle.blurbs;
+    }
+
+    if (isAiBundleLoading) {
+      return null;
     }
 
     if (celebration) {
@@ -276,7 +283,7 @@ function App({
       selectedDateObject.getDay() === 0 || selectedDateObject.getDay() === 6,
       mood
     );
-  }, [aiBundle, celebration, dayStatus.dayType, locale, mood, selectedDateObject, themeDayBlurbs]);
+  }, [aiBundle, celebration, dayStatus.dayType, isAiBundleLoading, locale, mood, selectedDateObject, themeDayBlurbs]);
   const kicker = celebration
     ? celebration.kicker
     : hasThemeDays
@@ -372,14 +379,17 @@ function App({
     } as const;
 
     setAiBundle(null);
+    setAiBundleState('loading');
 
     Promise.resolve(fetchAiBlurbBundle(request, controller.signal))
       .then((bundle) => {
         if (bundle === null) {
+          setAiBundleState('fallback');
           return;
         }
 
         setAiBundle(bundle);
+        setAiBundleState('ready');
       })
       .catch(() => {
         if (controller.signal.aborted) {
@@ -387,6 +397,7 @@ function App({
         }
 
         setAiBundle(null);
+        setAiBundleState('fallback');
       });
 
     return () => {
@@ -414,13 +425,17 @@ function App({
   ]);
 
   useEffect(() => {
+    if (isAiBundleLoading) {
+      return;
+    }
+
     if (!currentBlurbs) {
       setBlurb(ordinaryBlurb);
       return;
     }
 
     setBlurb(getRandomItem(currentBlurbs, ordinaryBlurb));
-  }, [selectedDate, locale, currentBlurbs, ordinaryBlurb]);
+  }, [selectedDate, locale, currentBlurbs, ordinaryBlurb, isAiBundleLoading]);
 
   useEffect(() => {
     const endings =
@@ -769,8 +784,14 @@ function App({
             </h2>
           )}
           <div className="blurb-row">
-            <p className="celebration-blurb">{blurb}</p>
-            {currentBlurbs ? (
+            {isAiBundleLoading ? (
+              <p className="celebration-blurb celebration-blurb--loading" aria-live="polite">
+                {text.blurbLoading}
+              </p>
+            ) : (
+              <p className="celebration-blurb">{blurb}</p>
+            )}
+            {currentBlurbs && !isAiBundleLoading ? (
               <button
                 type="button"
                 className="reroll-button"

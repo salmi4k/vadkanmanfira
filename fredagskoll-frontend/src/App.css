@@ -637,6 +637,11 @@
   font-size: var(--mood-blurb-size);
 }
 
+.celebration-blurb--loading {
+  min-height: 3.2rem;
+  color: color-mix(in srgb, var(--muted) 88%, var(--tone-accent) 12%);
+}
+
 .blurb-row {
   display: grid;
   gap: 0.9rem;
