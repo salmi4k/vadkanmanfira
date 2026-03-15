@@ -8,7 +8,7 @@ function json(status, body) {
     headers: {
       'Content-Type': 'application/json',
     },
-    body,
+    body: body === null ? '' : JSON.stringify(body),
   };
 }
 
