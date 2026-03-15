@@ -132,6 +132,78 @@ export function getThemeDaySpecificBlurbs(
   const normalized = normalizeLabel(themeDay);
   const overrides: Array<[string, string[]]> = [
     [
+      "saint patrick's day",
+      [
+        "Saint Patrick's day är dagen då grönt plötsligt uppträder som fullgod personlighet och ingen riktigt orkar invända.",
+        "Det är Saint Patrick's day idag, alltså datumet då irländsk myt, pubenergi och kollektiv färgkoordinering går ihop i ett märkligt fungerande paket.",
+        "Saint Patrick's day ger kalendern exakt den sortens självsäker folklore som vanliga vardagar bara kan drömma om.",
+      ],
+    ],
+    [
+      'rocka sockorna-dagen',
+      [
+        'Rocka sockorna-dagen lyckas vara både varm, synlig och faktiskt värd att bry sig om, vilket inte direkt gäller varje temadag.',
+        'Det är Rocka sockorna-dagen idag, alltså en av få dagar där ett litet symboliskt grepp faktiskt säger något vettigt om hur vi ser på varandra.',
+        'Rocka sockorna-dagen ger datumet både färg och moralisk ryggrad. Det är mer än kalendern brukar erbjuda gratis.',
+      ],
+    ],
+    [
+      'vårdagjämningen',
+      [
+        'Vårdagjämningen känns som en av få kalenderpunkter som inte behöver marknadsföring för att bära sig själv.',
+        'Det är Vårdagjämningen idag, alltså den officiella starten på årstiden där svenskar långsamt återgår till att tro på livet.',
+        'Vårdagjämningen ger dagen en sorts stillsam tyngd som gör resten av temadagssällskapet märkbart mindre viktigt.',
+      ],
+    ],
+    [
+      'sommarsolståndet',
+      [
+        'Sommarsolståndet kommer in med så mycket egen auktoritet att resten av dagens temadagar mest får stå vid sidan och nicka.',
+        'Det är Sommarsolståndet idag, alltså datumet då ljuset tar över helt och folk börjar resonera som om sömn vore en valfri tjänst.',
+        'Sommarsolståndet gör dagen större än vanligt. Det är inte pynt, det är själva årstiden som kliver in och tar ordet.',
+      ],
+    ],
+    [
+      'kanelbullens dag',
+      [
+        'Kanelbullens dag är så djupt etablerad att den knappt ens känns som temadag längre. Den känns som civil ordning.',
+        'Det är Kanelbullens dag idag, alltså ett tillfälle då Sverige kollektivt accepterar att kardemumma får driva samhällsutvecklingen några timmar.',
+        'Kanelbullens dag ger datumet exakt rätt blandning av trygghet, socker och nationell självbild.',
+      ],
+    ],
+    [
+      'star wars-dagen',
+      [
+        'Star wars-dagen är den sortens nördhögtid som gått så långt att ingen längre låtsas att den bara är ett skämt.',
+        'Det är Star wars-dagen idag, vilket betyder att ett mycket stort antal vuxna människor tänker "May the Fourth" och känner sig nöjda med sig själva.',
+        'Star wars-dagen ger datumet en fullt fungerande blandning av popkultur, ritual och obefogat självförtroende.',
+      ],
+    ],
+    [
+      'internationella fredsdagen',
+      [
+        'Internationella fredsdagen är en ovanligt seriös påminnelse om att världen blir bättre av mer eftertanke och betydligt mindre idioti.',
+        'Det är Internationella fredsdagen idag, alltså en dag som faktiskt har större ambitioner än att bara sälja bakverk eller prylar.',
+        'Internationella fredsdagen ger datumet en tyngd som gör det svårt att behandla det som ännu ett dekorativt kalenderpåhitt.',
+      ],
+    ],
+    [
+      'halloween',
+      [
+        'Halloween har sedan länge passerat gränsen för importerat påhitt och gått över till att vara fullgod mörkerteater med folkligt stöd.',
+        'Det är Halloween idag, alltså datumet då pumpor, socker och lätt organiserad dödsestetik får verka helt rimliga tillsammans.',
+        'Halloween ger kalendern ett ovanligt starkt visuellt självförtroende. Det får man nästan respektera.',
+      ],
+    ],
+    [
+      'nobeldagen',
+      [
+        'Nobeldagen bär sig med den sortens stel elegans som får resten av temadagskatalogen att se ut som ett studentprojekt.',
+        'Det är Nobeldagen idag, alltså en dag då vetenskap, litteratur och väldigt kontrollerad festlighet får tala med full auktoritet.',
+        'Nobeldagen ger datumet ett ovanligt högtidligt självförtroende och faktiskt tillräcklig substans för att motivera det.',
+      ],
+    ],
+    [
       'matladans dag',
       [
         'Matlådans dag är i praktiken ett erkännande av kall disciplin i plastform.',

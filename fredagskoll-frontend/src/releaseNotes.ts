@@ -8,6 +8,19 @@ export type ReleaseNote = {
 
 export const releaseNotes: ReleaseNote[] = [
   {
+    version: '0.1.19',
+    shortSummary: {
+      sv: 'Fler temadagar har fått mer egen röst och mindre generisk text.',
+      en: 'More theme days now have their own voice instead of generic copy.',
+      'pt-BR': 'Mais datas temáticas agora têm voz própria em vez de texto genérico.',
+    },
+    summary: {
+      sv: 'Flera tydliga temadagar, som Saint Patrick’s day, Rocka sockorna-dagen, Kanelbullens dag och Nobeldagen, har fått mer egen och mer minnesvärd text. Resultatet är att “Ny ursäkt” oftare känns som att den faktiskt hör till just den dagen i stället för att låta som en allmän temadagsmall.',
+      en: 'Several standout theme days, such as Saint Patrick’s Day, Rock Your Socks Day, Cinnamon Bun Day, and Nobel Day, now have more distinct and memorable writing. The result is that “New excuse” more often feels tied to that specific day instead of sounding like a generic theme-day template.',
+      'pt-BR': 'Várias datas temáticas mais marcantes, como Saint Patrick’s Day, Rock Your Socks Day, Cinnamon Bun Day e Nobel Day, agora têm textos mais próprios e memoráveis. O resultado é que “Nova desculpa” parece com mais frequência algo realmente ligado àquele dia, em vez de soar como um modelo genérico.',
+    },
+  },
+  {
     version: '0.1.18',
     shortSummary: {
       sv: 'Temadagar väljs nu mer vettigt när flera krockar samma dag.',
