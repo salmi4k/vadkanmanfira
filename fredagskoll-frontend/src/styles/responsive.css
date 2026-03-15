@@ -3,6 +3,11 @@
     grid-template-columns: 1fr;
   }
 
+  .app-main-column {
+    min-height: auto;
+    grid-template-rows: auto auto;
+  }
+
   .brand-title,
   .celebration-title {
     max-width: none;

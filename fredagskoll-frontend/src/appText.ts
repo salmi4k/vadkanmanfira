@@ -100,6 +100,7 @@ export const appText: Record<
     releaseNotesOpen: string;
     imageCredits: string;
     themeDaySource: string;
+    namedaySource: string;
     previousDay: string;
     nextDay: string;
     reroll: string;
@@ -168,6 +169,7 @@ export const appText: Record<
     releaseNotesOpen: 'Visa alla ändringar',
     imageCredits: 'Bildkällor',
     themeDaySource: 'Temadagar inspirerade av temadagar.se',
+    namedaySource: 'Namnsdagar via sholiday.faboul.se',
     previousDay: 'Föregående dag',
     nextDay: 'Nästa dag',
     reroll: 'Ny ursäkt',
@@ -240,6 +242,7 @@ export const appText: Record<
     releaseNotesOpen: 'Show all changes',
     imageCredits: 'Image credits',
     themeDaySource: 'Theme days inspired by temadagar.se',
+    namedaySource: 'Name days via sholiday.faboul.se',
     previousDay: 'Previous day',
     nextDay: 'Next day',
     reroll: 'New excuse',
@@ -312,6 +315,7 @@ export const appText: Record<
     releaseNotesOpen: 'Mostrar todas as mudanças',
     imageCredits: 'Créditos das imagens',
     themeDaySource: 'Datas temáticas inspiradas em temadagar.se',
+    namedaySource: 'Nomes do dia via sholiday.faboul.se',
     previousDay: 'Dia anterior',
     nextDay: 'Próximo dia',
     reroll: 'Nova desculpa',

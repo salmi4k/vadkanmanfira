@@ -360,7 +360,7 @@ test('renders an upcoming official holiday note when one lands later that week',
 test('renders upcoming notable dates with major celebrations ahead of random filler', async () => {
   await renderAppAt(new Date(2026, 3, 27));
 
-  expect(screen.getByText(/På gång/i)).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: /På gång/i })).toBeInTheDocument();
   expect(screen.getByText(/^Valborg$/i)).toBeInTheDocument();
   expect(screen.getAllByText(/^Första maj$/i).length).toBeGreaterThan(0);
   expect(screen.getAllByText(/Om 3 dagar/i).length).toBeGreaterThan(0);
@@ -637,4 +637,36 @@ test('only asks for another ai variant when reroll is clicked', async () => {
   await waitFor(() =>
     expect(screen.getByText(/Ny ai-text efter reroll\./i)).toBeInTheDocument()
   );
+});
+
+test('scrolls back to the main card after confirming a mobile date change', async () => {
+  jest.useFakeTimers();
+
+  const matchMediaMock = jest.fn().mockReturnValue({
+    matches: true,
+    addEventListener: jest.fn(),
+    removeEventListener: jest.fn(),
+  });
+  Object.defineProperty(window, 'matchMedia', {
+    writable: true,
+    value: matchMediaMock,
+  });
+
+  const scrollIntoViewMock = jest.fn();
+  Object.defineProperty(HTMLElement.prototype, 'scrollIntoView', {
+    writable: true,
+    value: scrollIntoViewMock,
+  });
+
+  await renderAppAt(new Date(2026, 2, 14));
+
+  fireEvent.change(screen.getByLabelText(/Välj datum/i), {
+    target: { value: '2026-03-15' },
+  });
+
+  jest.advanceTimersByTime(150);
+
+  expect(scrollIntoViewMock).toHaveBeenCalled();
+
+  jest.useRealTimers();
 });
