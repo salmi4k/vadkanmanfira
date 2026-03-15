@@ -172,9 +172,9 @@
   font-size: clamp(1.75rem, 3.2vw, 2.75rem);
   max-width: none;
   line-height: 0.92;
-  overflow-wrap: normal;
-  word-break: normal;
-  hyphens: manual;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  hyphens: auto;
 }
 
 .media-grid {

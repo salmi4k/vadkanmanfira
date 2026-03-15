@@ -542,7 +542,7 @@ function getCelebrationThemeAliasesSv(dayType: Exclude<DayType, 'ordinary'>): st
     case 'valborg':
       return ['Valborg', 'Valborgsmässoafton'];
     case 'nationaldagen':
-      return ['Nationaldagen'];
+      return ['Nationaldagen', 'Sveriges nationaldag'];
     case 'midsommarafton':
       return ['Midsommarafton'];
     case 'kanelbullensdag':

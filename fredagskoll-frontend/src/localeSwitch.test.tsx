@@ -1,29 +1,45 @@
 import React from 'react';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import App from './App';
+import { PREFERENCES_STORAGE_KEY } from './preferences';
+import { useAiContent } from './features/ai/useAiContent';
+import { useNameDays } from './features/name-days/useNameDays';
 
-jest.mock('./features/ai/aiBlurbs', () => ({
-  fetchAiBlurbBundle: () => Promise.resolve(null),
+jest.mock('./features/ai/useAiContent', () => ({
+  useAiContent: jest.fn(),
 }));
+
+jest.mock('./features/name-days/useNameDays', () => ({
+  useNameDays: jest.fn(),
+}));
+
+const mockedUseAiContent = useAiContent as jest.MockedFunction<typeof useAiContent>;
+const mockedUseNameDays = useNameDays as jest.MockedFunction<typeof useNameDays>;
 
 beforeEach(() => {
   window.localStorage.clear();
+  Object.defineProperty(window, 'matchMedia', {
+    writable: true,
+    value: jest.fn().mockReturnValue({
+      matches: false,
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+    }),
+  });
 
-  jest.spyOn(global, 'fetch').mockImplementation(async (input: RequestInfo | URL) => {
-    const url = String(input);
+  mockedUseNameDays.mockReturnValue({
+    nameDays: [],
+    nameDayState: 'ready',
+  });
 
-    if (url.includes('/api/blurbs')) {
-      return {
-        ok: true,
-        status: 204,
-        json: async () => ({}),
-      } as Response;
-    }
-
-    return {
-      ok: true,
-      json: async () => ({ dagar: [{ namnsdag: [] }] }),
-    } as Response;
+  mockedUseAiContent.mockReturnValue({
+    blurb: 'Standard text.',
+    currentBlurbs: ['Standard text.'],
+    handleReroll: jest.fn(),
+    isAiBundleLoading: false,
+    isAiRerolling: false,
+    themeDayCardNote: 'Standard note.',
+    themeDayTitleEnding: 'It can carry the day.',
   });
 });
 
@@ -34,10 +50,6 @@ afterEach(() => {
 test('switches the interface to English and persists the locale', async () => {
   render(<App initialDate={new Date(2026, 2, 25)} />);
 
-  await waitFor(() =>
-    expect(screen.queryByText(/Laddar namnsdag/i)).not.toBeInTheDocument()
-  );
-
   fireEvent.click(screen.getByRole('button', { name: /Språk/i }));
   fireEvent.click(screen.getByRole('menuitemradio', { name: /English/i }));
 
@@ -46,5 +58,8 @@ test('switches the interface to English and persists the locale', async () => {
   ).toBeInTheDocument();
   expect(screen.getByRole('button', { name: /Previous day/i })).toBeInTheDocument();
   expect(screen.getByText(/Image credits/i)).toBeInTheDocument();
-  expect(window.localStorage.getItem('vadkanmanfira.locale')).toBe('en');
+  expect(JSON.parse(window.localStorage.getItem(PREFERENCES_STORAGE_KEY) ?? '{}')).toMatchObject({
+    version: 1,
+    locale: 'en',
+  });
 });

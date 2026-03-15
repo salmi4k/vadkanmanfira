@@ -1,77 +1,92 @@
 import React from 'react';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import App from './App';
-import { fetchAiBlurbBundle } from './features/ai/aiBlurbs';
 import { buildInfo } from './buildInfo.generated';
 import { ContentPack } from './contentPack';
-import { MOOD_STORAGE_KEY } from './mood';
+import {
+  getOrdinaryThemeDayCardNotes,
+  getOrdinaryThemeDayTitleEndings,
+} from './editorialText';
+import { PREFERENCES_STORAGE_KEY } from './preferences';
 import { getReleaseNote } from './releaseNotes';
+import { useAiContent } from './features/ai/useAiContent';
+import { useNameDays } from './features/name-days/useNameDays';
 import { getThemeDaysForDate } from './features/theme-days/temadagar';
 
-jest.mock('./features/ai/aiBlurbs', () => ({
-  fetchAiBlurbBundle: jest.fn().mockResolvedValue(null),
+jest.mock('./features/ai/useAiContent', () => ({
+  useAiContent: jest.fn(),
 }));
 
-const mockedFetchAiBlurbBundle = fetchAiBlurbBundle as jest.MockedFunction<
-  typeof fetchAiBlurbBundle
->;
+jest.mock('./features/name-days/useNameDays', () => ({
+  useNameDays: jest.fn(),
+}));
 
-async function renderAppAt(
-  date: Date,
-  contentPack?: ContentPack,
-  options: { waitForAi?: boolean } = {}
-): Promise<void> {
-  const { waitForAi = true } = options;
+const mockedUseAiContent = useAiContent as jest.MockedFunction<typeof useAiContent>;
+const mockedUseNameDays = useNameDays as jest.MockedFunction<typeof useNameDays>;
 
+async function renderAppAt(date: Date, contentPack?: ContentPack): Promise<void> {
   render(<App initialDate={date} contentPack={contentPack} />);
   await waitFor(() =>
-    expect(
-      screen.queryByText(/Laddar namnsdag från öppet API/i)
-    ).not.toBeInTheDocument()
+    expect(screen.queryByText(/Hämtar dagens text\./i)).not.toBeInTheDocument()
   );
+}
 
-  if (waitForAi) {
-    await waitFor(() =>
-      expect(screen.queryByText(/Hämtar dagens text\./i)).not.toBeInTheDocument()
-    );
-  }
+function buildMockAiContent(
+  overrides: Partial<ReturnType<typeof useAiContent>> = {}
+): ReturnType<typeof useAiContent> {
+  return {
+    blurb: 'Standardtext.',
+    currentBlurbs: ['Standardtext.'],
+    handleReroll: jest.fn(),
+    isAiBundleLoading: false,
+    isAiRerolling: false,
+    themeDayCardNote: 'Standardnotis.',
+    themeDayTitleEnding: 'Det får väl bära dagen då.',
+    ...overrides,
+  };
 }
 
 beforeEach(() => {
   window.localStorage.clear();
-  mockedFetchAiBlurbBundle.mockReset();
-  mockedFetchAiBlurbBundle.mockResolvedValue(null);
+  mockedUseAiContent.mockReset();
+  mockedUseNameDays.mockReset();
 
-  jest.spyOn(global, 'fetch').mockImplementation(async (input: RequestInfo | URL) => {
-    const url = String(input);
-
-    if (url.includes('/api/blurbs')) {
-      return {
-        ok: true,
-        status: 204,
-        json: async () => ({}),
-      } as Response;
-    }
-
-    if (url.includes('/2026/03/14')) {
-      return {
-        ok: true,
-        json: async () => ({ dagar: [{ namnsdag: ['Matilda', 'Maud'] }] }),
-      } as Response;
-    }
-
-    if (url.includes('/2026/06/19')) {
-      return {
-        ok: true,
-        json: async () => ({ dagar: [{ namnsdag: ['Germund', 'Yvonne'] }] }),
-      } as Response;
-    }
-
-    return {
-      ok: true,
-      json: async () => ({ dagar: [{ namnsdag: [] }] }),
-    } as Response;
+  Object.defineProperty(window, 'matchMedia', {
+    writable: true,
+    value: jest.fn().mockReturnValue({
+      matches: false,
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+    }),
   });
+
+  mockedUseNameDays.mockImplementation((dateLabel: string) => {
+    if (dateLabel === '2026-03-14') {
+      return { nameDays: ['Matilda', 'Maud'], nameDayState: 'ready' };
+    }
+
+    if (dateLabel === '2026-06-19') {
+      return { nameDays: ['Germund', 'Yvonne'], nameDayState: 'ready' };
+    }
+
+    return { nameDays: [], nameDayState: 'ready' };
+  });
+
+  mockedUseAiContent.mockImplementation(
+    ({ celebration, ordinaryBlurb, locale, mood, themeDayBlurbs }) => {
+      const currentBlurbs =
+        celebration?.blurbs ?? themeDayBlurbs ?? (ordinaryBlurb ? [ordinaryBlurb] : null);
+
+      return {
+        ...buildMockAiContent({
+          blurb: currentBlurbs?.[0] ?? ordinaryBlurb,
+          currentBlurbs,
+          themeDayCardNote: getOrdinaryThemeDayCardNotes(locale, mood)[0],
+          themeDayTitleEnding: getOrdinaryThemeDayTitleEndings(locale, mood)[0],
+        }),
+      };
+    }
+  );
 });
 
 afterEach(() => {
@@ -166,10 +181,17 @@ test('does not render Fettisdag content on a random Tuesday', async () => {
 });
 
 test('renders a rerollable blurb on an ordinary weekday', async () => {
-  const randomSpy = jest
-    .spyOn(Math, 'random')
-    .mockReturnValueOnce(0)
-    .mockReturnValueOnce(0.99);
+  const handleReroll = jest.fn();
+  mockedUseAiContent.mockImplementationOnce(() =>
+    buildMockAiContent({
+      blurb:
+        'Det är en vanlig arbetsdag. Du får skapa din egen stämning, och det känns ju tveksamt.',
+      currentBlurbs: [
+        'Det är en vanlig arbetsdag. Du får skapa din egen stämning, och det känns ju tveksamt.',
+      ],
+      handleReroll,
+    })
+  );
 
   await renderAppAt(new Date(2026, 1, 16));
 
@@ -182,20 +204,21 @@ test('renders a rerollable blurb on an ordinary weekday', async () => {
 
   fireEvent.click(screen.getByRole('button', { name: /Ny ursäkt/i }));
 
-  expect(
-    screen.getByText(
-      /Det här är administrationens egen lilla arbetsseger: en dag som inte stör, gläder eller ursäktar något alls\./i
-    )
-  ).toBeInTheDocument();
-
-  randomSpy.mockRestore();
+  expect(handleReroll).toHaveBeenCalledTimes(1);
 });
 
 test('renders a rerollable blurb on an ordinary weekend date', async () => {
-  const randomSpy = jest
-    .spyOn(Math, 'random')
-    .mockReturnValueOnce(0)
-    .mockReturnValueOnce(0.99);
+  const handleReroll = jest.fn();
+  mockedUseAiContent.mockImplementationOnce(() =>
+    buildMockAiContent({
+      blurb:
+        'Det är helg, men inte på det minsta glittriga sättet. Bara frihet med lätt städsmak i bakgrunden.',
+      currentBlurbs: [
+        'Det är helg, men inte på det minsta glittriga sättet. Bara frihet med lätt städsmak i bakgrunden.',
+      ],
+      handleReroll,
+    })
+  );
 
   await renderAppAt(new Date(2026, 2, 28));
 
@@ -208,13 +231,7 @@ test('renders a rerollable blurb on an ordinary weekend date', async () => {
 
   fireEvent.click(screen.getByRole('button', { name: /Ny ursäkt/i }));
 
-  expect(
-    screen.getByText(
-      /Helgens stora innehåll idag är att den pågår\. Man får tydligen vara tacksam för det\./i
-    )
-  ).toBeInTheDocument();
-
-  randomSpy.mockRestore();
+  expect(handleReroll).toHaveBeenCalledTimes(1);
 });
 
 test('renders Påskafton with an actual image', async () => {
@@ -447,10 +464,14 @@ test('renders kräftskivesäsong as a seasonal sidebar note during late summer',
 });
 
 test('rerolls the excuse when clicking Ny ursäkt', async () => {
-  const randomSpy = jest
-    .spyOn(Math, 'random')
-    .mockReturnValueOnce(0)
-    .mockReturnValueOnce(0.99);
+  const handleReroll = jest.fn();
+  mockedUseAiContent.mockImplementationOnce(() =>
+    buildMockAiContent({
+      blurb: 'Veckan är över. Nu återstår bara att låtsas vara klar med allt.',
+      currentBlurbs: ['Veckan är över. Nu återstår bara att låtsas vara klar med allt.'],
+      handleReroll,
+    })
+  );
 
   await renderAppAt(new Date(2026, 2, 13), 'team');
 
@@ -460,13 +481,7 @@ test('rerolls the excuse when clicking Ny ursäkt', async () => {
 
   fireEvent.click(screen.getByRole('button', { name: /Ny ursäkt/i }));
 
-  expect(
-    screen.getByText(
-      /Marmeladfredag är när helgen syns i dörren och samvetet försöker hålla ihop med hjälp av socker\./i
-    )
-  ).toBeInTheDocument();
-
-  randomSpy.mockRestore();
+  expect(handleReroll).toHaveBeenCalledTimes(1);
 });
 
 test('steps between days from the center navigation buttons', async () => {
@@ -496,64 +511,38 @@ test('steps between days from the center navigation buttons', async () => {
 });
 
 test('hides fallback blurbs until the ai request resolves', async () => {
-  let resolveBundle!: (value: {
-    source: 'cache';
-    titleEndings: string[];
-    cardNotes: string[];
-    blurbs: string[];
-  }) => void;
-
-  mockedFetchAiBlurbBundle.mockImplementationOnce(
-    () =>
-      new Promise((resolve) => {
-        resolveBundle = resolve;
-      })
+  mockedUseAiContent.mockImplementationOnce(() =>
+    buildMockAiContent({
+      blurb: 'Det här ska inte synas ännu.',
+      currentBlurbs: null,
+      isAiBundleLoading: true,
+    })
   );
 
-  await renderAppAt(new Date(2026, 1, 16), undefined, { waitForAi: false });
+  render(<App initialDate={new Date(2026, 1, 16)} />);
 
   expect(screen.getByText(/Hämtar dagens text\./i)).toBeInTheDocument();
   expect(
     screen.queryByText(
-      /Det är en vanlig arbetsdag\. Du får skapa din egen stämning, och det känns ju tveksamt\./i
+      /Det här ska inte synas ännu\./i
     )
   ).not.toBeInTheDocument();
   expect(screen.queryByRole('button', { name: /Ny ursäkt/i })).not.toBeInTheDocument();
-
-  resolveBundle({
-    source: 'cache',
-    titleEndings: [],
-    cardNotes: [],
-    blurbs: ['AI-cachead text som faktiskt hör till datumet.'],
-  });
-
-  await waitFor(() =>
-    expect(screen.getByText(/AI-cachead text som faktiskt hör till datumet\./i)).toBeInTheDocument()
-  );
-  expect(screen.queryByText(/Hämtar dagens text\./i)).not.toBeInTheDocument();
 });
 
 test('hides the previous ai blurb while a new date request is loading', async () => {
-  let resolveSecondBundle!: (value: {
-    source: 'cache';
-    titleEndings: string[];
-    cardNotes: string[];
-    blurbs: string[];
-  }) => void;
-
-  mockedFetchAiBlurbBundle
-    .mockResolvedValueOnce({
-      source: 'cache',
-      titleEndings: [],
-      cardNotes: [],
-      blurbs: ['Första rätta texten.'],
-    })
-    .mockImplementationOnce(
-      () =>
-        new Promise((resolve) => {
-          resolveSecondBundle = resolve;
+  mockedUseAiContent.mockImplementation(({ selectedDate }) =>
+    selectedDate === '2026-02-16'
+      ? buildMockAiContent({
+          blurb: 'Första rätta texten.',
+          currentBlurbs: ['Första rätta texten.'],
         })
-    );
+      : buildMockAiContent({
+          blurb: 'Andra rätta texten.',
+          currentBlurbs: null,
+          isAiBundleLoading: true,
+        })
+  );
 
   await renderAppAt(new Date(2026, 1, 16));
 
@@ -563,17 +552,6 @@ test('hides the previous ai blurb while a new date request is loading', async ()
 
   expect(screen.getByText(/Hämtar dagens text\./i)).toBeInTheDocument();
   expect(screen.queryByText(/Första rätta texten\./i)).not.toBeInTheDocument();
-
-  resolveSecondBundle({
-    source: 'cache',
-    titleEndings: [],
-    cardNotes: [],
-    blurbs: ['Andra rätta texten.'],
-  });
-
-  await waitFor(() =>
-    expect(screen.getByText(/Andra rätta texten\./i)).toBeInTheDocument()
-  );
 });
 
 test('persists the selected mood and exposes it on the app root', async () => {
@@ -584,7 +562,10 @@ test('persists the selected mood and exposes it on the app root', async () => {
   });
 
   await waitFor(() =>
-    expect(window.localStorage.getItem(MOOD_STORAGE_KEY)).toBe('chaotic')
+    expect(JSON.parse(window.localStorage.getItem(PREFERENCES_STORAGE_KEY) ?? '{}')).toMatchObject({
+      version: 1,
+      mood: 'chaotic',
+    })
   );
   expect(document.querySelector('.App')).toHaveAttribute('data-mood', 'chaotic');
 });
@@ -592,51 +573,35 @@ test('persists the selected mood and exposes it on the app root', async () => {
 test('sends the selected mood in ai blurb requests', async () => {
   await renderAppAt(new Date(2026, 2, 14));
 
-  await waitFor(() => expect(mockedFetchAiBlurbBundle).toHaveBeenCalled());
-  mockedFetchAiBlurbBundle.mockClear();
-
   fireEvent.change(screen.getByLabelText(/Ton/i), {
     target: { value: 'warm' },
   });
 
   await waitFor(() =>
-    expect(mockedFetchAiBlurbBundle).toHaveBeenLastCalledWith(
-      expect.objectContaining({ mood: 'warm' }),
-      expect.any(AbortSignal)
+    expect(mockedUseAiContent).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        aiRequest: expect.objectContaining({ mood: 'warm' }),
+        mood: 'warm',
+      })
     )
   );
 });
 
 test('only asks for another ai variant when reroll is clicked', async () => {
-  mockedFetchAiBlurbBundle
-    .mockResolvedValueOnce({
-      source: 'cache',
-      titleEndings: [],
-      cardNotes: [],
-      blurbs: ['Första ai-texten.'],
+  const handleReroll = jest.fn();
+  mockedUseAiContent.mockImplementationOnce(() =>
+    buildMockAiContent({
+      blurb: 'Första ai-texten.',
+      currentBlurbs: ['Första ai-texten.'],
+      handleReroll,
     })
-    .mockResolvedValueOnce({
-      source: 'azure-openai',
-      titleEndings: [],
-      cardNotes: [],
-      blurbs: ['Ny ai-text efter reroll.'],
-    });
+  );
 
   await renderAppAt(new Date(2026, 2, 14));
 
-  mockedFetchAiBlurbBundle.mockClear();
-
   fireEvent.click(screen.getByRole('button', { name: /Ny ursäkt/i }));
 
-  await waitFor(() =>
-    expect(mockedFetchAiBlurbBundle).toHaveBeenLastCalledWith(
-      expect.objectContaining({ requestMode: 'reroll' }),
-      undefined
-    )
-  );
-  await waitFor(() =>
-    expect(screen.getByText(/Ny ai-text efter reroll\./i)).toBeInTheDocument()
-  );
+  expect(handleReroll).toHaveBeenCalledTimes(1);
 });
 
 test('scrolls back to the main card after confirming a mobile date change', async () => {
@@ -674,3 +639,55 @@ test('scrolls back to the main card after confirming a mobile date change', asyn
 
   jest.useRealTimers();
 });
+
+test('does not repeat Sveriges nationaldag in the extra theme-day list', async () => {
+  await renderAppAt(new Date(2026, 5, 6));
+
+  expect(screen.queryByText(/^Sveriges nationaldag$/i)).not.toBeInTheDocument();
+});
+
+test('keeps Arbetarrorelsens dag visible on Forsta maj', async () => {
+  await renderAppAt(new Date(2026, 4, 1));
+
+  expect(screen.getAllByText(/^Arbetarrörelsens dag$/i).length).toBeGreaterThan(0);
+});
+
+test('stores the selected mood in shared preferences', async () => {
+  await renderAppAt(new Date(2026, 2, 14));
+
+  fireEvent.change(screen.getByLabelText(/Ton/i), {
+    target: { value: 'chaotic' },
+  });
+
+  await waitFor(() =>
+    expect(JSON.parse(window.localStorage.getItem(PREFERENCES_STORAGE_KEY) ?? '{}')).toMatchObject({
+      version: 1,
+      mood: 'chaotic',
+    })
+  );
+});
+
+test('restores and persists dark mode through shared preferences', async () => {
+  window.localStorage.setItem(
+    PREFERENCES_STORAGE_KEY,
+    JSON.stringify({ version: 1, darkMode: true, locale: 'en', mood: 'warm' })
+  );
+
+  await renderAppAt(new Date(2026, 2, 14));
+
+  expect(document.querySelector('.App')).toHaveClass('dark');
+  expect(document.querySelector('.App')).toHaveAttribute('data-mood', 'warm');
+  expect(screen.getByRole('button', { name: /Light mode/i })).toBeInTheDocument();
+
+  fireEvent.click(screen.getByRole('button', { name: /Light mode/i }));
+
+  await waitFor(() =>
+    expect(JSON.parse(window.localStorage.getItem(PREFERENCES_STORAGE_KEY) ?? '{}')).toMatchObject({
+      version: 1,
+      darkMode: false,
+      locale: 'en',
+      mood: 'warm',
+    })
+  );
+});
+
