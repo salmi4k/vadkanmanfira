@@ -67,4 +67,9 @@ That workflow builds the same app twice from `main`:
 - `REACT_APP_CONTENT_PACK=public` -> `vadkanmanfira`
 - `REACT_APP_CONTENT_PACK=team` -> `fredagskoll`
 
-The same workflow also deploys the managed API in `../api`.
+The workflow sets `REACT_APP_AI_API_BASE_URL=https://vkmf-blurbs-api.azurewebsites.net`
+for both builds.
+
+The AI backend is a separate Azure Function App:
+
+- `https://vkmf-blurbs-api.azurewebsites.net/api/blurbs`
