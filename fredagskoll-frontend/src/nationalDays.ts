@@ -1,4 +1,5 @@
 import nationalDaysByDate from './data/nationalDaysByDate.json';
+import nationalDayNationsSv from './data/nationalDayNations.sv.json';
 import nationalDayNationsPtBr from './data/nationalDayNations.pt-BR.json';
 import nationalDaySignificancesPtBr from './data/nationalDaySignificances.pt-BR.json';
 import { Locale } from './locale';
@@ -104,6 +105,7 @@ const significanceTranslations: Record<string, Partial<Record<Locale, string>>> 
   },
 };
 
+const swedishNationTranslations = nationalDayNationsSv as Record<string, string>;
 const portugueseNationTranslations = nationalDayNationsPtBr as Record<string, string>;
 const portugueseSignificanceTranslations = nationalDaySignificancesPtBr as Record<string, string>;
 
@@ -157,6 +159,10 @@ function localizeSignificance(significance: string, locale: Locale): string {
 }
 
 function localizeNation(nation: string, locale: Locale): string {
+  if (locale === 'sv') {
+    return swedishNationTranslations[nation] ?? nation;
+  }
+
   if (locale === 'pt-BR') {
     return portugueseNationTranslations[nation] ?? nation;
   }

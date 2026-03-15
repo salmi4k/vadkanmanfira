@@ -35,7 +35,7 @@ export const ordinaryThemeDayTitleEndingsByLocale: Record<Locale, string[]> = {
 
 export const ordinaryThemeDayCardNotesByLocale: Record<Locale, string[]> = {
   sv: [
-    'Det är inte officiellt, men tillräckligt många har uppenbarligen bestämt sig för att göra något av det här datumet.',
+    'Det är ingen officiell svensk högtidsdag, men tillräckligt många har uppenbarligen bestämt sig för att göra något av det här datumet.',
     'Kalendern får arbeta med det material den har, och idag blev det ändå förvånansvärt dugligt.',
     'Det här är inte statsbärande direkt, men absolut tillräckligt för att spela lite större än datumet först såg ut.',
     'Ingen regering står bakom det här, men folk har ändå visat den goda smaken att fylla dagen med något märkbart.',
@@ -45,7 +45,7 @@ export const ordinaryThemeDayCardNotesByLocale: Record<Locale, string[]> = {
     'Det här får duga som folkligt initiativ. Inte majestätiskt, men klart bättre än kalendermässig öken.',
   ],
   en: [
-    "It's not official, but clearly enough people decided this date deserved some sort of content.",
+    "It's not an official Swedish holiday, but clearly enough people decided this date deserved some sort of content.",
     'The calendar has to work with the material available, and today it ended up with something surprisingly serviceable.',
     "This isn't exactly state-bearing, but it's absolutely enough to make the date play slightly above its station.",
     "No government stands behind this, but people still had the good judgment to give the day some visible substance.",
@@ -55,7 +55,7 @@ export const ordinaryThemeDayCardNotesByLocale: Record<Locale, string[]> = {
     "This will do as a piece of public initiative. Not majestic, but clearly better than calendar desert.",
   ],
   'pt-BR': [
-    'Não é oficial, mas claramente gente suficiente resolveu que essa data merecia algum conteúdo.',
+    'Não é um feriado oficial sueco, mas claramente gente suficiente resolveu que essa data merecia algum conteúdo.',
     'O calendário trabalha com o material que tem, e hoje saiu algo surpreendentemente aproveitável.',
     'Não é exatamente assunto de Estado, mas basta para a data parecer ligeiramente mais importante do que parecia no início.',
     'Nenhum governo assina isso, mas alguém ao menos teve o bom senso de dar algum corpo ao dia.',
