@@ -664,6 +664,10 @@ test('scrolls back to the main card after confirming a mobile date change', asyn
     target: { value: '2026-03-15' },
   });
 
+  expect(scrollIntoViewMock).not.toHaveBeenCalled();
+
+  fireEvent.blur(document.getElementById('date-picker') as HTMLInputElement);
+
   jest.advanceTimersByTime(150);
 
   expect(scrollIntoViewMock).toHaveBeenCalled();

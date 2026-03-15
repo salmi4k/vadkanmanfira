@@ -40,6 +40,7 @@ type IntroPanelProps = {
   onSelectLocale: (locale: Locale) => void;
   onSelectMood: (mood: Mood) => void;
   onDateChange: (date: string) => void;
+  onDateCommit: () => void;
   onToggleMobileSection: (section: MobileSectionKey) => void;
 };
 
@@ -65,6 +66,7 @@ export function IntroPanel({
   onSelectLocale,
   onSelectMood,
   onDateChange,
+  onDateCommit,
   onToggleMobileSection,
 }: IntroPanelProps) {
   const text = appText[locale];
@@ -140,6 +142,7 @@ export function IntroPanel({
           type="date"
           value={selectedDate}
           onChange={(event) => onDateChange(event.target.value)}
+          onBlur={onDateCommit}
           className="date-picker"
         />
         <div className="picker-meta">

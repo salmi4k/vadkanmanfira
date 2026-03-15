@@ -73,6 +73,7 @@ function App({
   });
   const [selectedDate, setSelectedDate] = useState(formatForInput(initialDate));
   const mainCardRef = useRef<HTMLElement | null>(null);
+  const shouldScrollAfterDateCommitRef = useRef(false);
 
   const text = appText[locale];
   const buildStamp = useMemo(() => formatBuildStamp(locale), [locale]);
@@ -265,11 +266,19 @@ function App({
 
   function handleDateChange(nextDate: string): void {
     setSelectedDate(nextDate);
+    shouldScrollAfterDateCommitRef.current = isMobileLayout;
+  }
 
-    if (!isMobileLayout || typeof window === 'undefined') {
+  function handleDateCommit(): void {
+    if (
+      !isMobileLayout ||
+      typeof window === 'undefined' ||
+      !shouldScrollAfterDateCommitRef.current
+    ) {
       return;
     }
 
+    shouldScrollAfterDateCommitRef.current = false;
     window.setTimeout(() => {
       mainCardRef.current?.scrollIntoView({
         behavior: 'smooth',
@@ -314,6 +323,7 @@ function App({
           onSelectLocale={setLocale}
           onSelectMood={setMood}
           onDateChange={handleDateChange}
+          onDateCommit={handleDateCommit}
           onToggleMobileSection={toggleMobileSection}
         />
 

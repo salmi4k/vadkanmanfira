@@ -8,6 +8,19 @@ export type ReleaseNote = {
 
 export const releaseNotes: ReleaseNote[] = [
   {
+    version: '0.1.22',
+    shortSummary: {
+      sv: 'Mobilvyn väntar nu med scroll tills datumväljaren faktiskt stängs.',
+      en: 'Mobile now waits to scroll until the date picker actually closes.',
+      'pt-BR': 'No celular, o app só rola depois que o seletor de data realmente fecha.',
+    },
+    summary: {
+      sv: 'När du byter datum på mobil hoppar appen inte längre direkt medan datumväljaren fortfarande är öppen. Scrollen sker först när datumfältet faktiskt bekräftas och stängs, vilket känns lugnare och mindre ryckigt.',
+      en: 'When you change the date on mobile, the app no longer jumps away while the date picker is still open. It now scrolls only after the field is actually confirmed and closed, which feels calmer and less jarring.',
+      'pt-BR': 'Ao trocar a data no celular, o app não pula mais enquanto o seletor ainda está aberto. A rolagem agora só acontece depois que o campo é realmente confirmado e fechado, deixando tudo mais calmo e menos brusco.',
+    },
+  },
+  {
     version: '0.1.21',
     shortSummary: {
       sv: 'På gång har flyttat till högersidan och footern ligger lägre.',
