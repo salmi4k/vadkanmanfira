@@ -48,9 +48,19 @@
     font-size: 0.88rem;
   }
 
+  .card-kicker-row,
+  .card-kicker-metrics,
+  .engagement-metrics {
+    justify-content: flex-start;
+  }
+
   .theme-toggle {
     padding: 0.68rem 0.85rem;
     font-size: 0.84rem;
+  }
+
+  .surprise-button {
+    width: 100%;
   }
 
   .intro-controls {

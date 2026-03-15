@@ -48,6 +48,14 @@
   min-width: 0;
 }
 
+.card-kicker-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: start;
+  flex-wrap: wrap;
+}
+
 .card-date {
   margin: 0;
   text-align: center;
