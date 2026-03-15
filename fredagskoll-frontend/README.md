@@ -26,14 +26,15 @@ The dev server runs on `http://localhost:3000`.
 Run the team variant locally:
 
 ```sh
-$env:REACT_APP_CONTENT_PACK="team"
+$env:VITE_CONTENT_PACK="team"
 npm start
 ```
 
 ## Quality checks
 
 ```sh
-npm test -- --runInBand --watchAll=false
+npm test
+npm run test:watch
 npm run test:visual
 npm run build
 ```
@@ -42,17 +43,31 @@ npm run build
 
 - `src/App.tsx`
   Main composition layer
+- `src/index.tsx`
+  Frontend entrypoint mounted by Vite
 - `src/contentPack.ts`
   Public/team pack selection and recurring weekday rules
 - `src/dayLogic.ts`
   Day classification and official holiday calculations
-- `src/celebrations.ts`
+- `src/features/celebrations/celebrationDefinitions.ts`
+  Built-in celebration rule catalog and calculated holiday definitions
+- `src/features/celebrations/celebrations.ts`
   Built-in celebration content with pack-aware exports
-- `src/themeDaySpecificBlurbs.ts`
+- `src/features/theme-days/themeDayPriority.ts`
+  Curated ordering for crowded temadag dates
+- `src/features/theme-days/themeDaySpecificBlurbs.ts`
   Handwritten temadag overrides
-- `src/themeDayCategoryBlurbs.ts`
+- `src/features/theme-days/themeDayCategoryBlurbs.ts`
   Category-based temadag fallbacks
-- `src/upcomingNotables.ts`
+- `src/hooks/useAppShellState.ts`
+  App-shell UI state such as date, dialogs, and disclosure panels
+- `src/appViewModel.ts`
+  Derived titles, kicker text, and AI request inputs
+- `index.html`
+  Vite HTML shell for local dev and production builds
+- `vite.config.ts`
+  Vite build/dev configuration and chunk splitting
+- `src/features/upcoming/upcomingNotables.ts`
   Upcoming sidebar card logic
 - `src/data/temadagarByDate.json`
   Curated temadagar dataset
@@ -67,8 +82,8 @@ workflow:
 That workflow builds the same app twice from `main` and includes the shared
 managed API from `../api`:
 
-- `REACT_APP_CONTENT_PACK=public` -> `vadkanmanfira`
-- `REACT_APP_CONTENT_PACK=team` -> `fredagskoll`
+- `VITE_CONTENT_PACK=public` -> `vadkanmanfira`
+- `VITE_CONTENT_PACK=team` -> `fredagskoll`
 
 In production, the frontend calls the same-origin managed API path:
 

@@ -22,7 +22,7 @@ The app now supports two variants on top of the same shared core:
 Set the variant with:
 
 ```sh
-$env:REACT_APP_CONTENT_PACK="team"
+$env:VITE_CONTENT_PACK="team"
 ```
 
 If the variable is unset, the app defaults to `public`.
@@ -83,7 +83,7 @@ flowchart TD
 - [docs/custom-domain-plan.md](docs/custom-domain-plan.md)
   Deferred branding and custom-domain planning notes.
 - [docs/cra-migration-plan.md](docs/cra-migration-plan.md)
-  Practical plan for migrating the frontend away from Create React App.
+  Historical notes from the completed CRA-to-Vite migration.
 - [docs/theme-day-priority-suggestions.json](docs/theme-day-priority-suggestions.json)
   Offline AI-assisted review output for crowded theme-day dates.
 
@@ -93,7 +93,11 @@ Shared core:
 
 - `allahjartansdag`: February 14
 - `fettisdag`: calculated from Easter
+- `skartorsdag`: 3 days before Easter Sunday
+- `langfredag`: 2 days before Easter Sunday
 - `paskafton`: calculated from Easter
+- `paskdagen`: Easter Sunday
+- `annandagpask`: the day after Easter Sunday
 - `vaffeldagen`: March 25
 - `valborg`: April 30
 - `nationaldagen`: June 6
@@ -125,14 +129,15 @@ npm start
 Run the team edition locally:
 
 ```sh
-$env:REACT_APP_CONTENT_PACK="team"
+$env:VITE_CONTENT_PACK="team"
 npm start
 ```
 
 Useful checks:
 
 ```sh
-npm test -- --runInBand --watchAll=false
+npm test
+npm run test:watch
 npm run test:visual
 npm run build
 ```
@@ -141,8 +146,8 @@ npm run build
 
 - GitHub Actions deploys the frontend and managed API from `main`
 - `.github/workflows/deploy-static-apps.yml` builds the app twice:
-  - `REACT_APP_CONTENT_PACK=public` deploys to `vadkanmanfira`
-  - `REACT_APP_CONTENT_PACK=team` deploys to `fredagskoll`
+  - `VITE_CONTENT_PACK=public` deploys to `vadkanmanfira`
+  - `VITE_CONTENT_PACK=team` deploys to `fredagskoll`
 - Both deployments include the managed API from `api/`
 - Required GitHub Actions secrets:
   - `AZURE_STATIC_WEB_APPS_API_TOKEN_THANKFUL_BUSH_0D8565003_1`

@@ -1,16 +1,17 @@
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
+import { vi } from 'vitest';
 import App from '../../App';
 
 beforeEach(() => {
-  jest.spyOn(global, 'fetch').mockResolvedValue({
+  vi.spyOn(global, 'fetch').mockResolvedValue({
     ok: true,
     json: async () => ({ dagar: [{ namnsdag: [] }] }),
   } as Response);
 });
 
 afterEach(() => {
-  jest.restoreAllMocks();
+  vi.restoreAllMocks();
 });
 
 test('renders the world national-day panel inside the main card when the date matches', async () => {

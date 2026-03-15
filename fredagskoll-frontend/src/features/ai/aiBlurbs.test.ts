@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { fetchAiBlurbBundle, type AiBlurbRequest } from './aiBlurbs';
 
 const request: AiBlurbRequest = {
@@ -22,11 +23,11 @@ const request: AiBlurbRequest = {
 };
 
 afterEach(() => {
-  jest.restoreAllMocks();
+  vi.restoreAllMocks();
 });
 
 test('posts ai blurb requests to the same-origin managed api path', async () => {
-  const fetchSpy = jest.spyOn(global, 'fetch').mockResolvedValue({
+  const fetchSpy = vi.spyOn(global, 'fetch').mockResolvedValue({
     ok: true,
     status: 200,
     json: async () => ({
