@@ -34,11 +34,6 @@
 - Keep frontend tests aligned with the day classification rules. The current
   tests inject fixed dates through the `initialDate` prop.
 
-## Media tool
-
-  using ImageSharp. Prefer extending that tool instead of rewriting ad hoc
-  media-generation code in the app.
-
 ## Change discipline
 
 - Favor small, explicit changes. This project is simple enough that extra

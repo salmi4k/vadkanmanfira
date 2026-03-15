@@ -1,4 +1,4 @@
-# Step 5: Custom Domain And Branding Plan
+# Custom Domain And Branding Plan
 
 ## Goal
 
@@ -8,18 +8,18 @@ Replace the random Azure hostname with a real domain and tighten the public-faci
 
 - keep Azure Static Web Apps
 - use a short Swedish domain or subdomain
-- keep `fredagskoll` as the product name unless a better one appears that is not embarrassing
+- keep `Vad kan man fira?` / `vadkanmanfira` as the public-facing product identity
 
 ## Suggested rollout
 
 1. Pick the public address.
-   - Best case: a dedicated domain like `fredagskoll.se`
-   - Simpler case: a subdomain on something you already control, like `fredagskoll.<your-domain>`
+   - Best case: a dedicated domain like `vadkanmanfira.se`
+   - Simpler case: a subdomain on something you already control, like `vadkanmanfira.<your-domain>`
 
 2. Decide the branding baseline.
    - confirm product name
    - confirm one short tagline
-   - decide whether `Mojo` stays visible or whether `fredagskoll` stands on its own
+   - decide whether `Mojo` stays visible or whether `Vad kan man fira?` stands on its own
    - produce final favicon/app icon set and OG image
 
 3. Wire the custom domain in Azure Static Web Apps.
