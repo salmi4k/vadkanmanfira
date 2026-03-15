@@ -50,9 +50,9 @@ module.exports = async function blurbHandler(context, req) {
       model: generated.model,
     });
   } catch (error) {
-    if (context?.log && typeof context.log.error === 'function') {
+    if (context && context.log && typeof context.log.error === 'function') {
       context.log.error('Failed to produce AI blurbs', error);
-    } else if (typeof context?.log === 'function') {
+    } else if (context && typeof context.log === 'function') {
       context.log('Failed to produce AI blurbs', error);
     }
 

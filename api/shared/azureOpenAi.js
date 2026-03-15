@@ -34,14 +34,15 @@ function parseJsonResponse(text) {
 }
 
 function sanitizeBundle(bundle, request) {
-  const titleEndings = Array.isArray(bundle?.titleEndings)
-    ? bundle.titleEndings.filter((value) => typeof value === 'string' && value.trim().length > 0)
+  const sourceBundle = bundle && typeof bundle === 'object' ? bundle : {};
+  const titleEndings = Array.isArray(sourceBundle.titleEndings)
+    ? sourceBundle.titleEndings.filter((value) => typeof value === 'string' && value.trim().length > 0)
     : [];
-  const cardNotes = Array.isArray(bundle?.cardNotes)
-    ? bundle.cardNotes.filter((value) => typeof value === 'string' && value.trim().length > 0)
+  const cardNotes = Array.isArray(sourceBundle.cardNotes)
+    ? sourceBundle.cardNotes.filter((value) => typeof value === 'string' && value.trim().length > 0)
     : [];
-  const blurbs = Array.isArray(bundle?.blurbs)
-    ? bundle.blurbs.filter((value) => typeof value === 'string' && value.trim().length > 0)
+  const blurbs = Array.isArray(sourceBundle.blurbs)
+    ? sourceBundle.blurbs.filter((value) => typeof value === 'string' && value.trim().length > 0)
     : [];
 
   return {
@@ -90,14 +91,19 @@ async function generateBlurbBundle(request) {
   }
 
   const payload = await response.json();
-  const content = payload?.choices?.[0]?.message?.content;
+  const content =
+    payload &&
+    payload.choices &&
+    payload.choices[0] &&
+    payload.choices[0].message &&
+    payload.choices[0].message.content;
   if (typeof content !== 'string' || content.trim().length === 0) {
     throw new Error('Azure OpenAI returned no content.');
   }
 
   return {
     enabled: true,
-    model: payload?.model || config.deployment,
+    model: (payload && payload.model) || config.deployment,
     bundle: sanitizeBundle(parseJsonResponse(content), request),
   };
 }
