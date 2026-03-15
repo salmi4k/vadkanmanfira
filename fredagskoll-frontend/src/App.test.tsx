@@ -452,6 +452,49 @@ test('hides fallback blurbs until the ai request resolves', async () => {
   expect(screen.queryByText(/Hämtar dagens text\./i)).not.toBeInTheDocument();
 });
 
+test('hides the previous ai blurb while a new date request is loading', async () => {
+  let resolveSecondBundle!: (value: {
+    source: 'cache';
+    titleEndings: string[];
+    cardNotes: string[];
+    blurbs: string[];
+  }) => void;
+
+  mockedFetchAiBlurbBundle
+    .mockResolvedValueOnce({
+      source: 'cache',
+      titleEndings: [],
+      cardNotes: [],
+      blurbs: ['Första rätta texten.'],
+    })
+    .mockImplementationOnce(
+      () =>
+        new Promise((resolve) => {
+          resolveSecondBundle = resolve;
+        })
+    );
+
+  await renderAppAt(new Date(2026, 1, 16));
+
+  expect(screen.getByText(/Första rätta texten\./i)).toBeInTheDocument();
+
+  fireEvent.click(screen.getByRole('button', { name: /Nästa dag/i }));
+
+  expect(screen.getByText(/Hämtar dagens text\./i)).toBeInTheDocument();
+  expect(screen.queryByText(/Första rätta texten\./i)).not.toBeInTheDocument();
+
+  resolveSecondBundle({
+    source: 'cache',
+    titleEndings: [],
+    cardNotes: [],
+    blurbs: ['Andra rätta texten.'],
+  });
+
+  await waitFor(() =>
+    expect(screen.getByText(/Andra rätta texten\./i)).toBeInTheDocument()
+  );
+});
+
 test('persists the selected mood and exposes it on the app root', async () => {
   await renderAppAt(new Date(2026, 2, 14));
 

@@ -187,6 +187,7 @@ function App({
   const [nameDayState, setNameDayState] = useState<NameDayState>('loading');
   const [aiBundle, setAiBundle] = useState<AiBlurbBundle | null>(null);
   const [aiBundleState, setAiBundleState] = useState<AiBundleState>('loading');
+  const [resolvedAiRequestKey, setResolvedAiRequestKey] = useState<string | null>(null);
   const [blurb, setBlurb] = useState(getOrdinaryBlurb(getInitialLocale(), getInitialMood()));
   const [themeDayTitleEnding, setThemeDayTitleEnding] = useState(
     getOrdinaryThemeDayTitleEndings(getInitialLocale(), getInitialMood())[0]
@@ -256,9 +257,91 @@ function App({
     () => (!celebration && hasThemeDays ? buildThemeDayBlurbs(visibleThemeDays, locale, mood) : null),
     [celebration, hasThemeDays, locale, mood, visibleThemeDays]
   );
-  const isAiBundleLoading = aiBundleState === 'loading';
+  const kicker = celebration
+    ? celebration.kicker
+    : hasThemeDays
+      ? displayThemeDays.length > 1
+        ? text.unofficialThemeDays(displayThemeDays.length)
+        : text.unofficialThemeDay
+      : text.noOfficialEnergy;
+  const themeDayDisplayTitle = hasThemeDays ? displayThemeDays[0] : null;
+  const extraThemeDayLead = useMemo(() => {
+    if (celebration && dayStatus.dayType !== 'ordinary') {
+      const aliases = getCelebrationThemeAliases(dayStatus.dayType, locale, contentPack);
+      return aliases[0] ?? celebration.title;
+    }
+
+    return themeDayDisplayTitle;
+  }, [celebration, contentPack, dayStatus.dayType, locale, themeDayDisplayTitle]);
+  const celebrationSubtitle = celebration?.subtitle ?? null;
+  const mainTitle = celebration
+    ? celebration.title
+    : hasThemeDays
+      ? `${themeDayDisplayTitle}. ${themeDayTitleEnding}`
+      : getOrdinaryTitle(locale, mood);
+  const hasLongWordTitle = hasLongTitleWord(themeDayDisplayTitle ?? mainTitle);
+  const aiRequest = useMemo(() => {
+    const fallbackTitleEnding = getOrdinaryThemeDayTitleEndings(locale, mood)[0];
+    const fallbackCardNote = getOrdinaryThemeDayCardNotes(locale, mood)[0];
+    const fallbackBlurbs = celebration
+      ? celebration.blurbs
+      : themeDayBlurbs
+        ? themeDayBlurbs
+        : dayStatus.dayType === 'ordinary'
+          ? getOrdinaryDayBlurbs(
+              locale,
+              selectedDateObject.getDay() === 0 || selectedDateObject.getDay() === 6,
+              mood
+            )
+          : [];
+
+    return {
+      locale,
+      contentPack,
+      kind: celebration ? 'celebration' : hasThemeDays ? 'themeDay' : 'ordinary',
+      mood,
+      date: selectedDate,
+      dateLabel: dayStatus.dateLabel,
+      dayType: dayStatus.dayType,
+      title: celebration ? celebration.title : themeDayDisplayTitle ?? getOrdinaryTitle(locale, mood),
+      subtitle: celebration?.subtitle,
+      kicker,
+      fallbackTitleEnding,
+      fallbackCardNote,
+      fallbackBlurbs,
+      themeDays: displayThemeDays,
+      extraThemeDays: extraDisplayThemeDays,
+      seasonalTitles: seasonalNotes.map((item) => item.title),
+      upcomingTitles: upcomingNotables.map((item) => item.title),
+      upcomingHolidayName: upcomingHolidayName ?? undefined,
+      nationalDaySummary: nationalDayPanel?.summary,
+      allowHumor: true,
+    } as const;
+  }, [
+    celebration,
+    contentPack,
+    dayStatus.dateLabel,
+    dayStatus.dayType,
+    displayThemeDays,
+    extraDisplayThemeDays,
+    hasThemeDays,
+    kicker,
+    locale,
+    mood,
+    nationalDayPanel,
+    selectedDate,
+    selectedDateObject,
+    seasonalNotes,
+    themeDayBlurbs,
+    themeDayDisplayTitle,
+    upcomingHolidayName,
+    upcomingNotables,
+  ]);
+  const aiRequestKey = useMemo(() => JSON.stringify(aiRequest), [aiRequest]);
+  const isAiBundleLoading =
+    aiBundleState === 'loading' || resolvedAiRequestKey !== aiRequestKey;
   const currentBlurbs = useMemo(() => {
-    if (aiBundle?.blurbs.length) {
+    if (resolvedAiRequestKey === aiRequestKey && aiBundle?.blurbs.length) {
       return aiBundle.blurbs;
     }
 
@@ -283,30 +366,18 @@ function App({
       selectedDateObject.getDay() === 0 || selectedDateObject.getDay() === 6,
       mood
     );
-  }, [aiBundle, celebration, dayStatus.dayType, isAiBundleLoading, locale, mood, selectedDateObject, themeDayBlurbs]);
-  const kicker = celebration
-    ? celebration.kicker
-    : hasThemeDays
-      ? displayThemeDays.length > 1
-        ? text.unofficialThemeDays(displayThemeDays.length)
-        : text.unofficialThemeDay
-      : text.noOfficialEnergy;
-  const themeDayDisplayTitle = hasThemeDays ? displayThemeDays[0] : null;
-  const extraThemeDayLead = useMemo(() => {
-    if (celebration && dayStatus.dayType !== 'ordinary') {
-      const aliases = getCelebrationThemeAliases(dayStatus.dayType, locale, contentPack);
-      return aliases[0] ?? celebration.title;
-    }
-
-    return themeDayDisplayTitle;
-  }, [celebration, contentPack, dayStatus.dayType, locale, themeDayDisplayTitle]);
-  const celebrationSubtitle = celebration?.subtitle ?? null;
-  const mainTitle = celebration
-    ? celebration.title
-    : hasThemeDays
-      ? `${themeDayDisplayTitle}. ${themeDayTitleEnding}`
-      : getOrdinaryTitle(locale, mood);
-  const hasLongWordTitle = hasLongTitleWord(themeDayDisplayTitle ?? mainTitle);
+  }, [
+    aiBundle,
+    aiRequestKey,
+    celebration,
+    dayStatus.dayType,
+    isAiBundleLoading,
+    locale,
+    mood,
+    resolvedAiRequestKey,
+    selectedDateObject,
+    themeDayBlurbs,
+  ]);
 
   useEffect(() => {
     if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') {
@@ -340,55 +411,21 @@ function App({
 
   useEffect(() => {
     const controller = new AbortController();
-    const fallbackTitleEnding = getOrdinaryThemeDayTitleEndings(locale, mood)[0];
-    const fallbackCardNote = getOrdinaryThemeDayCardNotes(locale, mood)[0];
-    const fallbackBlurbs = celebration
-      ? celebration.blurbs
-      : themeDayBlurbs
-        ? themeDayBlurbs
-        : dayStatus.dayType === 'ordinary'
-          ? getOrdinaryDayBlurbs(
-              locale,
-              selectedDateObject.getDay() === 0 || selectedDateObject.getDay() === 6,
-              mood
-            )
-          : [];
-
-    const kind = celebration ? 'celebration' : hasThemeDays ? 'themeDay' : 'ordinary';
-    const request = {
-      locale,
-      contentPack,
-      kind,
-      mood,
-      date: selectedDate,
-      dateLabel: dayStatus.dateLabel,
-      dayType: dayStatus.dayType,
-      title: celebration ? celebration.title : themeDayDisplayTitle ?? getOrdinaryTitle(locale, mood),
-      subtitle: celebration?.subtitle,
-      kicker,
-      fallbackTitleEnding,
-      fallbackCardNote,
-      fallbackBlurbs,
-      themeDays: displayThemeDays,
-      extraThemeDays: extraDisplayThemeDays,
-      seasonalTitles: seasonalNotes.map((item) => item.title),
-      upcomingTitles: upcomingNotables.map((item) => item.title),
-      upcomingHolidayName: upcomingHolidayName ?? undefined,
-      nationalDaySummary: nationalDayPanel?.summary,
-      allowHumor: true,
-    } as const;
-
     setAiBundle(null);
     setAiBundleState('loading');
+    setResolvedAiRequestKey(null);
 
-    Promise.resolve(fetchAiBlurbBundle(request, controller.signal))
+    Promise.resolve(fetchAiBlurbBundle(aiRequest, controller.signal))
       .then((bundle) => {
         if (bundle === null) {
+          setAiBundle(null);
+          setResolvedAiRequestKey(aiRequestKey);
           setAiBundleState('fallback');
           return;
         }
 
         setAiBundle(bundle);
+        setResolvedAiRequestKey(aiRequestKey);
         setAiBundleState('ready');
       })
       .catch(() => {
@@ -397,6 +434,7 @@ function App({
         }
 
         setAiBundle(null);
+        setResolvedAiRequestKey(aiRequestKey);
         setAiBundleState('fallback');
       });
 
@@ -404,24 +442,8 @@ function App({
       controller.abort();
     };
   }, [
-    celebration,
-    contentPack,
-    dayStatus.dateLabel,
-    dayStatus.dayType,
-    displayThemeDays,
-    extraDisplayThemeDays,
-    hasThemeDays,
-    kicker,
-    locale,
-    mood,
-    nationalDayPanel,
-    selectedDate,
-    selectedDateObject,
-    seasonalNotes,
-    themeDayBlurbs,
-    themeDayDisplayTitle,
-    upcomingHolidayName,
-    upcomingNotables,
+    aiRequest,
+    aiRequestKey,
   ]);
 
   useEffect(() => {
@@ -763,7 +785,9 @@ function App({
               }`}
             >
               {themeDayDisplayTitle}.
-              <span className="celebration-title-subline">{themeDayTitleEnding}</span>
+              <span className="celebration-title-subline">
+                {isAiBundleLoading ? text.blurbLoading : themeDayTitleEnding}
+              </span>
             </h2>
           ) : celebrationSubtitle ? (
             <h2
@@ -866,7 +890,9 @@ function App({
                 {hasThemeDays ? text.todayThemeDays : text.noHit}
               </span>
               <p>
-                {hasThemeDays
+                {hasThemeDays && isAiBundleLoading
+                  ? text.blurbLoading
+                  : hasThemeDays
                   ? getOrdinaryThemeDayLead(
                       locale,
                       mood,
