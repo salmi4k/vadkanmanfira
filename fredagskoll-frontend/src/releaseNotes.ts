@@ -8,6 +8,19 @@ export type ReleaseNote = {
 
 export const releaseNotes: ReleaseNote[] = [
   {
+    version: '0.1.17',
+    shortSummary: {
+      sv: 'Renare styling och lugnare rubriker i appen.',
+      en: 'Cleaner styling and calmer headings across the app.',
+      'pt-BR': 'Estilo mais limpo e títulos mais calmos em todo o app.',
+    },
+    summary: {
+      sv: 'Stilarna i appen har delats upp tydligare i teman, layout, innehåll, rörelse och mobilanpassning. Samtidigt har de största rubrikerna tonats ner lite, så sidan känns mer balanserad och mindre som en gammal portal med allt uppskruvat på max.',
+      en: 'The app styles are now split more clearly into themes, layout, content, motion, and responsive rules. At the same time, the biggest headings have been toned down so the page feels more balanced and less like an old portal with everything turned up to full volume.',
+      'pt-BR': 'Os estilos do app agora estão divididos de forma mais clara em tema, layout, conteúdo, movimento e regras responsivas. Ao mesmo tempo, os maiores títulos foram reduzidos um pouco, para a página ficar mais equilibrada e menos com cara de portal antigo com tudo no máximo.',
+    },
+  },
+  {
     version: '0.1.16',
     shortSummary: {
       sv: 'Mobilvyn sitter bättre och appkoden är uppstädad.',
