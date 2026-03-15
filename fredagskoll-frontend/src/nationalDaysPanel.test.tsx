@@ -21,6 +21,6 @@ test('renders the world national-day panel inside the main card when the date ma
   );
 
   expect(screen.getByText(/Nationaldagar ute i världen/i)).toBeInTheDocument();
-  expect(screen.getByText(/^Greece$/i)).toBeInTheDocument();
+  expect(screen.getByText(/^Grekland$/i)).toBeInTheDocument();
   expect(screen.getAllByText(/Självständighetsdagen/i).length).toBeGreaterThan(0);
 });
