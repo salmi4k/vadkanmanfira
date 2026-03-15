@@ -8,6 +8,19 @@ export type ReleaseNote = {
 
 export const releaseNotes: ReleaseNote[] = [
   {
+    version: '0.1.18',
+    shortSummary: {
+      sv: 'Temadagar väljs nu mer vettigt när flera krockar samma dag.',
+      en: 'Theme days are now chosen more sensibly when several land on the same date.',
+      'pt-BR': 'As datas temáticas agora são escolhidas de forma mais sensata quando várias caem no mesmo dia.',
+    },
+    summary: {
+      sv: 'Appen använder inte längre rå ordning från källdatan när flera temadagar delar datum. I stället görs en enklare redaktionell bedömning, så dagar som Rocka sockorna-dagen, vårdagjämningen och Star wars-dagen oftare får leda när de faktiskt känns mest relevanta eller roliga.',
+      en: 'The app no longer follows raw source order when several theme days share the same date. Instead it makes a lighter editorial choice, so days like Rock Your Socks Day, the spring equinox, and Star Wars Day are more likely to lead when they are clearly the most relevant or fun option.',
+      'pt-BR': 'O app não segue mais a ordem bruta da fonte quando várias datas temáticas compartilham o mesmo dia. Em vez disso, ele faz uma escolha editorial simples, para que datas como Rock Your Socks Day, o equinócio da primavera e Star Wars Day apareçam primeiro quando fizerem mais sentido ou forem mais divertidas.',
+    },
+  },
+  {
     version: '0.1.17',
     shortSummary: {
       sv: 'Renare styling och lugnare rubriker i appen.',
