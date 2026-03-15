@@ -19,6 +19,18 @@ function json(status, body) {
   };
 }
 
+async function tryGenerateVariant(request, cacheState) {
+  try {
+    return await generateBlurbBundle(request);
+  } catch (error) {
+    if (cacheState && cacheState.freshVariants.length > 0) {
+      return null;
+    }
+
+    throw error;
+  }
+}
+
 module.exports = async function blurbHandler(context, req) {
   try {
     const request = normalizeRequestBody(req.body || {});
@@ -55,8 +67,8 @@ module.exports = async function blurbHandler(context, req) {
       cacheState.staleVariants.length > 0;
 
     if (shouldGenerateVariant) {
-      const generated = await generateBlurbBundle(request);
-      if (!generated.enabled || !generated.bundle) {
+      const generated = await tryGenerateVariant(request, cacheState);
+      if (!generated || !generated.enabled || !generated.bundle) {
         if (!cacheState || cacheState.freshVariants.length === 0) {
           context.res = json(204, null);
           return;
@@ -68,8 +80,12 @@ module.exports = async function blurbHandler(context, req) {
         if (updatedVariants.length < MAX_VARIANTS_PER_KEY) {
           updatedVariants.push(generatedVariant);
         } else {
-          const staleIds = new Set(cacheState.staleVariants.map((variant) => variant.id));
-          const replacementIndex = updatedVariants.findIndex((variant) => staleIds.has(variant.id));
+          const staleBundleIds = new Set(
+            cacheState.staleVariants.map((variant) => variant.bundleId)
+          );
+          const replacementIndex = updatedVariants.findIndex((variant) =>
+            staleBundleIds.has(variant.bundleId)
+          );
           const targetIndex = replacementIndex >= 0 ? replacementIndex : 0;
           updatedVariants[targetIndex] = generatedVariant;
         }
@@ -87,7 +103,7 @@ module.exports = async function blurbHandler(context, req) {
 
     const selectedVariant = chooseVariant(
       cacheState ? cacheState.freshVariants : [],
-      cacheState ? cacheState.lastServedVariantId : null
+      cacheState ? cacheState.lastBundleId : null
     );
 
     if (!selectedVariant) {
