@@ -35,25 +35,29 @@ flowchart TD
     M --> M6[fallback blurbs and theme-day support text]
     M --> M7[seasonal, upcoming, and national-day context]
 
-    M --> N[POST to same-origin managed API /api/blurbs]
+    M --> M8[requestMode default or reroll]
+    M8 --> N[POST to same-origin managed API /api/blurbs]
     N --> O[normalizeRequestBody validates and trims request]
     O --> P[buildRequestHash creates request key]
     P --> Q[Lookup hot row in blurbcache]
 
-    Q --> R{Fresh bundle variants available for this exact request key?}
+    Q --> Q1[Check lastGeneratedAt cooldown for this request key]
+    Q1 --> R{Fresh bundle variants available for this exact request key?}
     R -->|Yes| S[Select a cached variant]
     S --> S1[Avoid immediately repeating the last-served variant]
     S1 --> S2[Update useCount and lastUsedAt]
     S2 --> T[Return source cache]
 
-    R -->|No| U[Build Azure OpenAI prompt]
+    R -->|No| R1{Cooldown allows generation?}
+    R1 -->|No| R2[Return 204 or fallback to existing local copy]
+    R1 -->|Yes| U[Build Azure OpenAI prompt]
     U --> U1[Prompt includes tone, fallback text, theme-day context, and page context]
     U1 --> V[Call Azure OpenAI deployment]
     V --> W{Generation succeeded?}
 
     W -->|Yes| X[Write bundle row to blurblibrary]
     X --> Y[Update hot row in blurbcache]
-    Y --> Y1[Store request metadata, mood, bundleIdsJson, useCount, lastBundleId]
+    Y --> Y1[Store request metadata, mood, bundleIdsJson, useCount, lastBundleId, lastGeneratedAt]
     Y1 --> Z[Return source azure-openai]
 
     W -->|No| AA[Return no AI bundle]
@@ -61,6 +65,7 @@ flowchart TD
     T --> AB[Frontend accepts bundle only if it matches current request key]
     Z --> AB
     AA --> AC[Frontend falls back to local static copy]
+    R2 --> AC
 
     AB --> AD[Render final visible text]
     AC --> AD
@@ -69,7 +74,7 @@ flowchart TD
     AE --> AE1[headline]
     AE --> AE2[subheader / theme-day title ending]
     AE --> AE3[main blurb]
-    AE --> AE4[reroll button when multiple blurbs exist]
+    AE --> AE4[reroll button can ask for another AI variant]
     AE --> AE5[mood-specific visual styling and motion]
 
     N -. request pending .-> AF[While waiting, frontend hides AI-driven text and shows loading copy]
