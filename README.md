@@ -67,6 +67,17 @@ flowchart TD
     H --> I[Render the final card]
 ```
 
+## Supporting docs
+
+- [docs/application-flow.md](docs/application-flow.md)
+  Detailed application flow and API/cache behavior.
+- [docs/text-surface-audit.md](docs/text-surface-audit.md)
+  Editorial vs stable UI text boundary for mood-aware copy.
+- [docs/custom-domain-plan.md](docs/custom-domain-plan.md)
+  Deferred branding and custom-domain planning notes.
+- [docs/theme-day-priority-suggestions.json](docs/theme-day-priority-suggestions.json)
+  Offline AI-assisted review output for crowded theme-day dates.
+
 ## Built-in celebration rules
 
 Shared core:
