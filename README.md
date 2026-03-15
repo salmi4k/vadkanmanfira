@@ -82,6 +82,8 @@ flowchart TD
   Editorial vs stable UI text boundary for mood-aware copy.
 - [docs/custom-domain-plan.md](docs/custom-domain-plan.md)
   Deferred branding and custom-domain planning notes.
+- [docs/cra-migration-plan.md](docs/cra-migration-plan.md)
+  Practical plan for migrating the frontend away from Create React App.
 - [docs/theme-day-priority-suggestions.json](docs/theme-day-priority-suggestions.json)
   Offline AI-assisted review output for crowded theme-day dates.
 
