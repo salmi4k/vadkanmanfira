@@ -27,3 +27,19 @@ test('does not generate plural self-reference blurbs for a single themeday', () 
     )
   ).toBe(false);
 });
+
+test('uses dedicated copy for Saint Patricks day instead of generic filler', () => {
+  const blurbs = buildThemeDayBlurbs(["Saint Patrick's day"]);
+
+  expect(
+    blurbs.some((blurb) => blurb.includes('grönt plötsligt uppträder som fullgod personlighet'))
+  ).toBe(true);
+});
+
+test('uses dedicated copy for Rocka sockorna-dagen', () => {
+  const blurbs = buildThemeDayBlurbs(['Rocka sockorna-dagen']);
+
+  expect(
+    blurbs.some((blurb) => blurb.includes('färg och moralisk ryggrad'))
+  ).toBe(true);
+});
