@@ -9,6 +9,7 @@ import { joinWithConjunction, Locale, localeOptions } from '../locale';
 import { getMoodLabel, getMoodNote, Mood, moodOptions } from '../mood';
 import { getReleaseNote } from '../releaseNotes';
 import { MobileSectionKey } from '../appTypes';
+import { DisclosurePanel } from './DisclosurePanel';
 import { MobileSection } from './MobileSection';
 
 type SeasonalNote = {
@@ -45,16 +46,14 @@ type IntroPanelProps = {
   seasonalNotes: SeasonalNote[];
   upcomingNotables: UpcomingNote[];
   isMobileLayout: boolean;
-  showUpcoming: boolean;
   showLanguageMenu: boolean;
-  expandedMobileSections: Record<MobileSectionKey, boolean>;
+  expandedSections: Record<MobileSectionKey, boolean>;
   currentReleaseVersion: string;
   onToggleLanguageMenu: () => void;
   onToggleDarkMode: () => void;
   onSelectLocale: (locale: Locale) => void;
   onSelectMood: (mood: Mood) => void;
   onDateChange: (date: string) => void;
-  onToggleUpcoming: () => void;
   onToggleMobileSection: (section: MobileSectionKey) => void;
   onOpenImageCredits: () => void;
   onOpenReleaseNotes: () => void;
@@ -77,16 +76,14 @@ export function IntroPanel({
   seasonalNotes,
   upcomingNotables,
   isMobileLayout,
-  showUpcoming,
   showLanguageMenu,
-  expandedMobileSections,
+  expandedSections,
   currentReleaseVersion,
   onToggleLanguageMenu,
   onToggleDarkMode,
   onSelectLocale,
   onSelectMood,
   onDateChange,
-  onToggleUpcoming,
   onToggleMobileSection,
   onOpenImageCredits,
   onOpenReleaseNotes,
@@ -207,7 +204,7 @@ export function IntroPanel({
       {upcomingHolidayName && upcomingHolidayDate && daysUntilHoliday !== null ? (
         <MobileSection
           isMobile={isMobileLayout}
-          expanded={expandedMobileSections.holiday}
+          expanded={expandedSections.holiday}
           onToggle={() => onToggleMobileSection('holiday')}
           summary={text.mobileWeeklyHolidaySummary}
         >
@@ -228,7 +225,7 @@ export function IntroPanel({
       {seasonalNotes.length > 0 ? (
         <MobileSection
           isMobile={isMobileLayout}
-          expanded={expandedMobileSections.season}
+          expanded={expandedSections.season}
           onToggle={() => onToggleMobileSection('season')}
           summary={text.mobileSeasonSummary(seasonalNotes.length)}
         >
@@ -251,48 +248,30 @@ export function IntroPanel({
       ) : null}
 
       {upcomingNotables.length > 0 ? (
-        <MobileSection
-          isMobile={isMobileLayout}
-          expanded={expandedMobileSections.upcoming}
+        <DisclosurePanel
+          className="upcoming-card"
+          isOpen={expandedSections.upcoming}
           onToggle={() => onToggleMobileSection('upcoming')}
-          summary={text.mobileUpcomingSummary(upcomingNotables.length)}
+          title={text.upcoming}
         >
-          <div className="upcoming-card">
-            <div className="upcoming-header">
-              <p className="eyebrow">{text.upcoming}</p>
-              {!isMobileLayout ? (
-                <button
-                  type="button"
-                  className="upcoming-toggle"
-                  aria-label={showUpcoming ? text.collapseHide : text.collapseShow}
-                  title={showUpcoming ? text.collapseHide : text.collapseShow}
-                  onClick={onToggleUpcoming}
-                >
-                  <span aria-hidden="true">{showUpcoming ? '-' : '+'}</span>
-                </button>
-              ) : null}
-            </div>
-            {isMobileLayout || showUpcoming ? (
-              <div className="upcoming-list">
-                {upcomingNotables.map((item) => (
-                  <article key={item.dateLabel} className="upcoming-item">
-                    <div className="upcoming-item-top">
-                      <span className="upcoming-label">{item.label}</span>
-                      <span className="upcoming-days">
-                        {item.daysUntil === 1
-                          ? text.upcomingTomorrow
-                          : text.upcomingInDays(item.daysUntil)}
-                      </span>
-                    </div>
-                    <p className="upcoming-title">{item.title}</p>
-                    <p className="upcoming-date">{formatShortSwedishDate(item.date, locale)}</p>
-                    <p className="upcoming-note">{item.note}</p>
-                  </article>
-                ))}
-              </div>
-            ) : null}
+          <div className="upcoming-list">
+            {upcomingNotables.map((item) => (
+              <article key={item.dateLabel} className="upcoming-item">
+                <div className="upcoming-item-top">
+                  <span className="upcoming-label">{item.label}</span>
+                  <span className="upcoming-days">
+                    {item.daysUntil === 1
+                      ? text.upcomingTomorrow
+                      : text.upcomingInDays(item.daysUntil)}
+                  </span>
+                </div>
+                <p className="upcoming-title">{item.title}</p>
+                <p className="upcoming-date">{formatShortSwedishDate(item.date, locale)}</p>
+                <p className="upcoming-note">{item.note}</p>
+              </article>
+            ))}
           </div>
-        </MobileSection>
+        </DisclosurePanel>
       ) : null}
 
       <footer className="intro-footer">

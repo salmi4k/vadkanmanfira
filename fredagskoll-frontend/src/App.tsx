@@ -5,7 +5,7 @@ import { appText } from './appText';
 import { buildInfo } from './buildInfo.generated';
 import { IntroPanel } from './components/IntroPanel';
 import { AppDialogs } from './components/AppDialogs';
-import { MobileSection } from './components/MobileSection';
+import { DisclosurePanel } from './components/DisclosurePanel';
 import { formatBuildStamp, getInitialMobileLayout } from './appHelpers';
 import { formatTitle, hasLongTitleWord, usesCompactPrimaryMedia } from './celebrationPresentation';
 import {
@@ -59,15 +59,15 @@ function App({
   const [showReleaseNotes, setShowReleaseNotes] = useState(false);
   const [isMobileLayout, setIsMobileLayout] = useState(getInitialMobileLayout);
   const [mood, setMood] = useState<Mood>(getInitialMood);
-  const [showUpcoming, setShowUpcoming] = useState(true);
-  const [expandedMobileSections, setExpandedMobileSections] = useState<
+  const [expandedSections, setExpandedSections] = useState<
     Record<MobileSectionKey, boolean>
   >({
     holiday: false,
     season: false,
-    upcoming: false,
-    extraThemeDays: false,
-    worldNationalDays: false,
+    upcoming: true,
+    themeDays: true,
+    extraThemeDays: true,
+    worldNationalDays: true,
   });
   const [selectedDate, setSelectedDate] = useState(formatForInput(initialDate));
 
@@ -260,7 +260,7 @@ function App({
   }
 
   function toggleMobileSection(section: MobileSectionKey): void {
-    setExpandedMobileSections((current) => ({
+    setExpandedSections((current) => ({
       ...current,
       [section]: !current[section],
     }));
@@ -290,16 +290,14 @@ function App({
           seasonalNotes={seasonalNotes}
           upcomingNotables={upcomingNotables}
           isMobileLayout={isMobileLayout}
-          showUpcoming={showUpcoming}
           showLanguageMenu={showLanguageMenu}
-          expandedMobileSections={expandedMobileSections}
+          expandedSections={expandedSections}
           currentReleaseVersion={buildInfo.version}
           onToggleLanguageMenu={() => setShowLanguageMenu((current) => !current)}
           onToggleDarkMode={() => setDarkMode((current) => !current)}
           onSelectLocale={setLocale}
           onSelectMood={setMood}
           onDateChange={setSelectedDate}
-          onToggleUpcoming={() => setShowUpcoming((current) => !current)}
           onToggleMobileSection={toggleMobileSection}
           onOpenImageCredits={() => setShowImageCredits(true)}
           onOpenReleaseNotes={() => setShowReleaseNotes(true)}
@@ -411,36 +409,41 @@ function App({
               </div>
 
               {extraDisplayThemeDays.length > 0 ? (
-                <MobileSection
-                  isMobile={isMobileLayout}
-                  expanded={expandedMobileSections.extraThemeDays}
+                <DisclosurePanel
+                  className="theme-day-panel"
+                  isOpen={expandedSections.extraThemeDays}
                   onToggle={() => toggleMobileSection('extraThemeDays')}
-                  summary={text.mobileExtraThemeDaysSummary(extraDisplayThemeDays.length)}
+                  badge={text.extraThemeDays}
+                  title={text.extraThemeDays}
                 >
-                  <div className="theme-day-panel">
-                    <span className="ordinary-badge">{text.extraThemeDays}</span>
-                    <p>
-                      {getAsIfThatWasNotEnough(
-                        locale,
-                        mood,
-                        extraThemeDayLead ?? '',
-                        joinWithAnd(extraDisplayThemeDays, locale)
-                      )}
-                    </p>
-                    <ul className="theme-day-list">
-                      {extraDisplayThemeDays.map((themeDay) => (
-                        <li key={themeDay}>{themeDay}</li>
-                      ))}
-                    </ul>
-                  </div>
-                </MobileSection>
+                  <p>
+                    {getAsIfThatWasNotEnough(
+                      locale,
+                      mood,
+                      extraThemeDayLead ?? '',
+                      joinWithAnd(extraDisplayThemeDays, locale)
+                    )}
+                  </p>
+                  <ul className="theme-day-list">
+                    {extraDisplayThemeDays.map((themeDay) => (
+                      <li key={themeDay}>{themeDay}</li>
+                    ))}
+                  </ul>
+                </DisclosurePanel>
               ) : null}
             </>
           ) : (
-            <div className="ordinary-card">
-              <span className="ordinary-badge">
-                {hasThemeDays ? text.todayThemeDays : text.noHit}
-              </span>
+            <DisclosurePanel
+              className="ordinary-card"
+              isOpen={!hasThemeDays || expandedSections.themeDays}
+              onToggle={() => {
+                if (hasThemeDays) {
+                  toggleMobileSection('themeDays');
+                }
+              }}
+              badge={hasThemeDays ? text.todayThemeDays : text.noHit}
+              title={hasThemeDays ? text.todayThemeDays : text.noHit}
+            >
               <p>
                 {hasThemeDays && isAiBundleLoading
                   ? text.blurbLoading
@@ -460,39 +463,32 @@ function App({
                   ))}
                 </ul>
               ) : null}
-            </div>
+            </DisclosurePanel>
           )}
 
           {nationalDayPanel ? (
-            <MobileSection
-              isMobile={isMobileLayout}
-              expanded={expandedMobileSections.worldNationalDays}
+            <DisclosurePanel
+              className="world-day-panel"
+              isOpen={expandedSections.worldNationalDays}
               onToggle={() => toggleMobileSection('worldNationalDays')}
-              summary={text.mobileWorldDaysSummary(
-                nationalDayPanel.items.length + nationalDayPanel.hiddenCount
-              )}
+              badge={text.worldNationalDaysBadge}
+              title={text.worldNationalDays}
             >
-              <div className="world-day-panel">
-                <span className="ordinary-badge">{text.worldNationalDaysBadge}</span>
-                <p className="world-day-summary">{nationalDayPanel.summary}</p>
-                <div className="world-day-header">
-                  <p className="eyebrow">{text.worldNationalDays}</p>
-                </div>
-                <ul className="theme-day-list world-day-list">
-                  {nationalDayPanel.items.map((item) => (
-                    <li key={`${item.nation}-${item.significance}`}>
-                      <strong>{item.nation}</strong>
-                      <span>{item.significance}</span>
-                    </li>
-                  ))}
-                </ul>
-                {nationalDayPanel.hiddenCount > 0 ? (
-                  <p className="world-day-more">
-                    {text.worldNationalDaysMore(nationalDayPanel.hiddenCount)}
-                  </p>
-                ) : null}
-              </div>
-            </MobileSection>
+              <p className="world-day-summary">{nationalDayPanel.summary}</p>
+              <ul className="theme-day-list world-day-list">
+                {nationalDayPanel.items.map((item) => (
+                  <li key={`${item.nation}-${item.significance}`}>
+                    <strong>{item.nation}</strong>
+                    <span>{item.significance}</span>
+                  </li>
+                ))}
+              </ul>
+              {nationalDayPanel.hiddenCount > 0 ? (
+                <p className="world-day-more">
+                  {text.worldNationalDaysMore(nationalDayPanel.hiddenCount)}
+                </p>
+              ) : null}
+            </DisclosurePanel>
           ) : null}
         </main>
       </div>
