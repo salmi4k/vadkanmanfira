@@ -8,6 +8,19 @@ export type ReleaseNote = {
 
 export const releaseNotes: ReleaseNote[] = [
   {
+    version: '0.1.16',
+    shortSummary: {
+      sv: 'Mobilvyn sitter bättre och appkoden är uppstädad.',
+      en: 'The mobile view fits better and the app code is cleaner.',
+      'pt-BR': 'A visualização no celular ficou melhor e o código do app está mais limpo.',
+    },
+    summary: {
+      sv: 'Mobilvyn trycker inte längre ut navigering, rubriker och blurbar utanför kortet på små skärmar. Samtidigt har App-komponenten delats upp i tydligare hjälpfiler och hooks så det är lättare att ändra appen utan att allt bor i en enda jättestor fil.',
+      en: 'The mobile view no longer pushes navigation, titles, and blurbs outside the card on small screens. At the same time, the App component has been split into clearer helpers and hooks so the app is easier to change without everything living in one giant file.',
+      'pt-BR': 'A visualização no celular não empurra mais navegação, títulos e blurbs para fora do cartão em telas pequenas. Ao mesmo tempo, o componente App foi dividido em helpers e hooks mais claros, para facilitar mudanças sem deixar tudo em um único arquivo gigante.',
+    },
+  },
+  {
     version: '0.1.15',
     shortSummary: {
       sv: 'AI-varianter fylls nu lugnare och bara på riktig reroll.',
