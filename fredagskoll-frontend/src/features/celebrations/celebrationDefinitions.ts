@@ -3,7 +3,11 @@ import { ContentPack, TeamWeekdayDayType } from '../../contentPack';
 export type CelebrationDayType =
   | 'allahjartansdag'
   | 'fettisdag'
+  | 'skartorsdag'
+  | 'langfredag'
   | 'paskafton'
+  | 'paskdagen'
+  | 'annandagpask'
   | 'vaffeldagen'
   | 'valborg'
   | 'nationaldagen'
@@ -123,10 +127,42 @@ export const celebrationDefinitions: CelebrationDefinition[] = [
     priority: 100,
   },
   {
+    id: 'skartorsdag',
+    dayType: 'skartorsdag',
+    dateType: 'easter-relative',
+    offsetDays: -3,
+    category: 'official',
+    priority: 100,
+  },
+  {
+    id: 'langfredag',
+    dayType: 'langfredag',
+    dateType: 'easter-relative',
+    offsetDays: -2,
+    category: 'official',
+    priority: 100,
+  },
+  {
     id: 'paskafton',
     dayType: 'paskafton',
     dateType: 'easter-relative',
     offsetDays: -1,
+    category: 'official',
+    priority: 100,
+  },
+  {
+    id: 'paskdagen',
+    dayType: 'paskdagen',
+    dateType: 'easter-relative',
+    offsetDays: 0,
+    category: 'official',
+    priority: 100,
+  },
+  {
+    id: 'annandagpask',
+    dayType: 'annandagpask',
+    dateType: 'easter-relative',
+    offsetDays: 1,
     category: 'official',
     priority: 100,
   },
