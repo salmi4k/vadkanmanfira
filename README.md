@@ -186,3 +186,9 @@ Local sample config lives in:
 - Temadagar are curated into a local dataset inspired by `temadagar.se`
 - Public image credits are exposed in the app for reused Wikimedia Commons
   assets
+
+## License
+
+This repository is proprietary and `all rights reserved`.
+No one is allowed to use, copy, modify, or redistribute this code without
+prior permission from the repository owner. See [LICENSE](LICENSE).

@@ -36,7 +36,6 @@
 
 ## Media tool
 
-- `tools/MeatWednesdayGifGen` generates animated assets from a source image
   using ImageSharp. Prefer extending that tool instead of rewriting ad hoc
   media-generation code in the app.
 
