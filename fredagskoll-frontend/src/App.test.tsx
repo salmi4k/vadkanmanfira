@@ -1,5 +1,6 @@
 import React from 'react';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { vi, type MockedFunction } from 'vitest';
 import App from './App';
 import { buildInfo } from './buildInfo.generated';
 import { ContentPack } from './contentPack';
@@ -13,16 +14,16 @@ import { useAiContent } from './features/ai/useAiContent';
 import { useNameDays } from './features/name-days/useNameDays';
 import { getThemeDaysForDate } from './features/theme-days/temadagar';
 
-jest.mock('./features/ai/useAiContent', () => ({
-  useAiContent: jest.fn(),
+vi.mock('./features/ai/useAiContent', () => ({
+  useAiContent: vi.fn(),
 }));
 
-jest.mock('./features/name-days/useNameDays', () => ({
-  useNameDays: jest.fn(),
+vi.mock('./features/name-days/useNameDays', () => ({
+  useNameDays: vi.fn(),
 }));
 
-const mockedUseAiContent = useAiContent as jest.MockedFunction<typeof useAiContent>;
-const mockedUseNameDays = useNameDays as jest.MockedFunction<typeof useNameDays>;
+const mockedUseAiContent = useAiContent as MockedFunction<typeof useAiContent>;
+const mockedUseNameDays = useNameDays as MockedFunction<typeof useNameDays>;
 
 async function renderAppAt(date: Date, contentPack?: ContentPack): Promise<void> {
   render(<App initialDate={date} contentPack={contentPack} />);
@@ -37,7 +38,7 @@ function buildMockAiContent(
   return {
     blurb: 'Standardtext.',
     currentBlurbs: ['Standardtext.'],
-    handleReroll: jest.fn(),
+    handleReroll: vi.fn(),
     isAiBundleLoading: false,
     isAiRerolling: false,
     themeDayCardNote: 'Standardnotis.',
@@ -53,10 +54,10 @@ beforeEach(() => {
 
   Object.defineProperty(window, 'matchMedia', {
     writable: true,
-    value: jest.fn().mockReturnValue({
+    value: vi.fn().mockReturnValue({
       matches: false,
-      addEventListener: jest.fn(),
-      removeEventListener: jest.fn(),
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
     }),
   });
 
@@ -90,7 +91,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  jest.restoreAllMocks();
+  vi.restoreAllMocks();
 });
 
 test('renders ordinary public content for a regular Wednesday', async () => {
@@ -181,7 +182,7 @@ test('does not render Fettisdag content on a random Tuesday', async () => {
 });
 
 test('renders a rerollable blurb on an ordinary weekday', async () => {
-  const handleReroll = jest.fn();
+  const handleReroll = vi.fn();
   mockedUseAiContent.mockImplementationOnce(() =>
     buildMockAiContent({
       blurb:
@@ -208,7 +209,7 @@ test('renders a rerollable blurb on an ordinary weekday', async () => {
 });
 
 test('renders a rerollable blurb on an ordinary weekend date', async () => {
-  const handleReroll = jest.fn();
+  const handleReroll = vi.fn();
   mockedUseAiContent.mockImplementationOnce(() =>
     buildMockAiContent({
       blurb:
@@ -328,7 +329,7 @@ test('renders Nyårsafton ahead of the generic Thursday fallback with an actual 
 });
 
 test('renders filtered temadagar for an otherwise ordinary date', async () => {
-  const randomSpy = jest.spyOn(Math, 'random').mockReturnValue(0);
+  const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0);
   const leadThemeDay = getThemeDaysForDate(new Date(2027, 2, 23))[0];
 
   await renderAppAt(new Date(2027, 2, 23));
@@ -350,7 +351,7 @@ test('renders filtered temadagar for an otherwise ordinary date', async () => {
 });
 
 test('picks the more meaningful March 21 theme day instead of blindly using source order', async () => {
-  const randomSpy = jest.spyOn(Math, 'random').mockReturnValue(0);
+  const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0);
   const leadThemeDay = getThemeDaysForDate(new Date(2026, 2, 21))[0];
 
   await renderAppAt(new Date(2026, 2, 21));
@@ -504,7 +505,7 @@ test('renders kräftskivesäsong as a seasonal sidebar note during late summer',
 });
 
 test('rerolls the excuse when clicking Ny ursäkt', async () => {
-  const handleReroll = jest.fn();
+  const handleReroll = vi.fn();
   mockedUseAiContent.mockImplementationOnce(() =>
     buildMockAiContent({
       blurb: 'Veckan är över. Nu återstår bara att låtsas vara klar med allt.',
@@ -628,7 +629,7 @@ test('sends the selected mood in ai blurb requests', async () => {
 });
 
 test('only asks for another ai variant when reroll is clicked', async () => {
-  const handleReroll = jest.fn();
+  const handleReroll = vi.fn();
   mockedUseAiContent.mockImplementationOnce(() =>
     buildMockAiContent({
       blurb: 'Första ai-texten.',
@@ -645,19 +646,17 @@ test('only asks for another ai variant when reroll is clicked', async () => {
 });
 
 test('scrolls back to the main card after confirming a mobile date change', async () => {
-  jest.useFakeTimers();
-
-  const matchMediaMock = jest.fn().mockReturnValue({
+  const matchMediaMock = vi.fn().mockReturnValue({
     matches: true,
-    addEventListener: jest.fn(),
-    removeEventListener: jest.fn(),
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
   });
   Object.defineProperty(window, 'matchMedia', {
     writable: true,
     value: matchMediaMock,
   });
 
-  const scrollIntoViewMock = jest.fn();
+  const scrollIntoViewMock = vi.fn();
   Object.defineProperty(HTMLElement.prototype, 'scrollIntoView', {
     writable: true,
     value: scrollIntoViewMock,
@@ -665,19 +664,25 @@ test('scrolls back to the main card after confirming a mobile date change', asyn
 
   await renderAppAt(new Date(2026, 2, 14));
 
-  fireEvent.change(screen.getByLabelText(/Välj datum/i), {
-    target: { value: '2026-03-15' },
-  });
+  vi.useFakeTimers();
 
-  expect(scrollIntoViewMock).not.toHaveBeenCalled();
+  try {
+    fireEvent.change(screen.getByLabelText(/Välj datum/i), {
+      target: { value: '2026-03-15' },
+    });
 
-  fireEvent.blur(document.getElementById('date-picker') as HTMLInputElement);
+    expect(scrollIntoViewMock).not.toHaveBeenCalled();
 
-  jest.advanceTimersByTime(150);
+    fireEvent.blur(document.getElementById('date-picker') as HTMLInputElement);
 
-  expect(scrollIntoViewMock).toHaveBeenCalled();
+    await act(async () => {
+      vi.advanceTimersByTime(150);
+    });
 
-  jest.useRealTimers();
+    expect(scrollIntoViewMock).toHaveBeenCalled();
+  } finally {
+    vi.useRealTimers();
+  }
 });
 
 test('does not repeat Sveriges nationaldag in the extra theme-day list', async () => {

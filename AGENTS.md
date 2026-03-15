@@ -10,7 +10,7 @@
   - `public` is the default and should stay safe for public deployment
   - `team` contains private recurring weekday lore and the Mojo branding
 - `main` is intended to deploy both variants from the same codebase with
-  different `REACT_APP_CONTENT_PACK` values.
+  different `VITE_CONTENT_PACK` values.
 
 ## Runbook
 
@@ -19,8 +19,8 @@
   `fredagskoll-frontend/src/dayLogic.ts`.
 - Content-pack boundaries live in
   `fredagskoll-frontend/src/contentPack.ts`.
-- Use `CI=true npm test -- --runInBand` semantics when sandboxed test runners
-  complain about watch mode or process spawning.
+- Use `npm test` for the Vitest unit/component suite and `npm run test:visual`
+  for the Playwright visual suite.
 
 ## Cross-file conventions
 

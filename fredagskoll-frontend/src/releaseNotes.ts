@@ -8,6 +8,19 @@ export type ReleaseNote = {
 
 export const releaseNotes: ReleaseNote[] = [
   {
+    version: '0.1.31',
+    shortSummary: {
+      sv: 'Frontendens verktygslåda kör nu på Vite i stället för CRA.',
+      en: 'The frontend toolchain now runs on Vite instead of CRA.',
+      'pt-BR': 'A base do frontend agora roda em Vite em vez de CRA.',
+    },
+    summary: {
+      sv: 'Frontendens bygg- och utvecklingsflöde kör nu på Vite i stället för Create React App. Det gör lokal utveckling snabbare, tar bort gammalt webpack-bagage och ger en renare väg framåt för appen utan att ändra hur själva produkten fungerar för användaren.',
+      en: 'The frontend build and development flow now runs on Vite instead of Create React App. That makes local development faster, removes old webpack baggage, and gives the app a cleaner path forward without changing how the product itself works for users.',
+      'pt-BR': 'O fluxo de build e desenvolvimento do frontend agora roda em Vite em vez de Create React App. Isso deixa o trabalho local mais rápido, remove o velho peso do webpack e dá ao app um caminho mais limpo daqui para frente sem mudar como o produto funciona para quem usa.',
+    },
+  },
+  {
     version: '0.1.30',
     shortSummary: {
       sv: 'Påskhelgen har fått tydligare egen känsla över flera dagar i rad.',
@@ -94,7 +107,7 @@ export const releaseNotes: ReleaseNote[] = [
     },
     summary: {
       sv: 'Frontendkoden är nu sorterad tydligare efter område, så AI, temadagar, nationaldagar, namnsdagar och kommande datum ligger samlade i egna delar i stället för att ligga utspridda i en platt mapp. Samtidigt har mörkt läge fått tydligare kontrast i knappar, badges och små etiketter som Firardag, så det viktiga innehållet blir lättare att läsa utan att appens ton försvinner.',
-      en: 'The frontend code is now grouped more clearly by area, so AI, theme days, national days, name days, and upcoming dates live in their own sections instead of a flat pile. At the same time, dark mode has better contrast in buttons, badges, and smaller labels like Celebration, so the important UI is easier to read without losing the app�?Ts tone.',
+      en: 'The frontend code is now grouped more clearly by area, so AI, theme days, national days, name days, and upcoming dates live in their own sections instead of a flat pile. At the same time, dark mode has better contrast in buttons, badges, and smaller labels like Celebration, so the important UI is easier to read without losing the app\'s tone.',
       'pt-BR': 'O código do frontend agora está agrupado de forma mais clara por área, para que IA, datas temáticas, datas nacionais, nomes do dia e próximas datas fiquem em suas próprias seções em vez de um monte plano. Ao mesmo tempo, o modo escuro ganhou melhor contraste em botões, badges e pequenas etiquetas como Comemoração, deixando a interface mais legível sem perder o clima do app.',
     },
   },
@@ -158,9 +171,9 @@ export const releaseNotes: ReleaseNote[] = [
       'pt-BR': 'Mais datas temáticas agora têm voz própria em vez de texto genérico.',
     },
     summary: {
-      sv: 'Flera tydliga temadagar, som Saint Patrick�?Ts day, Rocka sockorna-dagen, Kanelbullens dag och Nobeldagen, har fått mer egen och mer minnesvärd text. Resultatet är att �?oNy ursäkt�?� oftare känns som att den faktiskt hör till just den dagen i stället för att låta som en allmän temadagsmall.',
-      en: 'Several standout theme days, such as Saint Patrick�?Ts Day, Rock Your Socks Day, Cinnamon Bun Day, and Nobel Day, now have more distinct and memorable writing. The result is that �?oNew excuse�?� more often feels tied to that specific day instead of sounding like a generic theme-day template.',
-      'pt-BR': 'Várias datas temáticas mais marcantes, como Saint Patrick�?Ts Day, Rock Your Socks Day, Cinnamon Bun Day e Nobel Day, agora têm textos mais próprios e memoráveis. O resultado é que �?oNova desculpa�?� parece com mais frequência algo realmente ligado àquele dia, em vez de soar como um modelo genérico.',
+      sv: 'Flera tydliga temadagar, som Saint Patrick\'s day, Rocka sockorna-dagen, Kanelbullens dag och Nobeldagen, har fått mer egen och mer minnesvärd text. Resultatet är att "Ny ursäkt" oftare känns som att den faktiskt hör till just den dagen i stället för att låta som en allmän temadagsmall.',
+      en: 'Several standout theme days, such as Saint Patrick\'s Day, Rock Your Socks Day, Cinnamon Bun Day, and Nobel Day, now have more distinct and memorable writing. The result is that "New excuse" more often feels tied to that specific day instead of sounding like a generic theme-day template.',
+      'pt-BR': 'Várias datas temáticas mais marcantes, como Saint Patrick\'s Day, Rock Your Socks Day, Cinnamon Bun Day e Nobel Day, agora têm textos mais próprios e memoráveis. O resultado é que "Nova desculpa" parece com mais frequência algo realmente ligado àquele dia, em vez de soar como um modelo genérico.',
     },
   },
   {
@@ -245,12 +258,12 @@ export const releaseNotes: ReleaseNote[] = [
     version: '0.1.12',
     shortSummary: {
       sv: 'AI-texten går nu via appens egen Azure-väg.',
-      en: 'AI text now uses the app�?Ts own Azure route.',
+      en: 'AI text now uses the app\'s own Azure route.',
       'pt-BR': 'O texto de IA agora usa a própria rota Azure do app.',
     },
     summary: {
       sv: 'AI-texten går nu via appens egen Azure-väg i stället för en separat publik funktionsadress. Det gör lösningen enklare och minskar beroendet av en fristående backendadress.',
-      en: 'AI text now goes through the app�?Ts own Azure route instead of a separate public function URL. That makes the setup simpler and reduces the app�?Ts dependence on a standalone backend address.',
+      en: 'AI text now goes through the app\'s own Azure route instead of a separate public function URL. That makes the setup simpler and reduces the app\'s dependence on a standalone backend address.',
       'pt-BR': 'O texto de IA agora passa pela própria rota Azure do app em vez de uma URL pública separada. Isso deixa a solução mais simples e reduz a dependência de um endereço externo de backend.',
     },
   },
@@ -310,12 +323,12 @@ export const releaseNotes: ReleaseNote[] = [
     version: '0.1.7',
     shortSummary: {
       sv: 'Du kan nu välja ton i appen.',
-      en: 'You can now choose the app�?Ts tone.',
+      en: 'You can now choose the app\'s tone.',
       'pt-BR': 'Agora você pode escolher o tom do app.',
     },
     summary: {
       sv: 'Du kan nu välja ton för appens texter. Det påverkar både AI-texter och fler av appens egna formuleringar, så upplevelsen känns mer sammanhållen.',
-      en: 'You can now choose a tone for the app�?Ts writing. It affects both AI text and more of the app�?Ts own copy, so the experience feels more consistent.',
+      en: 'You can now choose a tone for the app\'s writing. It affects both AI text and more of the app\'s own copy, so the experience feels more consistent.',
       'pt-BR': 'Agora você pode escolher o tom dos textos do app. Isso afeta tanto o texto da IA quanto mais partes do próprio conteúdo do app, deixando a experiência mais coesa.',
     },
   },

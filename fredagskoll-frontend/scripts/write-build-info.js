@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 
-const CONTENT_PACK_ENV_KEY = 'REACT_APP_CONTENT_PACK';
+const CONTENT_PACK_ENV_KEY = 'VITE_CONTENT_PACK';
 
 function normalizeContentPack(value) {
   return value === 'team' ? 'team' : 'public';
@@ -103,9 +103,10 @@ function createFaviconSvg(branding) {
 
 function writeBrowserBranding(contentPack) {
   const branding = PACK_BRANDING[contentPack];
-  const publicDir = path.resolve(__dirname, '..', 'public');
+  const projectRoot = path.resolve(__dirname, '..');
+  const publicDir = path.resolve(projectRoot, 'public');
   const manifestPath = path.resolve(publicDir, 'manifest.json');
-  const indexPath = path.resolve(publicDir, 'index.html');
+  const indexPath = path.resolve(projectRoot, 'index.html');
   const logo192Path = path.resolve(publicDir, 'logo192.png');
   const logo512Path = path.resolve(publicDir, 'logo512.png');
   const faviconSvgPath = path.resolve(publicDir, 'favicon.svg');
@@ -145,20 +146,21 @@ function writeBrowserBranding(contentPack) {
     '<html lang="en">',
     '  <head>',
     '    <meta charset="utf-8" />',
-    '    <link rel="icon" type="image/svg+xml" href="%PUBLIC_URL%/favicon.svg" />',
+    '    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />',
     '    <meta name="viewport" content="width=device-width, initial-scale=1" />',
     `    <meta name="theme-color" content="${branding.themeColor}" />`,
     '    <meta',
     '      name="description"',
     `      content="${branding.appDescription}"`,
     '    />',
-    '    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />',
-    '    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />',
+    '    <link rel="apple-touch-icon" href="/logo192.png" />',
+    '    <link rel="manifest" href="/manifest.json" />',
     `    <title>${branding.appName}</title>`,
     '  </head>',
     '  <body>',
     '    <noscript>You need to enable JavaScript to run this app.</noscript>',
     '    <div id="root"></div>',
+    '    <script type="module" src="/src/index.tsx"></script>',
     '  </body>',
     '</html>',
     '',

@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import {
   getInitialDarkMode,
   getInitialMood,
@@ -29,7 +30,7 @@ test('prefers the shared stored mood when it is valid', () => {
 test('uses stored dark mode before falling back to system preference', () => {
   Object.defineProperty(window, 'matchMedia', {
     writable: true,
-    value: jest.fn().mockReturnValue({ matches: false }),
+    value: vi.fn().mockReturnValue({ matches: false }),
   });
   window.localStorage.setItem(
     PREFERENCES_STORAGE_KEY,

@@ -54,7 +54,7 @@ Replace the random Azure hostname with a real domain and tighten the public-faci
 
 ## Likely implementation tasks
 
-- replace the remaining generic metadata in `fredagskoll-frontend/public/index.html`
+- replace the remaining generic metadata in `fredagskoll-frontend/index.html`
 - update `fredagskoll-frontend/public/manifest.json`
 - add final social preview asset in `fredagskoll-frontend/public/`
 - optionally add a tiny footer link to the public domain once it exists

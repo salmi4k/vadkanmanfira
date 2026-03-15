@@ -7,7 +7,7 @@ type RecurringWeekdayRule = {
   dayType: TeamWeekdayDayType;
 };
 
-export const CONTENT_PACK_ENV_KEY = 'REACT_APP_CONTENT_PACK';
+export const CONTENT_PACK_ENV_KEY = 'VITE_CONTENT_PACK';
 
 export const TEAM_WEEKDAY_DAY_TYPES: TeamWeekdayDayType[] = [
   'kottonsdag',
@@ -29,7 +29,7 @@ export function normalizeContentPack(value?: string | null): ContentPack {
 }
 
 export function getActiveContentPack(): ContentPack {
-  return normalizeContentPack(process.env[CONTENT_PACK_ENV_KEY]);
+  return normalizeContentPack(import.meta.env[CONTENT_PACK_ENV_KEY]);
 }
 
 export function getRecurringWeekdayRule(

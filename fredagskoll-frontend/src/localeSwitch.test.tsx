@@ -1,29 +1,30 @@
 import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
+import { vi, type MockedFunction } from 'vitest';
 import App from './App';
 import { PREFERENCES_STORAGE_KEY } from './preferences';
 import { useAiContent } from './features/ai/useAiContent';
 import { useNameDays } from './features/name-days/useNameDays';
 
-jest.mock('./features/ai/useAiContent', () => ({
-  useAiContent: jest.fn(),
+vi.mock('./features/ai/useAiContent', () => ({
+  useAiContent: vi.fn(),
 }));
 
-jest.mock('./features/name-days/useNameDays', () => ({
-  useNameDays: jest.fn(),
+vi.mock('./features/name-days/useNameDays', () => ({
+  useNameDays: vi.fn(),
 }));
 
-const mockedUseAiContent = useAiContent as jest.MockedFunction<typeof useAiContent>;
-const mockedUseNameDays = useNameDays as jest.MockedFunction<typeof useNameDays>;
+const mockedUseAiContent = useAiContent as MockedFunction<typeof useAiContent>;
+const mockedUseNameDays = useNameDays as MockedFunction<typeof useNameDays>;
 
 beforeEach(() => {
   window.localStorage.clear();
   Object.defineProperty(window, 'matchMedia', {
     writable: true,
-    value: jest.fn().mockReturnValue({
+    value: vi.fn().mockReturnValue({
       matches: false,
-      addEventListener: jest.fn(),
-      removeEventListener: jest.fn(),
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
     }),
   });
 
@@ -35,7 +36,7 @@ beforeEach(() => {
   mockedUseAiContent.mockReturnValue({
     blurb: 'Standard text.',
     currentBlurbs: ['Standard text.'],
-    handleReroll: jest.fn(),
+    handleReroll: vi.fn(),
     isAiBundleLoading: false,
     isAiRerolling: false,
     themeDayCardNote: 'Standard note.',
@@ -44,7 +45,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  jest.restoreAllMocks();
+  vi.restoreAllMocks();
 });
 
 test('switches the interface to English and persists the locale', async () => {
