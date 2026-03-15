@@ -376,6 +376,7 @@
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
+  min-width: 0;
 }
 
 .intro-controls {
@@ -644,8 +645,10 @@
 
 .blurb-row {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 0.9rem;
   align-items: start;
+  min-width: 0;
 }
 
 .reroll-button {
@@ -801,6 +804,93 @@
 
 .App.dark .upcoming-card {
   background: rgba(255, 255, 255, 0.05);
+}
+
+.disclosure-panel {
+  padding: 0;
+  overflow: hidden;
+}
+
+.disclosure-toggle {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 0.75rem;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+}
+
+.disclosure-heading {
+  display: grid;
+  gap: 0.55rem;
+  min-width: 0;
+}
+
+.disclosure-badge {
+  display: inline-flex;
+  width: fit-content;
+  padding: 0.38rem 0.72rem;
+  border-radius: var(--mood-chip-radius);
+  background: var(--mood-button-bg);
+  color: var(--mood-button-text);
+  font-size: 0.82rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: var(--mood-chip-letter);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--tone-accent) 24%, transparent),
+    var(--mood-badge-shadow);
+  transform: var(--mood-badge-transform);
+}
+
+.disclosure-title {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: var(--tone-accent);
+}
+
+.disclosure-chevron {
+  flex: 0 0 auto;
+  color: var(--muted);
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1;
+  padding-top: 0.2rem;
+}
+
+.disclosure-content {
+  display: grid;
+  gap: 0.75rem;
+  padding: 0 1rem 1rem;
+}
+
+.ordinary-card .disclosure-toggle,
+.world-day-panel .disclosure-toggle {
+  padding: 0.72rem 0.82rem 0.52rem;
+}
+
+.theme-day-panel .disclosure-toggle {
+  padding: 0.82rem 0.96rem 0.6rem;
+}
+
+.ordinary-card .disclosure-content,
+.world-day-panel .disclosure-content {
+  gap: 0.6rem;
+  padding: 0 0.82rem 0.82rem;
+}
+
+.theme-day-panel .disclosure-content {
+  gap: 0.6rem;
+  padding: 0 0.96rem 0.96rem;
 }
 
 .upcoming-header {
@@ -1352,6 +1442,7 @@
 .celebration-card {
   padding: 3rem;
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   align-content: start;
   gap: 1.25rem;
   min-width: 0;
@@ -1395,6 +1486,7 @@
   grid-template-columns: auto minmax(0, 1fr) auto;
   gap: 1rem;
   align-items: center;
+  min-width: 0;
 }
 
 .card-date {
@@ -1434,6 +1526,7 @@
   box-shadow:
     inset 0 0 0 1px color-mix(in srgb, var(--tone-accent) 24%, transparent),
     var(--mood-badge-shadow);
+  max-width: 100%;
 }
 
 .card-nav-button:hover {
@@ -1454,6 +1547,7 @@
   text-wrap: pretty;
   transform: skewY(var(--mood-title-skew));
   transform-origin: left center;
+  min-width: 0;
 }
 
 .celebration-title--stacked {
@@ -1785,9 +1879,14 @@
   font-size: 0.88rem;
 }
 
+.ordinary-card,
+.theme-day-panel {
+  max-width: 44rem;
+  margin-top: 0.75rem;
+}
+
 .ordinary-card {
   max-width: 38rem;
-  margin-top: 0.75rem;
 }
 
 .theme-day-list {
@@ -1826,15 +1925,16 @@
   }
 
   .card-nav {
-    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, auto) minmax(0, 1fr) minmax(0, auto);
     gap: 0.55rem;
   }
 
   .card-nav-button {
-    width: auto;
+    width: 100%;
     min-width: 0;
     padding: 0.6rem 0.75rem;
     font-size: 0.77rem;
+    overflow-wrap: anywhere;
   }
 
   .card-date {
@@ -1879,6 +1979,8 @@
   .celebration-title {
     font-size: clamp(2.15rem, 11vw, 3.1rem);
     line-height: 0.94;
+    max-width: 100%;
+    overflow-wrap: anywhere;
   }
 
   .locale-pt-BR .celebration-title {
@@ -1900,6 +2002,7 @@
   .celebration-blurb {
     font-size: 0.96rem;
     line-height: 1.42;
+    max-width: 100%;
   }
 
   .reroll-button {
@@ -1969,12 +2072,23 @@
   .nameday-card,
   .holiday-card,
   .season-card,
-  .upcoming-card,
-  .theme-day-panel,
-  .world-day-panel,
-  .ordinary-card {
+  .world-day-panel {
     padding: 1rem;
     border-radius: 20px;
+  }
+
+  .upcoming-card,
+  .theme-day-panel,
+  .ordinary-card {
+    border-radius: 20px;
+  }
+
+  .disclosure-toggle {
+    padding: 1rem;
+  }
+
+  .disclosure-content {
+    padding: 0 1rem 1rem;
   }
 
   .app-panel--intro {

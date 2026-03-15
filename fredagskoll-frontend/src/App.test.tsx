@@ -353,10 +353,55 @@ test('allows collapsing the upcoming panel', async () => {
 
   expect(screen.getByText(/^Valborg$/i)).toBeInTheDocument();
 
-  fireEvent.click(screen.getByRole('button', { name: /Dölj/i }));
+  fireEvent.click(screen.getByRole('button', { name: /På gång/i }));
 
   expect(screen.queryByText(/^Valborg$/i)).not.toBeInTheDocument();
-  expect(screen.getByRole('button', { name: /^Visa$/i })).toBeInTheDocument();
+
+  fireEvent.click(screen.getByRole('button', { name: /På gång/i }));
+
+  expect(screen.getByText(/^Valborg$/i)).toBeInTheDocument();
+});
+
+test('allows collapsing the ordinary theme-day panel from its own heading', async () => {
+  await renderAppAt(new Date(2027, 2, 23));
+
+  expect(screen.getByText(/^Nordens dag$/i)).toBeInTheDocument();
+
+  fireEvent.click(screen.getByRole('button', { name: /Dagens temadagar/i }));
+
+  expect(screen.queryByText(/^Nordens dag$/i)).not.toBeInTheDocument();
+
+  fireEvent.click(screen.getByRole('button', { name: /Dagens temadagar/i }));
+
+  expect(screen.getByText(/^Nordens dag$/i)).toBeInTheDocument();
+});
+
+test('allows collapsing the extra theme-day panel from its own heading', async () => {
+  await renderAppAt(new Date(2026, 9, 4));
+
+  expect(screen.getAllByText(/Internationella Tacodagen/i).length).toBeGreaterThan(0);
+
+  fireEvent.click(screen.getByRole('button', { name: /Fler temadagar idag/i }));
+
+  expect(screen.queryByText(/Internationella Tacodagen/i)).not.toBeInTheDocument();
+
+  fireEvent.click(screen.getByRole('button', { name: /Fler temadagar idag/i }));
+
+  expect(screen.getAllByText(/Internationella Tacodagen/i).length).toBeGreaterThan(0);
+});
+
+test('allows collapsing the world-day panel from its own heading', async () => {
+  await renderAppAt(new Date(2026, 9, 4));
+
+  expect(screen.getAllByText(/Lesotho/i).length).toBeGreaterThan(0);
+
+  fireEvent.click(screen.getByRole('button', { name: /Också idag/i }));
+
+  expect(screen.queryByText(/Lesotho/i)).not.toBeInTheDocument();
+
+  fireEvent.click(screen.getByRole('button', { name: /Också idag/i }));
+
+  expect(screen.getAllByText(/Lesotho/i).length).toBeGreaterThan(0);
 });
 
 test('renders bokrean as a seasonal sidebar note during the sale window', async () => {

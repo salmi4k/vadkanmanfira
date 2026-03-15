@@ -1,43 +1,30 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import './App.css';
-import { AiBlurbBundle, fetchAiBlurbBundle } from './aiBlurbs';
-import mojoLogo from './mojo-logo.png';
-import publicLogo from './vkmf-logo-public.png';
-import {
-  appText,
-} from './appText';
+import { AiBlurbRequest } from './aiBlurbs';
+import { appText } from './appText';
 import { buildInfo } from './buildInfo.generated';
-import { usesCompactPrimaryMedia, formatTitle, hasLongTitleWord } from './celebrationPresentation';
+import { IntroPanel } from './components/IntroPanel';
+import { AppDialogs } from './components/AppDialogs';
+import { DisclosurePanel } from './components/DisclosurePanel';
+import { formatBuildStamp, getInitialMobileLayout } from './appHelpers';
+import { formatTitle, hasLongTitleWord, usesCompactPrimaryMedia } from './celebrationPresentation';
 import {
+  CelebrationContent,
   getCelebrations,
   getCelebrationThemeAliases,
   getOrdinaryBlurb,
   getOrdinaryDayBlurbs,
 } from './celebrations';
-import { ContentPack, getActiveContentPack, showsTeamBranding } from './contentPack';
+import { ContentPack, getActiveContentPack } from './contentPack';
 import {
   addDays,
   formatCenterDate,
   formatForHumans,
   formatForInput,
-  formatShortSwedishDate,
   getDaysUntil,
 } from './dateUtils';
-import { DayType, getDayStatus, getUpcomingOfficialHolidayInWeek } from './dayLogic';
-import { formatDaysUntilLabel, getUpcomingHolidayBlurb } from './holidayPresentation';
-import { getImageCreditNote, imageCredits } from './imageCredits';
-import {
-  Locale,
-  LOCALE_STORAGE_KEY,
-  getIntlLocale,
-  getInitialLocale,
-  joinWithConjunction,
-  localeOptions,
-  translateOfficialHolidayName,
-  translateThemeDayName,
-} from './locale';
-import { fetchNameDays } from './nameDays';
-import { getNationalDayPanel } from './nationalDays';
+import { getDayStatus, getUpcomingOfficialHolidayInWeek } from './dayLogic';
+import { Locale, LOCALE_STORAGE_KEY, getInitialLocale, translateOfficialHolidayName, translateThemeDayName } from './locale';
 import {
   getAsIfThatWasNotEnough,
   getOrdinaryNoHitBody,
@@ -46,122 +33,20 @@ import {
   getOrdinaryThemeDayTitleEndings,
   getOrdinaryTitle,
 } from './editorialText';
+import { getNationalDayPanel } from './nationalDays';
 import { getSeasonalNotes } from './seasonalNotes';
-import {
-  getInitialMood,
-  getMoodLabel,
-  getMoodNote,
-  moodOptions,
-  MOOD_STORAGE_KEY,
-  Mood,
-} from './mood';
-import { getReleaseNote, releaseNotes } from './releaseNotes';
+import { getInitialMood, getMoodLabel, MOOD_STORAGE_KEY, Mood } from './mood';
 import { buildThemeDayBlurbs, filterThemeDays, joinWithAnd } from './themeDayBlurbs';
 import { getThemeDaysForDate } from './temadagar';
 import { getUpcomingNotables } from './upcomingNotables';
+import { useAiContent } from './hooks/useAiContent';
+import { useNameDays } from './hooks/useNameDays';
+import { MobileSectionKey } from './appTypes';
 
 type AppProps = {
   initialDate?: Date;
   contentPack?: ContentPack;
 };
-
-type NameDayState = 'loading' | 'ready' | 'error';
-type AiBundleState = 'loading' | 'ready' | 'fallback';
-type MobileSectionKey =
-  | 'holiday'
-  | 'season'
-  | 'upcoming'
-  | 'extraThemeDays'
-  | 'worldNationalDays';
-
-const imageCreditDayTypes: Record<string, Exclude<DayType, 'ordinary'> | undefined> = {
-  vaffeldagen: 'vaffeldagen',
-  valborg: 'valborg',
-  paskafton: 'paskafton',
-  nationaldagen: 'nationaldagen',
-  midsommarafton: 'midsommarafton',
-  kanelbullensdag: 'kanelbullensdag',
-  kladdkakansdag: 'kladdkakansdag',
-  surstrommingspremiar: 'surstrommingspremiar',
-  lucia: 'lucia',
-  nyarsafton: 'nyarsafton',
-};
-
-function getRandomItem(options: string[], fallback: string, current?: string): string {
-  if (options.length === 0) {
-    return fallback;
-  }
-
-  if (options.length === 1) {
-    return options[0];
-  }
-
-  const candidates = current ? options.filter((option) => option !== current) : options;
-  const pool = candidates.length > 0 ? candidates : options;
-  const index = Math.floor(Math.random() * pool.length);
-  return pool[index];
-}
-
-function getImageCreditLabel(slug: string, locale: Locale, contentPack: ContentPack): string {
-  const dayType = imageCreditDayTypes[slug];
-  if (!dayType) {
-    return slug;
-  }
-
-  const aliases = getCelebrationThemeAliases(dayType, locale, contentPack);
-  return aliases[0] ?? slug;
-}
-
-function getInitialMobileLayout(): boolean {
-  return typeof window !== 'undefined' &&
-    typeof window.matchMedia === 'function'
-    ? window.matchMedia('(max-width: 640px)').matches
-    : false;
-}
-
-function MobileSection({
-  isMobile,
-  expanded,
-  onToggle,
-  summary,
-  children,
-}: {
-  isMobile: boolean;
-  expanded: boolean;
-  onToggle: () => void;
-  summary: React.ReactNode;
-  children: React.ReactNode;
-}) {
-  if (!isMobile) {
-    return <>{children}</>;
-  }
-
-  return (
-    <section className={`mobile-section${expanded ? ' mobile-section--open' : ''}`}>
-      <button type="button" className="mobile-section-toggle" onClick={onToggle}>
-        <span>{summary}</span>
-        <span className="mobile-section-chevron" aria-hidden="true">
-          {expanded ? '−' : '+'}
-        </span>
-      </button>
-      {expanded ? <div className="mobile-section-content">{children}</div> : null}
-    </section>
-  );
-}
-
-function formatBuildStamp(locale: Locale): string {
-  const builtAt = new Date(buildInfo.builtAt);
-  const formattedTime = new Intl.DateTimeFormat(getIntlLocale(locale), {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false,
-  }).format(builtAt);
-
-  return `v${buildInfo.version} | ${buildInfo.buildRef} | ${formattedTime}`;
-}
 
 function App({
   initialDate = new Date(),
@@ -174,65 +59,44 @@ function App({
   const [showReleaseNotes, setShowReleaseNotes] = useState(false);
   const [isMobileLayout, setIsMobileLayout] = useState(getInitialMobileLayout);
   const [mood, setMood] = useState<Mood>(getInitialMood);
-  const [showUpcoming, setShowUpcoming] = useState(true);
-  const [expandedMobileSections, setExpandedMobileSections] = useState<
+  const [expandedSections, setExpandedSections] = useState<
     Record<MobileSectionKey, boolean>
   >({
     holiday: false,
     season: false,
-    upcoming: false,
-    extraThemeDays: false,
-    worldNationalDays: false,
+    upcoming: true,
+    themeDays: true,
+    extraThemeDays: true,
+    worldNationalDays: true,
   });
   const [selectedDate, setSelectedDate] = useState(formatForInput(initialDate));
-  const [nameDays, setNameDays] = useState<string[]>([]);
-  const [nameDayState, setNameDayState] = useState<NameDayState>('loading');
-  const [aiBundle, setAiBundle] = useState<AiBlurbBundle | null>(null);
-  const [aiBundleState, setAiBundleState] = useState<AiBundleState>('loading');
-  const [resolvedAiRequestKey, setResolvedAiRequestKey] = useState<string | null>(null);
-  const [isAiRerolling, setIsAiRerolling] = useState(false);
-  const [blurb, setBlurb] = useState(getOrdinaryBlurb(getInitialLocale(), getInitialMood()));
-  const [themeDayTitleEnding, setThemeDayTitleEnding] = useState(
-    getOrdinaryThemeDayTitleEndings(getInitialLocale(), getInitialMood())[0]
-  );
-  const [themeDayCardNote, setThemeDayCardNote] = useState(
-    getOrdinaryThemeDayCardNotes(getInitialLocale(), getInitialMood())[0]
-  );
 
   const text = appText[locale];
   const buildStamp = useMemo(() => formatBuildStamp(locale), [locale]);
-  const currentReleaseNote = useMemo(() => getReleaseNote(buildInfo.version), []);
   const celebrations = useMemo(
     () => getCelebrations(locale, contentPack, mood),
     [contentPack, locale, mood]
   );
   const ordinaryBlurb = useMemo(() => getOrdinaryBlurb(locale, mood), [locale, mood]);
-  const selectedDateObject = useMemo(
-    () => new Date(`${selectedDate}T12:00:00`),
-    [selectedDate]
-  );
+  const selectedDateObject = useMemo(() => new Date(`${selectedDate}T12:00:00`), [selectedDate]);
   const dayStatus = getDayStatus(selectedDateObject, contentPack);
-  const celebration =
-    dayStatus.dayType === 'ordinary' ? null : celebrations[dayStatus.dayType];
-  const themeDays = useMemo(
-    () => getThemeDaysForDate(selectedDateObject),
-    [selectedDateObject]
-  );
+  const celebration = getCurrentCelebration(dayStatus.dayType, celebrations);
+  const themeDays = useMemo(() => getThemeDaysForDate(selectedDateObject), [selectedDateObject]);
   const visibleThemeDays = useMemo(() => {
     if (!celebration || dayStatus.dayType === 'ordinary') {
       return themeDays;
     }
 
-    return filterThemeDays(themeDays, getCelebrationThemeAliases(dayStatus.dayType, locale, contentPack));
+    return filterThemeDays(
+      themeDays,
+      getCelebrationThemeAliases(dayStatus.dayType, locale, contentPack)
+    );
   }, [celebration, contentPack, dayStatus.dayType, locale, themeDays]);
   const displayThemeDays = useMemo(
     () => visibleThemeDays.map((themeDay) => translateThemeDayName(themeDay, locale)),
     [locale, visibleThemeDays]
   );
-  const extraDisplayThemeDays = useMemo(
-    () => displayThemeDays,
-    [displayThemeDays]
-  );
+  const extraDisplayThemeDays = displayThemeDays;
   const hasThemeDays = displayThemeDays.length > 0;
   const humanDate = formatForHumans(selectedDateObject, locale);
   const centerDate = formatCenterDate(selectedDateObject, locale);
@@ -261,13 +125,12 @@ function App({
     () => (!celebration && hasThemeDays ? buildThemeDayBlurbs(visibleThemeDays, locale, mood) : null),
     [celebration, hasThemeDays, locale, mood, visibleThemeDays]
   );
-  const kicker = celebration
-    ? celebration.kicker
-    : hasThemeDays
-      ? displayThemeDays.length > 1
-        ? text.unofficialThemeDays(displayThemeDays.length)
-        : text.unofficialThemeDay
-      : text.noOfficialEnergy;
+  const kicker = getKicker({
+    celebration,
+    hasThemeDays,
+    displayThemeDaysCount: displayThemeDays.length,
+    text,
+  });
   const themeDayDisplayTitle = hasThemeDays ? displayThemeDays[0] : null;
   const extraThemeDayLead = useMemo(() => {
     if (celebration && dayStatus.dayType !== 'ordinary') {
@@ -278,13 +141,9 @@ function App({
     return themeDayDisplayTitle;
   }, [celebration, contentPack, dayStatus.dayType, locale, themeDayDisplayTitle]);
   const celebrationSubtitle = celebration?.subtitle ?? null;
-  const mainTitle = celebration
-    ? celebration.title
-    : hasThemeDays
-      ? `${themeDayDisplayTitle}. ${themeDayTitleEnding}`
-      : getOrdinaryTitle(locale, mood);
-  const hasLongWordTitle = hasLongTitleWord(themeDayDisplayTitle ?? mainTitle);
-  const aiRequest = useMemo(() => {
+  const isWeekend = selectedDateObject.getDay() === 0 || selectedDateObject.getDay() === 6;
+
+  const aiRequest = useMemo<AiBlurbRequest>(() => {
     const fallbackTitleEnding = getOrdinaryThemeDayTitleEndings(locale, mood)[0];
     const fallbackCardNote = getOrdinaryThemeDayCardNotes(locale, mood)[0];
     const fallbackBlurbs = celebration
@@ -292,11 +151,7 @@ function App({
       : themeDayBlurbs
         ? themeDayBlurbs
         : dayStatus.dayType === 'ordinary'
-          ? getOrdinaryDayBlurbs(
-              locale,
-              selectedDateObject.getDay() === 0 || selectedDateObject.getDay() === 6,
-              mood
-            )
+          ? getOrdinaryDayBlurbs(locale, isWeekend, mood)
           : [];
 
     return {
@@ -321,7 +176,7 @@ function App({
       upcomingHolidayName: upcomingHolidayName ?? undefined,
       nationalDaySummary: nationalDayPanel?.summary,
       allowHumor: true,
-    } as const;
+    };
   }, [
     celebration,
     contentPack,
@@ -330,59 +185,48 @@ function App({
     displayThemeDays,
     extraDisplayThemeDays,
     hasThemeDays,
+    isWeekend,
     kicker,
     locale,
     mood,
     nationalDayPanel,
     selectedDate,
-    selectedDateObject,
     seasonalNotes,
     themeDayBlurbs,
     themeDayDisplayTitle,
     upcomingHolidayName,
     upcomingNotables,
   ]);
-  const aiRequestKey = useMemo(() => JSON.stringify(aiRequest), [aiRequest]);
-  const isAiBundleLoading =
-    aiBundleState === 'loading' || resolvedAiRequestKey !== aiRequestKey;
-  const currentBlurbs = useMemo(() => {
-    if (resolvedAiRequestKey === aiRequestKey && aiBundle?.blurbs.length) {
-      return aiBundle.blurbs;
-    }
 
-    if (isAiBundleLoading) {
-      return null;
-    }
-
-    if (celebration) {
-      return celebration.blurbs;
-    }
-
-    if (themeDayBlurbs) {
-      return themeDayBlurbs;
-    }
-
-    if (dayStatus.dayType !== 'ordinary') {
-      return null;
-    }
-
-    return getOrdinaryDayBlurbs(
-      locale,
-      selectedDateObject.getDay() === 0 || selectedDateObject.getDay() === 6,
-      mood
-    );
-  }, [
-    aiBundle,
-    aiRequestKey,
-    celebration,
-    dayStatus.dayType,
+  const { nameDays, nameDayState } = useNameDays(dayStatus.dateLabel);
+  const {
+    blurb,
+    currentBlurbs,
+    handleReroll,
     isAiBundleLoading,
+    isAiRerolling,
+    themeDayCardNote,
+    themeDayTitleEnding,
+  } = useAiContent({
+    aiRequest,
+    ordinaryBlurb,
     locale,
     mood,
-    resolvedAiRequestKey,
-    selectedDateObject,
+    selectedDate,
+    celebration,
     themeDayBlurbs,
-  ]);
+    dayType: dayStatus.dayType,
+    isWeekend,
+    hasThemeDays,
+    themeDayDisplayTitle,
+  });
+
+  const mainTitle = celebration
+    ? celebration.title
+    : hasThemeDays
+      ? `${themeDayDisplayTitle}. ${themeDayTitleEnding}`
+      : getOrdinaryTitle(locale, mood);
+  const hasLongWordTitle = hasLongTitleWord(themeDayDisplayTitle ?? mainTitle);
 
   useEffect(() => {
     if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') {
@@ -396,10 +240,7 @@ function App({
 
     setIsMobileLayout(mediaQuery.matches);
     mediaQuery.addEventListener('change', handleChange);
-
-    return () => {
-      mediaQuery.removeEventListener('change', handleChange);
-    };
+    return () => mediaQuery.removeEventListener('change', handleChange);
   }, []);
 
   useEffect(() => {
@@ -414,161 +255,15 @@ function App({
     setShowLanguageMenu(false);
   }, [locale]);
 
-  useEffect(() => {
-    const controller = new AbortController();
-    setAiBundle(null);
-    setAiBundleState('loading');
-    setResolvedAiRequestKey(null);
-
-    Promise.resolve(fetchAiBlurbBundle(aiRequest, controller.signal))
-      .then((bundle) => {
-        if (bundle === null) {
-          setAiBundle(null);
-          setResolvedAiRequestKey(aiRequestKey);
-          setAiBundleState('fallback');
-          return;
-        }
-
-        setAiBundle(bundle);
-        setResolvedAiRequestKey(aiRequestKey);
-        setAiBundleState('ready');
-      })
-      .catch(() => {
-        if (controller.signal.aborted) {
-          return;
-        }
-
-        setAiBundle(null);
-        setResolvedAiRequestKey(aiRequestKey);
-        setAiBundleState('fallback');
-      });
-
-    return () => {
-      controller.abort();
-    };
-  }, [
-    aiRequest,
-    aiRequestKey,
-  ]);
-
-  useEffect(() => {
-    if (isAiBundleLoading) {
-      return;
-    }
-
-    if (!currentBlurbs) {
-      setBlurb(ordinaryBlurb);
-      return;
-    }
-
-    setBlurb(getRandomItem(currentBlurbs, ordinaryBlurb));
-  }, [selectedDate, locale, currentBlurbs, ordinaryBlurb, isAiBundleLoading]);
-
-  useEffect(() => {
-    const endings =
-      aiBundle?.titleEndings.length && themeDayDisplayTitle && !celebration
-        ? aiBundle.titleEndings
-        : getOrdinaryThemeDayTitleEndings(locale, mood);
-    if (!themeDayDisplayTitle || celebration) {
-      setThemeDayTitleEnding(endings[0]);
-      return;
-    }
-
-    setThemeDayTitleEnding(getRandomItem(endings, endings[0]));
-  }, [aiBundle, selectedDate, locale, mood, themeDayDisplayTitle, celebration]);
-
-  useEffect(() => {
-    const notes =
-      aiBundle?.cardNotes.length && hasThemeDays && !celebration
-        ? aiBundle.cardNotes
-        : getOrdinaryThemeDayCardNotes(locale, mood);
-    if (!hasThemeDays || celebration) {
-      setThemeDayCardNote(notes[0]);
-      return;
-    }
-
-    setThemeDayCardNote(getRandomItem(notes, notes[0]));
-  }, [aiBundle, selectedDate, locale, mood, hasThemeDays, celebration]);
-
-  useEffect(() => {
-    let isCurrent = true;
-
-    setNameDayState('loading');
-
-    fetchNameDays(dayStatus.dateLabel)
-      .then((names) => {
-        if (!isCurrent) {
-          return;
-        }
-
-        setNameDays(names);
-        setNameDayState('ready');
-      })
-      .catch(() => {
-        if (!isCurrent) {
-          return;
-        }
-
-        setNameDays([]);
-        setNameDayState('error');
-      });
-
-    return () => {
-      isCurrent = false;
-    };
-  }, [dayStatus.dateLabel]);
-
   function stepSelectedDate(days: number): void {
     setSelectedDate(formatForInput(addDays(selectedDateObject, days)));
   }
 
   function toggleMobileSection(section: MobileSectionKey): void {
-    setExpandedMobileSections((current) => ({
+    setExpandedSections((current) => ({
       ...current,
       [section]: !current[section],
     }));
-  }
-
-  async function handleReroll(): Promise<void> {
-    if (!currentBlurbs) {
-      return;
-    }
-
-    const canAskAiForAnotherVariant =
-      aiBundle !== null &&
-      resolvedAiRequestKey === aiRequestKey &&
-      aiBundleState === 'ready';
-
-    if (!canAskAiForAnotherVariant) {
-      setBlurb(getRandomItem(currentBlurbs, ordinaryBlurb, blurb));
-      return;
-    }
-
-    setIsAiRerolling(true);
-
-    try {
-      const rerolledBundle = await fetchAiBlurbBundle(
-        {
-          ...aiRequest,
-          requestMode: 'reroll',
-        },
-        undefined
-      );
-
-      if (rerolledBundle?.blurbs.length) {
-        setAiBundle(rerolledBundle);
-        setResolvedAiRequestKey(aiRequestKey);
-        setAiBundleState('ready');
-        setBlurb(getRandomItem(rerolledBundle.blurbs, ordinaryBlurb, blurb));
-        return;
-      }
-    } catch {
-      // Fall back to a local reroll when the extra AI fetch is unavailable.
-    } finally {
-      setIsAiRerolling(false);
-    }
-
-    setBlurb(getRandomItem(currentBlurbs, ordinaryBlurb, blurb));
   }
 
   return (
@@ -578,245 +273,35 @@ function App({
     >
       <div className="app-backdrop" aria-hidden="true" />
       <div className="app-grid">
-        <header className="app-panel app-panel--intro">
-          <div className="intro-controls">
-            <div className="language-control">
-              <button
-                type="button"
-                className="theme-toggle theme-toggle--language"
-                aria-haspopup="menu"
-                aria-expanded={showLanguageMenu}
-                aria-label={text.languageMenuLabel}
-                onClick={() => setShowLanguageMenu((current) => !current)}
-              >
-                <span className="language-toggle-flag" aria-hidden="true">
-                  {localeOptions.find((option) => option.value === locale)?.flag}
-                </span>
-                <span className="language-toggle-code" aria-hidden="true">
-                  {localeOptions.find((option) => option.value === locale)?.shortLabel}
-                </span>
-              </button>
-              {showLanguageMenu ? (
-                <div className="language-menu" role="menu" aria-label={text.languageMenuLabel}>
-                  {localeOptions.map((option) => (
-                    <button
-                      key={option.value}
-                      type="button"
-                      role="menuitemradio"
-                      aria-checked={locale === option.value}
-                      className={`language-option${
-                        locale === option.value ? ' language-option--active' : ''
-                      }`}
-                      onClick={() => setLocale(option.value)}
-                    >
-                      <span className="language-option-flag" aria-hidden="true">
-                        {option.flag}
-                      </span>
-                      <span className="language-option-text">{option.label}</span>
-                    </button>
-                  ))}
-                </div>
-              ) : null}
-            </div>
-            <button
-              type="button"
-              className="theme-toggle"
-              onClick={() => setDarkMode((current) => !current)}
-            >
-              {darkMode ? text.lightMode : text.darkMode}
-            </button>
-          </div>
-
-          <div className={`brand-block${showsTeamBranding(contentPack) ? '' : ' brand-block--text-only'}`}>
-            {showsTeamBranding(contentPack) ? (
-              <img src={mojoLogo} alt="Mojo Logo" className="brand-logo" />
-            ) : (
-              <div className="brand-mark" aria-label="VKMF">
-                <img src={publicLogo} alt="VKMF emblem" className="brand-logo brand-logo--public" />
-                <span className="brand-mark-label">VKMF</span>
-              </div>
-            )}
-            <div className="brand-copy">
-              <p className="eyebrow">{text.eyebrow}</p>
-              <h1 className="brand-title">{text.title}</h1>
-              <p className="brand-lede">{text.lede}</p>
-            </div>
-          </div>
-
-          <label htmlFor="date-picker" className="picker-label">
-            {text.pickDate}
-          </label>
-          <div className="picker-shell">
-            <input
-              id="date-picker"
-              type="date"
-              value={selectedDate}
-              onChange={(event) => setSelectedDate(event.target.value)}
-              className="date-picker"
-            />
-            <div className="picker-meta">
-              <span>{humanDate}</span>
-              <span>{dayStatus.dateLabel}</span>
-            </div>
-          </div>
-
-          <label htmlFor="mood-picker" className="picker-label">
-            {text.moodLabel}
-          </label>
-          <div className="picker-shell picker-shell--mood">
-            <select
-              id="mood-picker"
-              value={mood}
-              onChange={(event) => setMood(event.target.value as Mood)}
-              className="date-picker mood-picker"
-            >
-              {moodOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {getMoodLabel(option.value, locale)}
-                </option>
-              ))}
-            </select>
-            <p className="mood-note">{getMoodNote(mood, locale)}</p>
-          </div>
-
-          <div className="nameday-card">
-            <p className="eyebrow">{text.nameday}</p>
-            {nameDayState === 'loading' ? <p className="nameday-text">{text.namedayLoading}</p> : null}
-            {nameDayState === 'error' ? <p className="nameday-text">{text.namedayError}</p> : null}
-            {nameDayState === 'ready' && nameDays.length > 0 ? (
-              <p className="nameday-text">{joinWithConjunction(nameDays, locale)}</p>
-            ) : null}
-            {nameDayState === 'ready' && nameDays.length === 0 ? (
-              <p className="nameday-text">{text.namedayNone}</p>
-            ) : null}
-          </div>
-
-          {upcomingHoliday && upcomingHolidayName && daysUntilHoliday !== null ? (
-            <MobileSection
-              isMobile={isMobileLayout}
-              expanded={expandedMobileSections.holiday}
-              onToggle={() => toggleMobileSection('holiday')}
-              summary={text.mobileWeeklyHolidaySummary}
-            >
-              <div className="holiday-card">
-                <p className="eyebrow">{text.weeklyHoliday}</p>
-                <p className="holiday-title">{upcomingHolidayName}</p>
-                <p className="nameday-text">
-                  {getUpcomingHolidayBlurb(upcomingHolidayName, daysUntilHoliday, locale)}
-                </p>
-                <p className="holiday-meta">
-                  {formatDaysUntilLabel(daysUntilHoliday, locale)}{' '}
-                  {text.untilLabel}{' '}
-                  {formatShortSwedishDate(upcomingHoliday.date, locale)}.
-                </p>
-              </div>
-            </MobileSection>
-          ) : null}
-
-          {seasonalNotes.length > 0 ? (
-            <MobileSection
-              isMobile={isMobileLayout}
-              expanded={expandedMobileSections.season}
-              onToggle={() => toggleMobileSection('season')}
-              summary={text.mobileSeasonSummary(seasonalNotes.length)}
-            >
-              <div className="season-card">
-                <p className="eyebrow">{text.nowCard}</p>
-                <div className="season-list">
-                  {seasonalNotes.map((item) => (
-                    <article key={item.id} className="season-item">
-                      <div className="season-item-top">
-                        <span className="season-label">{item.label}</span>
-                        <span className="season-meta">{item.meta}</span>
-                      </div>
-                      <p className="season-title">{item.title}</p>
-                      <p className="nameday-text">{item.note}</p>
-                    </article>
-                  ))}
-                </div>
-              </div>
-            </MobileSection>
-          ) : null}
-
-          {upcomingNotables.length > 0 ? (
-            <MobileSection
-              isMobile={isMobileLayout}
-              expanded={expandedMobileSections.upcoming}
-              onToggle={() => toggleMobileSection('upcoming')}
-              summary={text.mobileUpcomingSummary(upcomingNotables.length)}
-            >
-              <div className="upcoming-card">
-                <div className="upcoming-header">
-                  <p className="eyebrow">{text.upcoming}</p>
-                  {!isMobileLayout ? (
-                    <button
-                      type="button"
-                      className="upcoming-toggle"
-                      aria-label={showUpcoming ? text.collapseHide : text.collapseShow}
-                      title={showUpcoming ? text.collapseHide : text.collapseShow}
-                      onClick={() => setShowUpcoming((current) => !current)}
-                    >
-                      <span aria-hidden="true">{showUpcoming ? '−' : '+'}</span>
-                    </button>
-                  ) : null}
-                </div>
-                {isMobileLayout || showUpcoming ? (
-                  <div className="upcoming-list">
-                    {upcomingNotables.map((item) => (
-                      <article key={item.dateLabel} className="upcoming-item">
-                        <div className="upcoming-item-top">
-                          <span className="upcoming-label">{item.label}</span>
-                          <span className="upcoming-days">
-                            {item.daysUntil === 1 ? text.upcomingTomorrow : text.upcomingInDays(item.daysUntil)}
-                          </span>
-                        </div>
-                        <p className="upcoming-title">{item.title}</p>
-                        <p className="upcoming-date">{formatShortSwedishDate(item.date, locale)}</p>
-                        <p className="upcoming-note">{item.note}</p>
-                      </article>
-                    ))}
-                  </div>
-                ) : null}
-              </div>
-            </MobileSection>
-          ) : null}
-
-          <footer className="intro-footer">
-            <div className="intro-footer-links">
-              <button
-                type="button"
-                className="source-link source-link--button"
-                onClick={() => setShowImageCredits(true)}
-              >
-                {text.imageCredits}
-              </button>
-              <a
-                className="source-link"
-                href="https://temadagar.se/kalender/"
-                target="_blank"
-                rel="noreferrer"
-              >
-                {text.themeDaySource}
-              </a>
-              <span className="build-stamp">
-                {text.buildInfoLabel} {buildStamp}
-              </span>
-            </div>
-            <div className="release-note-card release-note-card--subtle">
-              <p className="eyebrow">{text.releaseNotesLabel}</p>
-              <p className="release-note-current">
-                {currentReleaseNote?.shortSummary[locale] ?? buildStamp}
-              </p>
-              <button
-                type="button"
-                className="source-link source-link--button release-note-button"
-                onClick={() => setShowReleaseNotes(true)}
-              >
-                {text.releaseNotesOpen}
-              </button>
-            </div>
-          </footer>
-        </header>
+        <IntroPanel
+          locale={locale}
+          darkMode={darkMode}
+          contentPack={contentPack}
+          buildStamp={buildStamp}
+          mood={mood}
+          selectedDate={selectedDate}
+          humanDate={humanDate}
+          dateLabel={dayStatus.dateLabel}
+          nameDayState={nameDayState}
+          nameDays={nameDays}
+          upcomingHolidayName={upcomingHolidayName}
+          upcomingHolidayDate={upcomingHoliday?.date}
+          daysUntilHoliday={daysUntilHoliday}
+          seasonalNotes={seasonalNotes}
+          upcomingNotables={upcomingNotables}
+          isMobileLayout={isMobileLayout}
+          showLanguageMenu={showLanguageMenu}
+          expandedSections={expandedSections}
+          currentReleaseVersion={buildInfo.version}
+          onToggleLanguageMenu={() => setShowLanguageMenu((current) => !current)}
+          onToggleDarkMode={() => setDarkMode((current) => !current)}
+          onSelectLocale={setLocale}
+          onSelectMood={setMood}
+          onDateChange={setSelectedDate}
+          onToggleMobileSection={toggleMobileSection}
+          onOpenImageCredits={() => setShowImageCredits(true)}
+          onOpenReleaseNotes={() => setShowReleaseNotes(true)}
+        />
 
         <main className="app-panel celebration-card">
           <div className="card-nav" aria-label={text.dateNavigationAria}>
@@ -836,10 +321,12 @@ function App({
               {text.nextDay}
             </button>
           </div>
+
           <div className="card-kicker-row">
             <p className="eyebrow">{kicker}</p>
             <span className="mood-pill">{getMoodLabel(mood, locale)}</span>
           </div>
+
           {themeDayDisplayTitle && !celebration ? (
             <h2
               className={`celebration-title celebration-title--stacked${
@@ -869,6 +356,7 @@ function App({
               {formatTitle(mainTitle)}
             </h2>
           )}
+
           <div className="blurb-row">
             {isAiBundleLoading ? (
               <p className="celebration-blurb celebration-blurb--loading" aria-live="polite">
@@ -900,10 +388,7 @@ function App({
                       compactPrimaryMedia ? ' media-card--compact' : ''
                     }`}
                   >
-                    <img
-                      src={celebration.primaryImage}
-                      alt={celebration.alt ?? celebration.title}
-                    />
+                    <img src={celebration.primaryImage} alt={celebration.alt ?? celebration.title} />
                   </figure>
                 ) : null}
                 {celebration.secondaryImage ? (
@@ -924,47 +409,52 @@ function App({
               </div>
 
               {extraDisplayThemeDays.length > 0 ? (
-                <MobileSection
-                  isMobile={isMobileLayout}
-                  expanded={expandedMobileSections.extraThemeDays}
+                <DisclosurePanel
+                  className="theme-day-panel"
+                  isOpen={expandedSections.extraThemeDays}
                   onToggle={() => toggleMobileSection('extraThemeDays')}
-                  summary={text.mobileExtraThemeDaysSummary(extraDisplayThemeDays.length)}
+                  badge={text.extraThemeDays}
+                  title={text.extraThemeDays}
                 >
-                  <div className="theme-day-panel">
-                    <span className="ordinary-badge">{text.extraThemeDays}</span>
-                    <p>
-                      {getAsIfThatWasNotEnough(
-                        locale,
-                        mood,
-                        extraThemeDayLead ?? '',
-                        joinWithAnd(extraDisplayThemeDays, locale)
-                      )}
-                    </p>
-                    <ul className="theme-day-list">
-                      {extraDisplayThemeDays.map((themeDay) => (
-                        <li key={themeDay}>{themeDay}</li>
-                      ))}
-                    </ul>
-                  </div>
-                </MobileSection>
+                  <p>
+                    {getAsIfThatWasNotEnough(
+                      locale,
+                      mood,
+                      extraThemeDayLead ?? '',
+                      joinWithAnd(extraDisplayThemeDays, locale)
+                    )}
+                  </p>
+                  <ul className="theme-day-list">
+                    {extraDisplayThemeDays.map((themeDay) => (
+                      <li key={themeDay}>{themeDay}</li>
+                    ))}
+                  </ul>
+                </DisclosurePanel>
               ) : null}
             </>
           ) : (
-            <div className="ordinary-card">
-              <span className="ordinary-badge">
-                {hasThemeDays ? text.todayThemeDays : text.noHit}
-              </span>
+            <DisclosurePanel
+              className="ordinary-card"
+              isOpen={!hasThemeDays || expandedSections.themeDays}
+              onToggle={() => {
+                if (hasThemeDays) {
+                  toggleMobileSection('themeDays');
+                }
+              }}
+              badge={hasThemeDays ? text.todayThemeDays : text.noHit}
+              title={hasThemeDays ? text.todayThemeDays : text.noHit}
+            >
               <p>
                 {hasThemeDays && isAiBundleLoading
                   ? text.blurbLoading
                   : hasThemeDays
-                  ? getOrdinaryThemeDayLead(
-                      locale,
-                      mood,
-                      joinWithAnd(displayThemeDays, locale),
-                      themeDayCardNote
-                    )
-                  : getOrdinaryNoHitBody(locale, mood)}
+                    ? getOrdinaryThemeDayLead(
+                        locale,
+                        mood,
+                        joinWithAnd(displayThemeDays, locale),
+                        themeDayCardNote
+                      )
+                    : getOrdinaryNoHitBody(locale, mood)}
               </p>
               {hasThemeDays ? (
                 <ul className="theme-day-list">
@@ -973,153 +463,77 @@ function App({
                   ))}
                 </ul>
               ) : null}
-            </div>
+            </DisclosurePanel>
           )}
 
           {nationalDayPanel ? (
-            <MobileSection
-              isMobile={isMobileLayout}
-              expanded={expandedMobileSections.worldNationalDays}
+            <DisclosurePanel
+              className="world-day-panel"
+              isOpen={expandedSections.worldNationalDays}
               onToggle={() => toggleMobileSection('worldNationalDays')}
-              summary={text.mobileWorldDaysSummary(
-                nationalDayPanel.items.length + nationalDayPanel.hiddenCount
-              )}
+              badge={text.worldNationalDaysBadge}
+              title={text.worldNationalDays}
             >
-              <div className="world-day-panel">
-                <span className="ordinary-badge">{text.worldNationalDaysBadge}</span>
-                <p className="world-day-summary">{nationalDayPanel.summary}</p>
-                <div className="world-day-header">
-                  <p className="eyebrow">{text.worldNationalDays}</p>
-                </div>
-                <ul className="theme-day-list world-day-list">
-                  {nationalDayPanel.items.map((item) => (
-                    <li key={`${item.nation}-${item.significance}`}>
-                      <strong>{item.nation}</strong>
-                      <span>{item.significance}</span>
-                    </li>
-                  ))}
-                </ul>
-                {nationalDayPanel.hiddenCount > 0 ? (
-                  <p className="world-day-more">{text.worldNationalDaysMore(nationalDayPanel.hiddenCount)}</p>
-                ) : null}
-              </div>
-            </MobileSection>
+              <p className="world-day-summary">{nationalDayPanel.summary}</p>
+              <ul className="theme-day-list world-day-list">
+                {nationalDayPanel.items.map((item) => (
+                  <li key={`${item.nation}-${item.significance}`}>
+                    <strong>{item.nation}</strong>
+                    <span>{item.significance}</span>
+                  </li>
+                ))}
+              </ul>
+              {nationalDayPanel.hiddenCount > 0 ? (
+                <p className="world-day-more">
+                  {text.worldNationalDaysMore(nationalDayPanel.hiddenCount)}
+                </p>
+              ) : null}
+            </DisclosurePanel>
           ) : null}
         </main>
       </div>
 
-      {showImageCredits ? (
-        <div
-          className="credits-overlay"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="image-credits-title"
-        >
-          <div
-            className="credits-backdrop"
-            aria-hidden="true"
-            onClick={() => setShowImageCredits(false)}
-          />
-          <section className="credits-panel">
-            <div className="credits-header">
-              <div>
-                <p className="eyebrow">{text.creditsEyebrow}</p>
-                <h2 id="image-credits-title" className="credits-title">
-                  {text.creditsTitle}
-                </h2>
-                <p className="credits-lede">{text.creditsLead}</p>
-              </div>
-              <button
-                type="button"
-                className="theme-toggle credits-close"
-                onClick={() => setShowImageCredits(false)}
-              >
-                {text.close}
-              </button>
-            </div>
-
-            <div className="credits-list">
-              {imageCredits.map((credit) => (
-                <article key={credit.slug} className="credits-item">
-                  <p className="credits-item-title">{getImageCreditLabel(credit.slug, locale, contentPack)}</p>
-                  <p className="credits-item-meta">
-                    {text.creator}:{' '}
-                    {credit.creatorUrl ? (
-                      <a href={credit.creatorUrl} target="_blank" rel="noreferrer">
-                        {credit.creator}
-                      </a>
-                    ) : (
-                      credit.creator
-                    )}
-                  </p>
-                  <p className="credits-item-meta">
-                    {text.license}:{' '}
-                    {credit.licenseUrl ? (
-                      <a href={credit.licenseUrl} target="_blank" rel="noreferrer">
-                        {credit.licenseName}
-                      </a>
-                    ) : (
-                      credit.licenseName
-                    )}
-                  </p>
-                  <p className="credits-item-meta">
-                    {text.source}:{' '}
-                    <a href={credit.sourceUrl} target="_blank" rel="noreferrer">
-                      {text.commonsFilePage}
-                    </a>
-                  </p>
-                  {credit.note ? (
-                    <p className="credits-item-note">{getImageCreditNote(credit.note, locale)}</p>
-                  ) : null}
-                </article>
-              ))}
-            </div>
-          </section>
-        </div>
-      ) : null}
-
-      {showReleaseNotes ? (
-        <div
-          className="credits-overlay"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="release-notes-title"
-        >
-          <div
-            className="credits-backdrop"
-            aria-hidden="true"
-            onClick={() => setShowReleaseNotes(false)}
-          />
-          <section className="credits-panel">
-            <div className="credits-header">
-              <div>
-                <p className="eyebrow">{text.releaseNotesLabel}</p>
-                <h2 id="release-notes-title" className="credits-title">
-                  {text.releaseNotesTitle}
-                </h2>
-              </div>
-              <button
-                type="button"
-                className="theme-toggle credits-close"
-                onClick={() => setShowReleaseNotes(false)}
-              >
-                {text.close}
-              </button>
-            </div>
-
-            <div className="release-notes-list">
-              {releaseNotes.map((note) => (
-                <article key={note.version} className="credits-item release-note-item">
-                  <p className="release-note-version">v{note.version}</p>
-                  <p className="credits-item-meta">{note.summary[locale]}</p>
-                </article>
-              ))}
-            </div>
-          </section>
-        </div>
-      ) : null}
+      <AppDialogs
+        showImageCredits={showImageCredits}
+        showReleaseNotes={showReleaseNotes}
+        onCloseImageCredits={() => setShowImageCredits(false)}
+        onCloseReleaseNotes={() => setShowReleaseNotes(false)}
+        locale={locale}
+        contentPack={contentPack}
+      />
     </div>
   );
+}
+
+function getCurrentCelebration(
+  dayType: string,
+  celebrations: Record<string, CelebrationContent>
+): CelebrationContent | null {
+  return dayType === 'ordinary' ? null : celebrations[dayType] ?? null;
+}
+
+function getKicker({
+  celebration,
+  hasThemeDays,
+  displayThemeDaysCount,
+  text,
+}: {
+  celebration: CelebrationContent | null;
+  hasThemeDays: boolean;
+  displayThemeDaysCount: number;
+  text: (typeof appText)[Locale];
+}) {
+  if (celebration) {
+    return celebration.kicker;
+  }
+
+  if (hasThemeDays) {
+    return displayThemeDaysCount > 1
+      ? text.unofficialThemeDays(displayThemeDaysCount)
+      : text.unofficialThemeDay;
+  }
+
+  return text.noOfficialEnergy;
 }
 
 export default App;
