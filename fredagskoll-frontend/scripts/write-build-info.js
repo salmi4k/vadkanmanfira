@@ -16,7 +16,7 @@ const PACK_BRANDING = {
   public: {
     appName: 'Vad kan man fira?',
     appDescription:
-      'Vad kan man fira? avgör om dagen förtjänar flaggor, bakverk, högtidston eller bara ett torrt konstaterande av kalenderns begränsningar.',
+      'Vad kan man fira? avg\u00f6r om dagen f\u00f6rtj\u00e4nar flaggor, bakverk, h\u00f6gtidston eller bara ett torrt konstaterande av kalenderns begr\u00e4nsningar.',
     shortName: 'VKMF',
     themeColor: '#9d4b17',
     backgroundColor: '#f2ecda',
@@ -25,7 +25,7 @@ const PACK_BRANDING = {
   team: {
     appName: 'Fredagskoll',
     appDescription:
-      'Fredagskoll avgör om dagen förtjänar intern kontorsmytologi, högtidston eller ett torrt konstaterande av kalenderns begränsningar.',
+      'Fredagskoll avg\u00f6r om dagen f\u00f6rtj\u00e4nar intern kontorsmytologi, h\u00f6gtidston eller ett torrt konstaterande av kalenderns begr\u00e4nsningar.',
     shortName: 'Mojo',
     themeColor: '#16321f',
     backgroundColor: '#f2ecda',

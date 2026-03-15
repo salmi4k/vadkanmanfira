@@ -1,11 +1,20 @@
 const crypto = require('crypto');
-const { TableClient } = require('@azure/data-tables');
 
 const TABLE_NAME = 'blurbcache';
 
+function loadTableClient() {
+  try {
+    return require('@azure/data-tables').TableClient;
+  } catch {
+    return null;
+  }
+}
+
 function getCacheClient() {
   const connectionString = process.env.AZURE_TABLES_CONNECTION_STRING;
-  if (!connectionString) {
+  const TableClient = loadTableClient();
+
+  if (!connectionString || !TableClient) {
     return null;
   }
 
