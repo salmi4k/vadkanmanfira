@@ -159,6 +159,7 @@ export function getUpcomingOfficialHolidayInWeek(
   return holidays.length > 0 ? holidays[0] : null;
 }
 
+
 export function getDayStatus(
   inputDate: Date,
   contentPack: ContentPack = getActiveContentPack()

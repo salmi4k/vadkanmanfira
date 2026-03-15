@@ -29,7 +29,7 @@ import {
   getDaysUntil,
 } from './dateUtils';
 import { getDayStatus, getUpcomingOfficialHolidayInWeek } from './dayLogic';
-import { Locale, LOCALE_STORAGE_KEY, getInitialLocale, translateOfficialHolidayName, translateThemeDayName } from './locale';
+import { Locale, getInitialLocale, persistLocale, translateOfficialHolidayName, translateThemeDayName } from './locale';
 import {
   getAsIfThatWasNotEnough,
   getOrdinaryNoHitBody,
@@ -40,7 +40,7 @@ import {
 } from './editorialText';
 import { getNationalDayPanel } from './features/national-days/nationalDays';
 import { getSeasonalNotes } from './features/upcoming/seasonalNotes';
-import { getInitialMood, getMoodLabel, MOOD_STORAGE_KEY, Mood } from './mood';
+import { getInitialDarkMode, getInitialMood, getMoodLabel, persistDarkMode, persistMood, Mood } from './mood';
 import { getReleaseNote } from './releaseNotes';
 import {
   buildThemeDayBlurbs,
@@ -63,7 +63,7 @@ function App({
   contentPack = getActiveContentPack(),
 }: AppProps) {
   const [locale, setLocale] = useState<Locale>(getInitialLocale);
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(getInitialDarkMode);
   const [showLanguageMenu, setShowLanguageMenu] = useState(false);
   const [showImageCredits, setShowImageCredits] = useState(false);
   const [showReleaseNotes, setShowReleaseNotes] = useState(false);
@@ -257,12 +257,16 @@ function App({
   }, []);
 
   useEffect(() => {
-    window.localStorage.setItem(LOCALE_STORAGE_KEY, locale);
+    persistLocale(locale);
   }, [locale]);
 
   useEffect(() => {
-    window.localStorage.setItem(MOOD_STORAGE_KEY, mood);
+    persistMood(mood);
   }, [mood]);
+
+  useEffect(() => {
+    persistDarkMode(darkMode);
+  }, [darkMode]);
 
   useEffect(() => {
     setShowLanguageMenu(false);

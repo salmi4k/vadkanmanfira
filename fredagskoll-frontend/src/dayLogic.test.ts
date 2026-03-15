@@ -9,7 +9,7 @@ test('calculates Fettisdag for 2026 correctly', () => {
   expect(getFettisdag(2026)).toEqual(new Date(2026, 1, 17));
 });
 
-test('classifies Surströmmingspremiär ahead of ordinary Thursday logic', () => {
+test('classifies Surstrommingspremiar ahead of ordinary Thursday logic', () => {
   const result = getDayStatus(new Date(2026, 7, 20));
 
   expect(result.dayType).toBe('surstrommingspremiar');
@@ -28,7 +28,7 @@ test('restores recurring weekday lore in the team content pack', () => {
   expect(result.dayType).toBe('fisktorsdag');
 });
 
-test('includes Långfredagen in the official holiday list', () => {
+test('includes Langfredagen in the official holiday list', () => {
   const holidays = getOfficialHolidays(2026);
   const holiday = holidays.find((item) => item.name === 'Långfredagen');
 

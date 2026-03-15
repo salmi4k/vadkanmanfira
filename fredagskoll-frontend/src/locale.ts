@@ -1,5 +1,6 @@
 import themeDayTranslationsEn from './data/themeDayTranslations.en.json';
 import themeDayTranslationsPtBr from './data/themeDayTranslations.pt-BR.json';
+import { readStoredPreferences, writeStoredPreferences } from './preferences';
 
 export type Locale = 'sv' | 'en' | 'pt-BR';
 
@@ -61,8 +62,25 @@ export function getInitialLocale(): Locale {
     return 'sv';
   }
 
+  const storedPreferences = readStoredPreferences();
+  if (
+    storedPreferences?.locale === 'en' ||
+    storedPreferences?.locale === 'pt-BR' ||
+    storedPreferences?.locale === 'sv'
+  ) {
+    return storedPreferences.locale;
+  }
+
   const stored = window.localStorage.getItem(LOCALE_STORAGE_KEY);
   return stored === 'en' || stored === 'pt-BR' ? stored : 'sv';
+}
+
+export function persistLocale(locale: Locale): void {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  writeStoredPreferences({ locale });
 }
 
 export function getIntlLocale(locale: Locale): string {

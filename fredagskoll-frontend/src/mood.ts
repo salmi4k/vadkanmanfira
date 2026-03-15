@@ -1,4 +1,5 @@
 import { Locale } from './locale';
+import { readStoredPreferences, writeStoredPreferences } from './preferences';
 
 export type Mood = 'dry' | 'cheerful' | 'chaotic' | 'formal' | 'absurd' | 'warm';
 
@@ -72,8 +73,44 @@ export function getInitialMood(): Mood {
     return 'dry';
   }
 
+  const storedPreferences = readStoredPreferences();
+  if (storedPreferences?.mood && supportedMoods.has(storedPreferences.mood)) {
+    return storedPreferences.mood;
+  }
+
   const value = window.localStorage.getItem(MOOD_STORAGE_KEY);
   return value && supportedMoods.has(value as Mood) ? (value as Mood) : 'dry';
+}
+
+export function persistMood(mood: Mood): void {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  writeStoredPreferences({ mood });
+}
+
+export function getInitialDarkMode(): boolean {
+  if (typeof window === 'undefined') {
+    return false;
+  }
+
+  const storedPreferences = readStoredPreferences();
+  if (typeof storedPreferences?.darkMode === 'boolean') {
+    return storedPreferences.darkMode;
+  }
+
+  return typeof window.matchMedia === 'function'
+    ? window.matchMedia('(prefers-color-scheme: dark)').matches
+    : false;
+}
+
+export function persistDarkMode(darkMode: boolean): void {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  writeStoredPreferences({ darkMode });
 }
 
 export function getMoodLabel(mood: Mood, locale: Locale): string {
