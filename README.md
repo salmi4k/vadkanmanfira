@@ -147,8 +147,10 @@ What it does:
 - receives a structured date context from the frontend
 - computes a deterministic request hash
 - checks a hot cache row in Azure Table Storage first
-- rotates between multiple cached AI bundles for the same request when available
-- refreshes stale bundles older than 15 minutes one slot at a time
+- auto-generates one AI bundle for a new request key and serves cache after that
+- can store up to 3 variants for the same request key, but only creates extra variants on explicit reroll
+- enforces a real generation cooldown per request key before Azure OpenAI is called again
+- rotates between cached variants when more than one already exists
 - stores generated bundles in a separate bundle library table for reuse and tracking
 - returns multiple options for:
   - `blurbs`
@@ -159,7 +161,7 @@ Current table layout:
 
 - `blurbcache`
   - one hot row per request key
-  - stores request metadata, `useCount`, `lastUsedAt`, `lastBundleId`, and `bundleIdsJson`
+  - stores request metadata, `useCount`, `lastUsedAt`, `lastGeneratedAt`, `lastBundleId`, and `bundleIdsJson`
 - `blurblibrary`
   - one row per generated bundle
   - stores `bundleId`, `requestHash`, `generatedAt`, `model`, `useCount`, `lastUsedAt`,
