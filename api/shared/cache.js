@@ -153,6 +153,12 @@ function buildBundleEntity(requestHash, variant) {
     rowKey: variant.bundleId,
     requestHash,
     bundleId: variant.bundleId,
+    locale: variant.locale || null,
+    contentPack: variant.contentPack || null,
+    kind: variant.kind || null,
+    mood: variant.mood || null,
+    date: variant.date || null,
+    title: variant.title || null,
     generatedAt: variant.generatedAt,
     model: variant.model || 'unknown',
     useCount: Number.isFinite(variant.useCount) ? Number(variant.useCount) : 0,
@@ -229,6 +235,12 @@ function buildLegacyVariants(hotEntity, requestHash) {
             : typeof source.createdAt === 'string' && source.createdAt.length > 0
               ? source.createdAt
               : hotEntity.createdAt || new Date().toISOString(),
+        locale: hotEntity.locale || null,
+        contentPack: hotEntity.contentPack || null,
+        kind: hotEntity.kind || null,
+        mood: hotEntity.mood || null,
+        date: hotEntity.date || null,
+        title: hotEntity.title || null,
         model:
           typeof source.model === 'string' && source.model.length > 0
             ? source.model
@@ -266,6 +278,12 @@ function buildLegacyVariants(hotEntity, requestHash) {
       bundleId: createBundleId(),
       requestHash,
       generatedAt: hotEntity.createdAt || new Date().toISOString(),
+      locale: hotEntity.locale || null,
+      contentPack: hotEntity.contentPack || null,
+      kind: hotEntity.kind || null,
+      mood: hotEntity.mood || null,
+      date: hotEntity.date || null,
+      title: hotEntity.title || null,
       model: hotEntity.model || 'unknown',
       useCount: Number.isFinite(hotEntity.useCount) ? Number(hotEntity.useCount) : 0,
       lastUsedAt:
@@ -382,6 +400,12 @@ async function saveCacheState(request, state) {
 
   for (const variant of variants) {
     variant.requestHash = requestHash;
+    variant.locale = request.locale;
+    variant.contentPack = request.contentPack;
+    variant.kind = request.kind;
+    variant.mood = request.mood;
+    variant.date = request.date;
+    variant.title = request.title;
   }
 
   await Promise.all(
@@ -392,6 +416,16 @@ async function saveCacheState(request, state) {
     partitionKey: entityKey.partitionKey,
     rowKey: entityKey.rowKey,
     requestHash,
+    locale: request.locale,
+    contentPack: request.contentPack,
+    kind: request.kind,
+    mood: request.mood,
+    date: request.date,
+    dateLabel: request.dateLabel,
+    dayType: request.dayType,
+    title: request.title,
+    subtitle: request.subtitle || null,
+    kicker: request.kicker || null,
     createdAt,
     updatedAt: nowIso,
     lastUsedAt:
