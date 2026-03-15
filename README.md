@@ -56,31 +56,15 @@ flow. The version below is the short, human-readable overview.
 
 ```mermaid
 flowchart TD
-    A[User picks date, language, tone, and content pack] --> B[Frontend classifies the date]
-    B --> C{Built-in celebration?}
-    C -->|Yes| D[Show celebration content]
-    C -->|No| E{Theme days found?}
-    E -->|Yes| F[Show theme-day based content]
-    E -->|No| G[Show ordinary-day content]
-
-    D --> H[Load sidebar context]
-    F --> H
-    G --> H
-
-    H --> I[Optionally request AI blurbs from Azure Function]
-    I --> J{Cache hit for this exact request?}
-    J -->|Yes| K[Return cached bundle]
-    J -->|No| L[Generate a new bundle with Azure OpenAI and store it]
-
-    K --> M[Frontend accepts result only for the active request]
-    L --> M
-    I -. pending .-> N[Show loading text instead of visible AI copy]
-
-    M --> O[Render headline, subheader, blurbs, reroll options, and mood styling]
-
-    P[GitHub Actions] --> Q[Build public and team variants]
-    Q --> R[Deploy frontend to Azure Static Web Apps]
-    I --> S[Dedicated Azure Function App]
+    A[User picks a date] --> B[Frontend checks what kind of day it is]
+    B --> C{Celebration, theme day, or ordinary day?}
+    C --> D[Build the page content]
+    D --> E[Load extra context like name day and upcoming dates]
+    E --> F[Optionally ask the AI API for better blurbs]
+    F --> G[Use cached or newly generated AI text when available]
+    F --> H[Otherwise keep local built-in text]
+    G --> I[Render the final card]
+    H --> I[Render the final card]
 ```
 
 ## Built-in celebration rules
