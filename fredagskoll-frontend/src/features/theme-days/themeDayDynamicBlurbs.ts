@@ -1,5 +1,5 @@
-import { Locale } from './locale';
-import { Mood } from './mood';
+import { Locale } from '../../locale';
+import { Mood } from '../../mood';
 import { includesAny, joinWithAnd, normalizeLabel } from './themeDayTextUtils';
 
 function lowerFirst(value: string): string {

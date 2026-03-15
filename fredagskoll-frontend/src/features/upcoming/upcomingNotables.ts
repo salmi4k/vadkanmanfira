@@ -1,19 +1,26 @@
-import { getCelebrationThemeAliases, getCelebrations } from './celebrations';
+import {
+  getCelebrationThemeAliases,
+  getCelebrations,
+} from '../celebrations/celebrations';
 import {
   ContentPack,
   getActiveContentPack,
   getRecurringWeekdayTypes,
   isTeamWeekdayDayType,
-} from './contentPack';
+} from '../../contentPack';
 import {
   DayType,
   OfficialHoliday,
   getDayStatus,
   getOfficialHolidays,
-} from './dayLogic';
-import { Locale, translateOfficialHolidayName, translateThemeDayName } from './locale';
-import { getThemeDaysForDate } from './temadagar';
-import { joinWithAnd } from './themeDayBlurbs';
+} from '../../dayLogic';
+import {
+  Locale,
+  translateOfficialHolidayName,
+  translateThemeDayName,
+} from '../../locale';
+import { getThemeDaysForDate } from '../theme-days/temadagar';
+import { joinWithAnd } from '../theme-days/themeDayBlurbs';
 
 type UpcomingNotableKind = 'holiday' | 'celebration' | 'themeday';
 

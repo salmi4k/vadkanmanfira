@@ -1,20 +1,24 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import './App.css';
-import { AiBlurbRequest } from './aiBlurbs';
+import { AiBlurbRequest } from './features/ai/aiBlurbs';
 import { appText } from './appText';
 import { buildInfo } from './buildInfo.generated';
 import { IntroPanel } from './components/IntroPanel';
 import { AppDialogs } from './components/AppDialogs';
 import { DisclosurePanel } from './components/DisclosurePanel';
 import { formatBuildStamp, getInitialMobileLayout } from './appHelpers';
-import { formatTitle, hasLongTitleWord, usesCompactPrimaryMedia } from './celebrationPresentation';
+import {
+  formatTitle,
+  hasLongTitleWord,
+  usesCompactPrimaryMedia,
+} from './features/celebrations/celebrationPresentation';
 import {
   CelebrationContent,
   getCelebrations,
   getCelebrationThemeAliases,
   getOrdinaryBlurb,
   getOrdinaryDayBlurbs,
-} from './celebrations';
+} from './features/celebrations/celebrations';
 import { ContentPack, getActiveContentPack } from './contentPack';
 import {
   addDays,
@@ -34,15 +38,19 @@ import {
   getOrdinaryThemeDayTitleEndings,
   getOrdinaryTitle,
 } from './editorialText';
-import { getNationalDayPanel } from './nationalDays';
-import { getSeasonalNotes } from './seasonalNotes';
+import { getNationalDayPanel } from './features/national-days/nationalDays';
+import { getSeasonalNotes } from './features/upcoming/seasonalNotes';
 import { getInitialMood, getMoodLabel, MOOD_STORAGE_KEY, Mood } from './mood';
 import { getReleaseNote } from './releaseNotes';
-import { buildThemeDayBlurbs, filterThemeDays, joinWithAnd } from './themeDayBlurbs';
-import { getThemeDaysForDate } from './temadagar';
-import { getUpcomingNotables } from './upcomingNotables';
-import { useAiContent } from './hooks/useAiContent';
-import { useNameDays } from './hooks/useNameDays';
+import {
+  buildThemeDayBlurbs,
+  filterThemeDays,
+  joinWithAnd,
+} from './features/theme-days/themeDayBlurbs';
+import { getThemeDaysForDate } from './features/theme-days/temadagar';
+import { getUpcomingNotables } from './features/upcoming/upcomingNotables';
+import { useAiContent } from './features/ai/useAiContent';
+import { useNameDays } from './features/name-days/useNameDays';
 import { MobileSectionKey } from './appTypes';
 
 type AppProps = {

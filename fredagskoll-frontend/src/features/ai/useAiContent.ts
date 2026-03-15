@@ -1,13 +1,13 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { AiBlurbBundle, AiBlurbRequest, fetchAiBlurbBundle } from '../aiBlurbs';
-import { getOrdinaryDayBlurbs } from '../celebrations';
+import { AiBlurbBundle, AiBlurbRequest, fetchAiBlurbBundle } from './aiBlurbs';
+import { getOrdinaryDayBlurbs } from '../celebrations/celebrations';
 import {
   getOrdinaryThemeDayCardNotes,
   getOrdinaryThemeDayTitleEndings,
-} from '../editorialText';
-import { Locale } from '../locale';
-import { Mood } from '../mood';
-import { getRandomItem } from '../appHelpers';
+} from '../../editorialText';
+import { Locale } from '../../locale';
+import { Mood } from '../../mood';
+import { getRandomItem } from '../../appHelpers';
 
 type AiBundleState = 'loading' | 'ready' | 'fallback';
 

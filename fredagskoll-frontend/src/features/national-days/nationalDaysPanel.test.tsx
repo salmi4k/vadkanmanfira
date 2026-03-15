@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
-import App from './App';
+import App from '../../App';
 
 beforeEach(() => {
   jest.spyOn(global, 'fetch').mockResolvedValue({

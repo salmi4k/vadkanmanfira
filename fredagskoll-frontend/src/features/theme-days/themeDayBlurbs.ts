@@ -1,5 +1,5 @@
-import { Locale, translateThemeDayName } from './locale';
-import { Mood } from './mood';
+import { Locale, translateThemeDayName } from '../../locale';
+import { Mood } from '../../mood';
 import { buildThemeDayDynamicBlurbs } from './themeDayDynamicBlurbs';
 import { getThemeDayCategoryBlurbs } from './themeDayCategoryBlurbs';
 import { getThemeDaySpecificBlurbs } from './themeDaySpecificBlurbs';

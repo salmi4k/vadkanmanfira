@@ -1,5 +1,5 @@
-import { getFettisdag } from './dayLogic';
-import { getIntlLocale, Locale } from './locale';
+import { getFettisdag } from '../../dayLogic';
+import { getIntlLocale, Locale } from '../../locale';
 
 export interface SeasonalNote {
   id: string;

@@ -1,4 +1,4 @@
-import { Locale } from './locale';
+import { Locale } from '../../locale';
 
 export function joinWithAnd(items: string[], locale: Locale = 'sv'): string {
   if (items.length <= 1) {

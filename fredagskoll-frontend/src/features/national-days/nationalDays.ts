@@ -1,8 +1,8 @@
-import nationalDaysByDate from './data/nationalDaysByDate.json';
-import nationalDayNationsSv from './data/nationalDayNations.sv.json';
-import nationalDayNationsPtBr from './data/nationalDayNations.pt-BR.json';
-import nationalDaySignificancesPtBr from './data/nationalDaySignificances.pt-BR.json';
-import { Locale } from './locale';
+import nationalDaysByDate from '../../data/nationalDaysByDate.json';
+import nationalDayNationsSv from '../../data/nationalDayNations.sv.json';
+import nationalDayNationsPtBr from '../../data/nationalDayNations.pt-BR.json';
+import nationalDaySignificancesPtBr from '../../data/nationalDaySignificances.pt-BR.json';
+import { Locale } from '../../locale';
 
 type NationalDayRecord = {
   nation: string;

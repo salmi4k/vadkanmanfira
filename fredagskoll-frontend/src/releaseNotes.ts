@@ -8,6 +8,19 @@ export type ReleaseNote = {
 
 export const releaseNotes: ReleaseNote[] = [
   {
+    version: '0.1.24',
+    shortSummary: {
+      sv: 'Koden Ã¤r bÃ¤ttre uppdelad och mÃ¶rkt lÃ¤ge Ã¤r lÃ¤ttare att lÃ¤sa.',
+      en: 'The code is better organized and dark mode is easier to read.',
+      'pt-BR': 'O cÃ³digo estÃ¡ melhor organizado e o modo escuro ficou mais fÃ¡cil de ler.',
+    },
+    summary: {
+      sv: 'Frontendkoden Ã¤r nu sorterad tydligare efter omrÃ¥de, sÃ¥ AI, temadagar, nationaldagar, namnsdagar och kommande datum ligger samlade i egna delar i stÃ¤llet fÃ¶r att ligga utspridda i en platt mapp. Samtidigt har mÃ¶rkt lÃ¤ge fÃ¥tt tydligare kontrast i knappar, badges och smÃ¥ etiketter som Firardag, sÃ¥ det viktiga innehÃ¥llet blir lÃ¤ttare att lÃ¤sa utan att appens ton fÃ¶rsvinner.',
+      en: 'The frontend code is now grouped more clearly by area, so AI, theme days, national days, name days, and upcoming dates live in their own sections instead of a flat pile. At the same time, dark mode has better contrast in buttons, badges, and smaller labels like Celebration, so the important UI is easier to read without losing the appâ€™s tone.',
+      'pt-BR': 'O cÃ³digo do frontend agora estÃ¡ agrupado de forma mais clara por Ã¡rea, para que IA, datas temÃ¡ticas, datas nacionais, nomes do dia e prÃ³ximas datas fiquem em suas prÃ³prias seÃ§Ãµes em vez de um monte plano. Ao mesmo tempo, o modo escuro ganhou melhor contraste em botÃµes, badges e pequenas etiquetas como ComemoraÃ§Ã£o, deixando a interface mais legÃ­vel sem perder o clima do app.',
+    },
+  },
+  {
     version: '0.1.23',
     shortSummary: {
       sv: 'Mörkt läge har fått tydligare kontrast i knappar och etiketter.',

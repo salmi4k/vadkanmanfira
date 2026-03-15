@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { fetchNameDays } from '../nameDays';
+import { fetchNameDays } from './nameDays';
 
 export type NameDayState = 'loading' | 'ready' | 'error';
 

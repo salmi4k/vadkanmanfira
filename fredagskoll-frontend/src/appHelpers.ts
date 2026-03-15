@@ -1,5 +1,5 @@
 import { buildInfo } from './buildInfo.generated';
-import { getCelebrationThemeAliases } from './celebrations';
+import { getCelebrationThemeAliases } from './features/celebrations/celebrations';
 import { ContentPack } from './contentPack';
 import { DayType } from './dayLogic';
 import { getIntlLocale, Locale } from './locale';

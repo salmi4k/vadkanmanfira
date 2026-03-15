@@ -1,5 +1,5 @@
-import { isTeamWeekdayDayType } from './contentPack';
-import { DayType } from './dayLogic';
+import { isTeamWeekdayDayType } from '../../contentPack';
+import { DayType } from '../../dayLogic';
 
 export function formatTitle(title: string): string {
   return title.replaceAll('. ', '.\n');
