@@ -14,3 +14,16 @@ test('builds non-generic blurbs for non-overridden themedays', () => {
     )
   ).toBe(true);
 });
+
+test('does not generate plural self-reference blurbs for a single themeday', () => {
+  const blurbs = buildThemeDayBlurbs(['Såpbubblans dag']);
+
+  expect(
+    blurbs.some(
+      (blurb) =>
+        blurb.includes('samsas på samma datum') ||
+        blurb.includes('delar datumet') ||
+        blurb.includes('trängs på samma datum')
+    )
+  ).toBe(false);
+});
