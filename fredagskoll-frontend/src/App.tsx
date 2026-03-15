@@ -481,7 +481,10 @@ function App({
   }
 
   return (
-    <div className={`App ${darkMode ? 'dark' : ''} theme-${theme} locale-${locale}`}>
+    <div
+      className={`App ${darkMode ? 'dark' : ''} theme-${theme} locale-${locale}`}
+      data-mood={mood}
+    >
       <div className="app-backdrop" aria-hidden="true" />
       <div className="app-grid">
         <header className="app-panel app-panel--intro">
@@ -569,7 +572,7 @@ function App({
           <label htmlFor="mood-picker" className="picker-label">
             {text.moodLabel}
           </label>
-          <div className="picker-shell">
+          <div className="picker-shell picker-shell--mood">
             <select
               id="mood-picker"
               value={mood}
