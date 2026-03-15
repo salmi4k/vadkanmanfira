@@ -22,30 +22,31 @@ function coerceBoolean(value, fallback = false) {
 }
 
 function normalizeRequestBody(body) {
-  const locale = SUPPORTED_LOCALES.has(body?.locale) ? body.locale : 'sv';
-  const contentPack = SUPPORTED_PACKS.has(body?.contentPack) ? body.contentPack : 'public';
-  const kind = SUPPORTED_KINDS.has(body?.kind) ? body.kind : 'ordinary';
+  const source = body && typeof body === 'object' ? body : {};
+  const locale = SUPPORTED_LOCALES.has(source.locale) ? source.locale : 'sv';
+  const contentPack = SUPPORTED_PACKS.has(source.contentPack) ? source.contentPack : 'public';
+  const kind = SUPPORTED_KINDS.has(source.kind) ? source.kind : 'ordinary';
 
   return {
     locale,
     contentPack,
     kind,
-    date: coerceString(body?.date),
-    dateLabel: coerceString(body?.dateLabel),
-    dayType: coerceString(body?.dayType, 'ordinary'),
-    title: coerceString(body?.title),
-    subtitle: coerceString(body?.subtitle),
-    kicker: coerceString(body?.kicker),
-    fallbackTitleEnding: coerceString(body?.fallbackTitleEnding),
-    fallbackCardNote: coerceString(body?.fallbackCardNote),
-    fallbackBlurbs: coerceStringArray(body?.fallbackBlurbs),
-    themeDays: coerceStringArray(body?.themeDays),
-    extraThemeDays: coerceStringArray(body?.extraThemeDays),
-    seasonalTitles: coerceStringArray(body?.seasonalTitles),
-    upcomingTitles: coerceStringArray(body?.upcomingTitles),
-    upcomingHolidayName: coerceString(body?.upcomingHolidayName),
-    nationalDaySummary: coerceString(body?.nationalDaySummary),
-    allowHumor: coerceBoolean(body?.allowHumor, true),
+    date: coerceString(source.date),
+    dateLabel: coerceString(source.dateLabel),
+    dayType: coerceString(source.dayType, 'ordinary'),
+    title: coerceString(source.title),
+    subtitle: coerceString(source.subtitle),
+    kicker: coerceString(source.kicker),
+    fallbackTitleEnding: coerceString(source.fallbackTitleEnding),
+    fallbackCardNote: coerceString(source.fallbackCardNote),
+    fallbackBlurbs: coerceStringArray(source.fallbackBlurbs),
+    themeDays: coerceStringArray(source.themeDays),
+    extraThemeDays: coerceStringArray(source.extraThemeDays),
+    seasonalTitles: coerceStringArray(source.seasonalTitles),
+    upcomingTitles: coerceStringArray(source.upcomingTitles),
+    upcomingHolidayName: coerceString(source.upcomingHolidayName),
+    nationalDaySummary: coerceString(source.nationalDaySummary),
+    allowHumor: coerceBoolean(source.allowHumor, true),
   };
 }
 
