@@ -8,6 +8,19 @@ export type ReleaseNote = {
 
 export const releaseNotes: ReleaseNote[] = [
   {
+    version: '0.1.27',
+    shortSummary: {
+      sv: 'Appen är uppdelad tydligare och huvudvyn är lättare att bygga vidare på.',
+      en: 'The app is split more clearly and the main view is easier to build on.',
+      'pt-BR': 'O app está dividido de forma mais clara e a tela principal ficou mais fácil de evoluir.',
+    },
+    summary: {
+      sv: 'Appens huvudskal är nu uppdelat tydligare, så App-komponenten mest håller ihop data och tillstånd i stället för att också bära hela huvudvyn och footern själv. Det gör koden lättare att förstå och säkrare att ändra när fler förbättringar ska in.',
+      en: 'The app shell is now split more clearly, so the App component mostly wires data and state together instead of also carrying the full main view and footer by itself. That makes the code easier to understand and safer to change as more improvements are added.',
+      'pt-BR': 'A estrutura principal do app agora está dividida de forma mais clara, então o componente App fica mais focado em ligar dados e estado em vez de também carregar sozinho toda a tela principal e o rodapé. Isso deixa o código mais fácil de entender e mais seguro para continuar evoluindo.',
+    },
+  },
+  {
     version: '0.1.26',
     shortSummary: {
       sv: 'Inställningar sparas bättre och testkörningen är lugnare.',
