@@ -1,0 +1,242 @@
+@media (max-width: 980px) {
+  .app-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .brand-title,
+  .celebration-title {
+    max-width: none;
+  }
+
+  .celebration-card {
+    padding: 1.75rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .app-grid {
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  .app-panel--intro,
+  .celebration-card {
+    padding: 1.25rem;
+    border-radius: 24px;
+  }
+
+  .card-nav {
+    grid-template-columns: minmax(0, auto) minmax(0, 1fr) minmax(0, auto);
+    gap: 0.55rem;
+  }
+
+  .card-nav-button {
+    width: 100%;
+    min-width: 0;
+    padding: 0.6rem 0.75rem;
+    font-size: 0.77rem;
+    overflow-wrap: anywhere;
+  }
+
+  .card-date {
+    order: 0;
+    font-size: 0.88rem;
+  }
+
+  .theme-toggle {
+    padding: 0.68rem 0.85rem;
+    font-size: 0.84rem;
+  }
+
+  .intro-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .language-menu {
+    left: auto;
+    right: 0;
+    min-width: min(16rem, calc(100vw - 2.5rem));
+  }
+
+  .brand-logo {
+    width: min(100%, 180px);
+  }
+
+  .brand-mark-label {
+    font-size: 0.82rem;
+    letter-spacing: 0.36em;
+  }
+
+  .brand-title {
+    font-size: clamp(1.65rem, 8.4vw, 2.35rem);
+  }
+
+  .locale-pt-BR .brand-title {
+    font-size: clamp(1.38rem, 6.4vw, 1.88rem);
+    max-width: 12ch;
+  }
+
+  .celebration-title {
+    font-size: clamp(1.9rem, 9.3vw, 2.65rem);
+    line-height: 0.95;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+
+  .locale-pt-BR .celebration-title {
+    font-size: clamp(1.62rem, 7.1vw, 2.18rem);
+  }
+
+  .locale-pt-BR .celebration-title--stacked {
+    max-width: 14.6ch;
+  }
+
+  .celebration-title-subline {
+    font-size: 0.68em;
+  }
+
+  .locale-pt-BR .celebration-title-subline {
+    font-size: 0.62em;
+  }
+
+  .celebration-blurb {
+    font-size: 0.96rem;
+    line-height: 1.42;
+    max-width: 100%;
+  }
+
+  .reroll-button {
+    width: 100%;
+    justify-self: stretch;
+  }
+
+  .picker-meta,
+  .media-grid {
+    grid-template-columns: 1fr;
+    display: grid;
+  }
+
+  .picker-meta {
+    justify-content: start;
+    gap: 0.3rem;
+    font-size: 0.84rem;
+  }
+
+  .brand-lede,
+  .nameday-text,
+  .holiday-meta,
+  .upcoming-note,
+  .world-day-summary,
+  .world-day-more,
+  .ordinary-card p,
+  .theme-day-panel p,
+  .world-day-panel p {
+    font-size: 0.92rem;
+  }
+
+  .locale-pt-BR .brand-lede,
+  .locale-pt-BR .nameday-text,
+  .locale-pt-BR .holiday-meta,
+  .locale-pt-BR .upcoming-note,
+  .locale-pt-BR .world-day-summary,
+  .locale-pt-BR .world-day-more,
+  .locale-pt-BR .ordinary-card p,
+  .locale-pt-BR .theme-day-panel p,
+  .locale-pt-BR .world-day-panel p {
+    font-size: 0.88rem;
+  }
+
+  .locale-pt-BR .brand-lede {
+    max-width: none;
+    font-size: 0.84rem;
+    line-height: 1.32;
+  }
+
+  .locale-pt-BR .card-nav {
+    grid-template-columns: minmax(0, auto) minmax(0, 1fr) minmax(0, auto);
+    gap: 0.42rem;
+  }
+
+  .locale-pt-BR .card-nav-button {
+    padding: 0.52rem 0.58rem;
+    font-size: 0.69rem;
+    max-width: 6.9rem;
+  }
+
+  .locale-pt-BR .card-date {
+    font-size: 0.8rem;
+  }
+
+  .season-item,
+  .upcoming-item,
+  .nameday-card,
+  .holiday-card,
+  .season-card,
+  .world-day-panel {
+    padding: 1rem;
+    border-radius: 20px;
+  }
+
+  .upcoming-card,
+  .theme-day-panel,
+  .ordinary-card {
+    border-radius: 20px;
+  }
+
+  .disclosure-toggle {
+    padding: 1rem;
+  }
+
+  .disclosure-content {
+    padding: 0 1rem 1rem;
+  }
+
+  .app-panel--intro {
+    gap: 0.9rem;
+  }
+
+  .mobile-section {
+    display: grid;
+    gap: 0.65rem;
+  }
+
+  .mobile-section-content > * {
+    margin-top: 0;
+  }
+
+  .theme-day-panel,
+  .world-day-panel {
+    max-width: none;
+  }
+
+  .media-card--primary {
+    grid-column: auto;
+  }
+
+  .media-card img {
+    min-height: 240px;
+  }
+
+  .placeholder-card--visual {
+    min-height: 240px;
+  }
+
+  .media-card--compact img {
+    min-height: 230px;
+    max-height: 300px;
+  }
+
+  .credits-panel {
+    padding: 1.15rem;
+  }
+
+  .credits-header {
+    grid-template-columns: 1fr;
+    display: grid;
+  }
+
+  .credits-close {
+    justify-self: start;
+  }
+}

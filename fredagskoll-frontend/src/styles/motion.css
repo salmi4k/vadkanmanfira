@@ -1,0 +1,205 @@
+@keyframes theme-wash {
+  0% {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+
+  40% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.02);
+  }
+}
+
+@keyframes backdrop-drift {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  100% {
+    transform: translate3d(0.8rem, -0.6rem, 0) scale(1.02);
+  }
+}
+
+@keyframes card-settle {
+  0% {
+    opacity: 0;
+    transform: translateY(18px) scale(0.985);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(var(--mood-card-shift)) scale(1);
+  }
+}
+
+@keyframes cheerful-arrive {
+  0% {
+    opacity: 0;
+    transform: translateY(22px) scale(0.965) rotate(-0.6deg);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(var(--mood-card-shift)) scale(1) rotate(0deg);
+  }
+}
+
+@keyframes formal-arrive {
+  0% {
+    opacity: 0;
+    transform: translateY(14px) scale(0.99);
+    filter: saturate(0.92);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(var(--mood-card-shift)) scale(1);
+    filter: saturate(1);
+  }
+}
+
+@keyframes warm-arrive {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.975);
+    filter: blur(3px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(var(--mood-card-shift)) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes chaotic-arrive {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.96) rotate(-1.8deg);
+  }
+
+  45% {
+    transform: translateY(-4px) scale(1.01) rotate(0.8deg);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(var(--mood-card-shift)) scale(1) rotate(0deg);
+  }
+}
+
+@keyframes absurd-arrive {
+  0% {
+    opacity: 0;
+    transform: translateY(22px) scale(0.97) rotate(1.1deg);
+  }
+
+  60% {
+    transform: translateY(-2px) scale(1.01) rotate(-0.6deg);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(var(--mood-card-shift)) scale(1) rotate(0deg);
+  }
+}
+
+@keyframes cheerful-bob {
+  0%,
+  100% {
+    transform: var(--mood-badge-transform) translateY(0);
+  }
+
+  50% {
+    transform: var(--mood-badge-transform) translateY(-2px);
+  }
+}
+
+@keyframes warm-breath {
+  0%,
+  100% {
+    transform: var(--mood-badge-transform) scale(1);
+  }
+
+  50% {
+    transform: var(--mood-badge-transform) scale(1.03);
+  }
+}
+
+@keyframes chaotic-fidget {
+  0%,
+  100% {
+    transform: var(--mood-badge-transform) translate(0, 0);
+  }
+
+  25% {
+    transform: var(--mood-badge-transform) translate(-1px, -1px);
+  }
+
+  75% {
+    transform: var(--mood-badge-transform) translate(1px, 1px);
+  }
+}
+
+@keyframes absurd-wobble {
+  0%,
+  100% {
+    transform: var(--mood-badge-transform) rotate(0deg);
+  }
+
+  50% {
+    transform: var(--mood-badge-transform) rotate(1.4deg);
+  }
+}
+
+@keyframes chaotic-drift {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate3d(-0.4rem, 0.5rem, 0) scale(1.025);
+  }
+
+  100% {
+    transform: translate3d(0.9rem, -0.6rem, 0) scale(1.015);
+  }
+}
+
+.date-picker {
+  appearance: none;
+  width: 100%;
+  border: 1px solid var(--panel-border);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--text);
+  padding: 1rem;
+  font-size: 1rem;
+  font-weight: 700;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.24);
+}
+
+.App.dark .date-picker {
+  background: rgba(18, 16, 20, 0.6);
+}
+
+.picker-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 0.92rem;
+  flex-wrap: wrap;
+}
+
+.card-kicker-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+

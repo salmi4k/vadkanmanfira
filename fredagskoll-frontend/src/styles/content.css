@@ -1,0 +1,458 @@
+.celebration-card {
+  padding: 3rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  gap: 1.25rem;
+  min-width: 0;
+  position: relative;
+  overflow: hidden;
+  transform: translateY(var(--mood-card-shift));
+}
+
+.celebration-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--mood-card-decoration);
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+.celebration-card::after {
+  content: "";
+  position: absolute;
+  inset: 1rem 1rem auto auto;
+  width: 7rem;
+  height: 7rem;
+  border-radius: calc(var(--mood-subpanel-radius) + 12px);
+  background:
+    radial-gradient(circle at 30% 30%, color-mix(in srgb, var(--tone-accent) 18%, white), transparent 56%),
+    linear-gradient(135deg, color-mix(in srgb, var(--tone-accent) 18%, transparent), transparent 66%);
+  mix-blend-mode: screen;
+  opacity: 0.42;
+  pointer-events: none;
+  transform: rotate(6deg);
+}
+
+.celebration-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.card-nav {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: center;
+  min-width: 0;
+}
+
+.card-date {
+  margin: 0;
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: var(--text);
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.locale-pt-BR .card-date {
+  font-size: 0.86rem;
+  line-height: 1.25;
+}
+
+.card-nav-button {
+  border: 0;
+  border-radius: var(--mood-chip-radius);
+  background: var(--mood-button-bg);
+  color: var(--mood-button-text);
+  padding: 0.72rem 1rem;
+  font-size: 0.88rem;
+  font-weight: 800;
+  letter-spacing: var(--mood-chip-letter);
+  cursor: pointer;
+  transition:
+    background-color 220ms ease,
+    color 220ms ease,
+    filter 220ms ease,
+    transform 220ms ease;
+  min-width: 0;
+  white-space: normal;
+  text-align: center;
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--tone-accent) 24%, transparent),
+    var(--mood-badge-shadow);
+  max-width: 100%;
+}
+
+.card-nav-button:hover {
+  filter: brightness(0.98) saturate(1.06);
+  transform: translateY(-1px) rotate(var(--mood-button-hover-rotate));
+}
+
+.card-nav-button:active {
+  transform: translateY(1px);
+}
+
+.celebration-title {
+  font-size: clamp(2.3rem, 4.1vw, 4rem);
+  max-width: 11.5ch;
+  white-space: pre-line;
+  overflow-wrap: normal;
+  hyphens: manual;
+  text-wrap: pretty;
+  transform: skewY(var(--mood-title-skew));
+  transform-origin: left center;
+  min-width: 0;
+}
+
+.celebration-title--stacked {
+  max-width: 14.5ch;
+}
+
+.locale-pt-BR .celebration-title {
+  font-size: clamp(1.85rem, 3.2vw, 3rem);
+  max-width: 15ch;
+  line-height: 0.98;
+}
+
+.locale-pt-BR .celebration-title--stacked {
+  max-width: 17ch;
+}
+
+.locale-pt-BR .celebration-title-subline {
+  font-size: 0.6em;
+  line-height: 1.04;
+}
+
+.locale-pt-BR .celebration-blurb,
+.locale-pt-BR .nameday-text,
+.locale-pt-BR .holiday-meta,
+.locale-pt-BR .upcoming-note,
+.locale-pt-BR .world-day-summary,
+.locale-pt-BR .world-day-more,
+.locale-pt-BR .ordinary-card p,
+.locale-pt-BR .theme-day-panel p,
+.locale-pt-BR .world-day-panel p,
+.locale-pt-BR .credits-lede,
+.locale-pt-BR .credits-item-meta,
+.locale-pt-BR .credits-item-note {
+  font-size: 0.95rem;
+  line-height: 1.42;
+}
+
+.locale-pt-BR .upcoming-title,
+.locale-pt-BR .season-title,
+.locale-pt-BR .holiday-title {
+  font-size: 0.96rem;
+}
+
+.locale-pt-BR .ordinary-badge,
+.locale-pt-BR .placeholder-card span,
+.locale-pt-BR .upcoming-label,
+.locale-pt-BR .upcoming-days,
+.locale-pt-BR .season-label,
+.locale-pt-BR .season-meta {
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+}
+
+.celebration-title-subline {
+  display: block;
+  margin-top: 0.16em;
+  font-size: 0.64em;
+  line-height: 0.98;
+  letter-spacing: -0.015em;
+}
+
+.celebration-title--longword {
+  font-size: clamp(1.75rem, 3.2vw, 2.75rem);
+  max-width: none;
+  line-height: 0.92;
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: manual;
+}
+
+.media-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.media-card,
+.placeholder-card,
+.ordinary-card,
+.theme-day-panel,
+.world-day-panel {
+  border-radius: var(--mood-subpanel-radius);
+  overflow: hidden;
+  background:
+    var(--mood-panel-stripe),
+    linear-gradient(135deg, var(--mood-panel-tint), transparent 72%),
+    rgba(255, 255, 255, 0.38);
+  border: 1px solid color-mix(in srgb, var(--panel-border) 78%, var(--mood-panel-border) 22%);
+  box-shadow: var(--mood-outline);
+}
+
+.App.dark .media-card,
+.App.dark .placeholder-card,
+.App.dark .ordinary-card,
+.App.dark .theme-day-panel,
+.App.dark .world-day-panel {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.media-card img {
+  width: 100%;
+  height: 100%;
+  min-height: 320px;
+  object-fit: cover;
+  display: block;
+}
+
+.media-card--primary {
+  grid-column: span 2;
+}
+
+.media-card--compact img {
+  min-height: 280px;
+  max-height: 380px;
+  object-fit: contain;
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.placeholder-card,
+.ordinary-card {
+  padding: 1.4rem;
+  display: grid;
+  gap: 0.6rem;
+}
+
+.placeholder-card--visual {
+  align-content: start;
+  min-height: 320px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.46), rgba(255, 255, 255, 0.24)),
+    radial-gradient(circle at top right, rgba(255, 255, 255, 0.52), transparent 42%),
+    linear-gradient(140deg, var(--accent-soft), rgba(255, 255, 255, 0.08));
+}
+
+.App.dark .placeholder-card--visual {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.03)),
+    radial-gradient(circle at top right, rgba(255, 255, 255, 0.14), transparent 44%),
+    linear-gradient(140deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+}
+
+.theme-day-panel {
+  padding: 1.4rem;
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  max-width: 44rem;
+  min-width: 0;
+}
+
+.world-day-panel {
+  padding: 1.4rem;
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  max-width: 44rem;
+  min-width: 0;
+}
+
+.world-day-summary,
+.world-day-more {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.world-day-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.world-day-list li {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.world-day-list strong,
+.world-day-list span {
+  overflow-wrap: anywhere;
+}
+
+.world-day-list strong {
+  color: var(--text);
+}
+
+.placeholder-card span,
+.ordinary-badge {
+  display: inline-flex;
+  width: fit-content;
+  padding: 0.38rem 0.72rem;
+  border-radius: var(--mood-chip-radius);
+  background: var(--mood-button-bg);
+  color: var(--mood-button-text);
+  font-size: 0.82rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: var(--mood-chip-letter);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--tone-accent) 24%, transparent),
+    var(--mood-badge-shadow);
+  transform: var(--mood-badge-transform);
+}
+
+.mood-pill {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 0.38rem 0.78rem;
+  border-radius: var(--mood-chip-radius);
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--tone-soft) 92%, rgba(255, 255, 255, 0.36)), rgba(255, 255, 255, 0.18));
+  color: var(--tone-ink);
+  font-size: 0.76rem;
+  font-weight: 900;
+  letter-spacing: var(--mood-chip-letter);
+  text-transform: uppercase;
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--tone-accent) 24%, transparent),
+    var(--mood-badge-shadow);
+  transform: var(--mood-badge-transform);
+}
+
+.placeholder-card--visual strong {
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  line-height: 1.02;
+  color: var(--text);
+  max-width: 14ch;
+}
+
+.placeholder-card--visual p {
+  max-width: 30rem;
+}
+
+.credits-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+}
+
+.credits-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(17, 10, 8, 0.58);
+  backdrop-filter: blur(10px);
+}
+
+.credits-panel {
+  position: relative;
+  width: min(860px, 100%);
+  max-height: min(82vh, 920px);
+  overflow: auto;
+  border-radius: 28px;
+  padding: 1.5rem;
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  box-shadow: var(--shadow);
+}
+
+.credits-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: start;
+  margin-bottom: 1.2rem;
+}
+
+.credits-title,
+.credits-lede,
+.credits-item-title,
+.credits-item-meta,
+.credits-item-note {
+  margin: 0;
+}
+
+.credits-title {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.7rem, 3vw, 2.4rem);
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+}
+
+.credits-lede,
+.credits-item-meta,
+.credits-item-note {
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.credits-lede {
+  margin-top: 0.65rem;
+  max-width: 42rem;
+}
+
+.credits-list {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.credits-item {
+  display: grid;
+  gap: 0.35rem;
+  padding: 1rem 1.05rem;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.34);
+  border: 1px solid var(--panel-border);
+}
+
+.App.dark .credits-item {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.credits-item-title {
+  font-weight: 800;
+  font-size: 1rem;
+}
+
+.credits-item a {
+  color: var(--accent);
+}
+
+.credits-item-note {
+  font-size: 0.88rem;
+}
+
+.ordinary-card,
+.theme-day-panel {
+  max-width: 44rem;
+  margin-top: 0.75rem;
+}
+
+.ordinary-card {
+  max-width: 38rem;
+}
+
+.theme-day-list {
+  margin: 0;
+  padding-left: 1.1rem;
+  color: var(--muted);
+  display: grid;
+  gap: 0.42rem;
+}
+
