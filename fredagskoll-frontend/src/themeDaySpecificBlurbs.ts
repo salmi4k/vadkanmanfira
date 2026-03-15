@@ -1,6 +1,134 @@
+import { Locale } from './locale';
+import { Mood } from './mood';
 import { normalizeLabel } from './themeDayTextUtils';
 
-export function getThemeDaySpecificBlurbs(themeDay: string): string[] | null {
+function getMoodSpecificBlurbs(
+  themeDay: string,
+  locale: Locale,
+  mood: Mood,
+  displayThemeDay = themeDay
+): string[] | null {
+  if (mood === 'dry') {
+    return null;
+  }
+
+  const shownDay = displayThemeDay;
+
+  if (locale === 'en') {
+    switch (mood) {
+      case 'cheerful':
+        return [
+          `${shownDay} is exactly the sort of oddly specific theme that can improve a weekday by surprise.`,
+          `It's ${shownDay.toLowerCase()} today, which is at least a friendlier plot than a blank square in the calendar.`,
+          `${shownDay} gives the date enough personality to justify a modest smile.`,
+        ];
+      case 'formal':
+        return [
+          `${shownDay} has been entered into the date with notable specificity.`,
+          `It is ${shownDay.toLowerCase()} today, and the calendar expects a certain procedural acceptance.`,
+          `${shownDay} provides the date with a narrow but usable thematic mandate.`,
+        ];
+      case 'warm':
+        return [
+          `${shownDay} gives the date a little more heart than it would otherwise have managed.`,
+          `It's ${shownDay.toLowerCase()} today, which makes the calendar feel slightly less indifferent.`,
+          `${shownDay} is specific, but in a way that makes the day easier to like.`,
+        ];
+      case 'chaotic':
+        return [
+          `${shownDay} has landed on the date and immediately made the whole schedule less believable.`,
+          `It's ${shownDay.toLowerCase()} today, which explains why the calendar suddenly feels overcaffeinated.`,
+          `${shownDay} gives the day a very specific wobble and no obvious supervision.`,
+        ];
+      default:
+        return [
+          `${shownDay} is so specific that the date has stopped behaving like neutral infrastructure.`,
+          `It's ${shownDay.toLowerCase()} today, which means the calendar has once again dressed itself oddly.`,
+          `${shownDay} gives the day a strangely deliberate silhouette.`,
+        ];
+    }
+  }
+
+  if (locale === 'pt-BR') {
+    switch (mood) {
+      case 'cheerful':
+        return [
+          `${shownDay} e exatamente aquele tipo de tema especifico demais que consegue melhorar uma data por surpresa.`,
+          `Hoje e ${shownDay.toLowerCase()}, o que ja e um enredo bem mais simpatico do que um quadrado vazio no calendario.`,
+          `${shownDay} da a data personalidade suficiente para justificar um sorriso modesto.`,
+        ];
+      case 'formal':
+        return [
+          `${shownDay} foi inscrito na data com especificidade notavel.`,
+          `Hoje e ${shownDay.toLowerCase()}, e o calendario espera certa aceitacao procedimental.`,
+          `${shownDay} fornece a data um mandato tematico estreito, mas utilizavel.`,
+        ];
+      case 'warm':
+        return [
+          `${shownDay} da a data um pouco mais de coracao do que ela conseguiria sozinha.`,
+          `Hoje e ${shownDay.toLowerCase()}, o que torna o calendario um pouco menos indiferente.`,
+          `${shownDay} e especifico, mas de um jeito que torna o dia mais facil de gostar.`,
+        ];
+      case 'chaotic':
+        return [
+          `${shownDay} caiu na data e imediatamente reduziu bastante a credibilidade da agenda.`,
+          `Hoje e ${shownDay.toLowerCase()}, o que explica por que o calendario de repente parece cafeinado demais.`,
+          `${shownDay} da ao dia uma oscilacao muito especifica e nenhuma supervisao evidente.`,
+        ];
+      default:
+        return [
+          `${shownDay} e tao especifico que a data deixou de parecer infraestrutura neutra.`,
+          `Hoje e ${shownDay.toLowerCase()}, o que significa que o calendario voltou a se vestir de maneira estranha.`,
+          `${shownDay} da ao dia uma silhueta estranhamente deliberada.`,
+        ];
+    }
+  }
+
+  switch (mood) {
+    case 'cheerful':
+      return [
+        `${shownDay} är exakt den sortens överraskande specifika tema som kan förbättra en vardag lite i smyg.`,
+        `Det är ${shownDay.toLowerCase()} idag, vilket ändå är ett trevligare narrativ än en tom ruta i kalendern.`,
+        `${shownDay} ger datumet tillräckligt med personlighet för att motivera ett måttligt leende.`,
+      ];
+    case 'formal':
+      return [
+        `${shownDay} har införts i datumet med anmärkningsvärd specificitet.`,
+        `Det är ${shownDay.toLowerCase()} idag, och kalendern förväntar sig viss proceduriell acceptans.`,
+        `${shownDay} tillför datumet ett smalt men användbart tematiskt mandat.`,
+      ];
+    case 'warm':
+      return [
+        `${shownDay} ger dagen lite mer hjärta än den annars hade lyckats uppbåda.`,
+        `Det är ${shownDay.toLowerCase()} idag, vilket gör kalendern något mindre likgiltig.`,
+        `${shownDay} är specifikt, men på ett sätt som gör dagen lättare att tycka om.`,
+      ];
+    case 'chaotic':
+      return [
+        `${shownDay} landade på datumet och gjorde genast schemat märkbart mindre trovärdigt.`,
+        `Det är ${shownDay.toLowerCase()} idag, vilket förklarar varför kalendern plötsligt känns överkoffeinad.`,
+        `${shownDay} ger dagen ett väldigt specifikt svaj och ingen självklar vuxennärvaro.`,
+      ];
+    default:
+      return [
+        `${shownDay} är så specifik att datumet slutat bete sig som neutral infrastruktur.`,
+        `Det är ${shownDay.toLowerCase()} idag, vilket betyder att kalendern återigen klätt sig märkligt.`,
+        `${shownDay} ger dagen en märkligt avsiktlig silhuett.`,
+      ];
+  }
+}
+
+export function getThemeDaySpecificBlurbs(
+  themeDay: string,
+  locale: Locale = 'sv',
+  mood: Mood = 'dry',
+  displayThemeDay = themeDay
+): string[] | null {
+  const moodSpecific = getMoodSpecificBlurbs(themeDay, locale, mood, displayThemeDay);
+  if (moodSpecific) {
+    return moodSpecific;
+  }
+
   const normalized = normalizeLabel(themeDay);
   const overrides: Array<[string, string[]]> = [
     [

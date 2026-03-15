@@ -1,10 +1,12 @@
 import { ContentPack } from './contentPack';
 import { Locale } from './locale';
+import { Mood } from './mood';
 
 export type AiBlurbRequest = {
   locale: Locale;
   contentPack: ContentPack;
   kind: 'celebration' | 'themeDay' | 'ordinary';
+  mood: Mood;
   date: string;
   dateLabel: string;
   dayType: string;

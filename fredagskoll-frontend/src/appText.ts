@@ -76,6 +76,7 @@ export const appText: Record<
     title: string;
     lede: string;
     pickDate: string;
+    moodLabel: string;
     nameday: string;
     namedayLoading: string;
     namedayError: string;
@@ -136,6 +137,7 @@ export const appText: Record<
     lede:
       'Välj ett datum och låt appen avgöra om dagen förtjänar flaggor, bakverk, högtidston eller bara ett torrt konstaterande av kalenderns begränsningar.',
     pickDate: 'Välj datum',
+    moodLabel: 'Ton',
     nameday: 'Dagens namnsdag',
     namedayLoading: 'Laddar namnsdag från öppet API.',
     namedayError:
@@ -203,6 +205,7 @@ export const appText: Record<
     lede:
       'Pick a date and let the app decide whether it calls for flags, pastries, ceremonial energy, or just a dry acknowledgement of the calendar’s limitations.',
     pickDate: 'Choose date',
+    moodLabel: 'Tone',
     nameday: "Today's name day",
     namedayLoading: 'Loading name day from the open API.',
     namedayError:
@@ -270,6 +273,7 @@ export const appText: Record<
     lede:
       'Escolha uma data e deixe o app decidir se o dia merece bandeiras, doces, solenidade ou apenas um comentário seco sobre as limitações do calendário.',
     pickDate: 'Escolher data',
+    moodLabel: 'Tom',
     nameday: 'Nome do dia',
     namedayLoading: 'Carregando nome do dia pela API aberta.',
     namedayError:

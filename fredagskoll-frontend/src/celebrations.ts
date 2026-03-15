@@ -10,6 +10,7 @@ import celebrationsEn from './data/celebrations.en.json';
 import celebrationsPtBr from './data/celebrations.pt-BR.json';
 import { DayType } from './dayLogic';
 import { Locale } from './locale';
+import { Mood } from './mood';
 export type CelebrationTheme =
   | 'ordinary'
   | 'jam'
@@ -116,6 +117,417 @@ const ordinaryWeekendBlurbsSv = [
   'Ingen officiell anledning att samlas, skåla eller baka. Bara ett fritt datum med skrämmande mycket eget ansvar.',
   'Helgens stora innehåll idag är att den pågår. Man får tydligen vara tacksam för det.',
 ];
+
+function getMoodOrdinaryBlurb(locale: Locale, mood: Mood): string | null {
+  if (mood === 'dry') {
+    return null;
+  }
+
+  switch (mood) {
+    case 'cheerful':
+      return locale === 'en'
+        ? 'No major Swedish celebration is carrying the date, but the day is still workable with decent snacks and a little goodwill.'
+        : locale === 'pt-BR'
+          ? 'Nenhuma grande celebracao sueca esta carregando a data, mas o dia ainda funciona com um lanche decente e alguma boa vontade.'
+          : 'Ingen större svensk firardag bär datumet, men dagen är fortfarande fullt användbar med något gott och lite god vilja.';
+    case 'formal':
+      return locale === 'en'
+        ? 'No Swedish celebration of sufficient weight has been identified for this date.'
+        : locale === 'pt-BR'
+          ? 'Nenhuma celebracao sueca de peso suficiente foi identificada para esta data.'
+          : 'Ingen svensk firardag av tillräcklig dignitet har identifierats för detta datum.';
+    case 'warm':
+      return locale === 'en'
+        ? 'No major Swedish celebration turned up here, but the date does not have to be treated harshly for that.'
+        : locale === 'pt-BR'
+          ? 'Nenhuma grande celebracao sueca apareceu aqui, mas a data nao precisa ser tratada com dureza por isso.'
+          : 'Ingen större svensk firardag dök upp här, men datumet behöver inte behandlas hårt för det.';
+    case 'chaotic':
+      return locale === 'en'
+        ? 'No Swedish celebration arrived to stabilize the situation. The date is basically freestyling now.'
+        : locale === 'pt-BR'
+          ? 'Nenhuma celebracao sueca apareceu para estabilizar a situacao. A data esta basicamente improvisando agora.'
+          : 'Ingen svensk firardag kom för att stabilisera läget. Datumet frijazzar i princip nu.';
+    case 'absurd':
+      return locale === 'en'
+        ? 'No Swedish celebration claimed the date, so it is left wandering the halls in ordinary office clothes.'
+        : locale === 'pt-BR'
+          ? 'Nenhuma celebracao sueca reivindicou a data, entao ela ficou vagando pelos corredores em roupa de escritorio.'
+          : 'Ingen svensk firardag gjorde anspråk på datumet, så det går nu runt i korridoren klätt som en vanlig arbetsdag.';
+    default:
+      return null;
+  }
+}
+
+function getMoodOrdinaryDayBlurbs(
+  locale: Locale,
+  isWeekend: boolean,
+  mood: Mood
+): string[] | null {
+  if (mood === 'dry') {
+    return null;
+  }
+
+  if (locale === 'en') {
+    if (mood === 'cheerful') {
+      return isWeekend
+        ? [
+            'It is a plain weekend, which is still a respectable excuse to move slowly and drink something warm.',
+            'No holiday is carrying the weekend, but the schedule has at least relaxed its jaw a little.',
+            'The date offers no official party, only free time with decent recovery potential.',
+            'Nothing ceremonial is happening, which leaves more room for snacks, air, and low-stakes plans.',
+          ]
+        : [
+            'It is a regular workday, but the day is still salvageable with coffee and moderate competence.',
+            'No celebration has rescued the date, though it remains structurally capable of becoming decent.',
+            'This is an ordinary weekday, which mostly means the bar for success can stay pleasantly low.',
+            'The calendar provided no fanfare, but the day still has room for one useful decision and a proper lunch.',
+          ];
+    }
+    if (mood === 'formal') {
+      return isWeekend
+        ? [
+            'This weekend date carries no official ceremonial burden.',
+            'No holiday directive has been attached to the day. Private management is therefore advised.',
+            'The weekend remains in standard operating condition, absent any larger tradition.',
+            'No formal observance intervenes here; the date is proceeding under ordinary leisure rules.',
+          ]
+        : [
+            'This is a standard workday with no sanctioned festive exception.',
+            'No official observance has been assigned to the date.',
+            'The weekday remains operationally ordinary and will require self-supplied motivation.',
+            'No public tradition has been registered here; routine procedures remain in force.',
+          ];
+    }
+    if (mood === 'warm') {
+      return isWeekend
+        ? [
+            'It is only a normal weekend, but that still leaves room for gentler pacing and a little grace.',
+            'No holiday is lifting the date, though the day can still be kind if people allow it.',
+            'The weekend arrived without fireworks, which is not the same thing as arriving empty.',
+            'Nothing official is happening, and that may be reason enough to breathe a bit.',
+          ]
+        : [
+            'It is a regular workday, but not every decent day needs ceremonial help.',
+            'No celebration came to rescue the date, though a calm lunch and a humane tone would still improve it.',
+            'The day is ordinary, which is not ideal, but not a moral failure either.',
+            'No holiday is carrying this weekday. People will have to be slightly nicer on their own.',
+          ];
+    }
+    if (mood === 'chaotic') {
+      return isWeekend
+        ? [
+            'It is technically the weekend, though the date is carrying a faint smell of abandoned plans.',
+            'No holiday took command here, so the day is mostly free-range leisure with loose wiring.',
+            'The weekend has no official plot today, only momentum and whatever was left in the fridge.',
+            'Nothing ceremonial showed up, so the date is just roaming around in socks with poor supervision.',
+          ]
+        : [
+            'This is a regular workday and the calendar has provided no protective equipment.',
+            'No celebration has saved the date, so the day is out here making eye contact with meetings unaided.',
+            'The weekday is fully ordinary and therefore exposed to all the usual operational nonsense.',
+            'No tradition is carrying this date. It is just you, the clock, and a slightly unstable chain of decisions.',
+          ];
+    }
+    return isWeekend
+      ? [
+          'It is an ordinary weekend, drifting around with no official costume and suspiciously little doctrine.',
+          'No holiday claimed the date. It has therefore become a free-floating pocket of leisure in civilian clothes.',
+          'The weekend is unsupervised by tradition today, which gives it a mildly experimental quality.',
+          'Nothing formal is happening. The date is basically lying on a sofa inside the calendar.',
+        ]
+      : [
+          'This is a standard weekday with no festival attached, a beige rectangle wearing a wristwatch.',
+          'No celebration arrived, so the day has been left to walk upright under its own administrative power.',
+          'The calendar submitted an unadorned weekday and expected everyone to pretend that was normal.',
+          'No public excuse is available. The date is simply standing there in office shoes.',
+        ];
+  }
+
+  if (locale === 'pt-BR') {
+    if (mood === 'cheerful') {
+      return isWeekend
+        ? [
+            'E um fim de semana comum, o que ainda e uma desculpa bastante respeitavel para andar devagar e beber algo quente.',
+            'Nenhum feriado esta carregando o dia, mas a agenda ao menos afrouxou a gravata.',
+            'A data nao oferece festa oficial, so tempo livre com algum potencial de recuperacao.',
+            'Nada cerimonial esta acontecendo, o que deixa mais espaco para lanches, ar fresco e planos modestos.',
+          ]
+        : [
+            'E um dia util comum, mas ainda perfeitamente salvavel com cafe e alguma competencia.',
+            'Nenhuma celebracao salvou a data, mas ela continua estruturalmente capaz de ficar decente.',
+            'E um dia de semana comum, o que tambem significa que a barra do sucesso pode continuar agradavelmente baixa.',
+            'O calendario nao ofereceu fanfarra nenhuma, mas o dia ainda comporta uma boa decisao e um almoco digno.',
+          ];
+    }
+    if (mood === 'formal') {
+      return isWeekend
+        ? [
+            'Esta data de fim de semana nao possui carga cerimonial oficial.',
+            'Nenhuma diretriz festiva foi anexada ao dia. Recomenda-se gestao privada.',
+            'O fim de semana permanece em condicao operacional padrao, sem tradicao maior associada.',
+            'Nenhuma observancia formal intervem aqui; a data segue em regime comum de lazer.',
+          ]
+        : [
+            'Trata-se de um dia util padrao sem excecao festiva sancionada.',
+            'Nenhuma observancia oficial foi atribuida a data.',
+            'O dia util permanece operacionalmente comum e exigira motivacao fornecida pelo proprio usuario.',
+            'Nenhuma tradicao publica foi registrada aqui; os procedimentos rotineiros seguem em vigor.',
+          ];
+    }
+    if (mood === 'warm') {
+      return isWeekend
+        ? [
+            'E apenas um fim de semana comum, mas isso ainda deixa espaco para um ritmo mais gentil.',
+            'Nenhum feriado elevou a data, embora o dia ainda possa ser acolhedor se as pessoas permitirem.',
+            'O fim de semana chegou sem fogos de artificio, o que nao e a mesma coisa que chegar vazio.',
+            'Nada oficial esta acontecendo, e isso talvez ja seja motivo suficiente para respirar com calma.',
+          ]
+        : [
+            'E um dia util comum, mas nem todo bom dia precisa de ajuda cerimonial.',
+            'Nenhuma celebracao veio salvar a data, embora um almoco tranquilo e um tom humano ainda ajudem muito.',
+            'O dia e ordinario, o que nao e ideal, mas tambem nao e uma tragedia moral.',
+            'Nenhum feriado esta carregando esta quarta-feira. As pessoas vao ter de ser um pouco mais gentis por conta propria.',
+          ];
+    }
+    if (mood === 'chaotic') {
+      return isWeekend
+        ? [
+            'Tecnicamente e fim de semana, embora a data carregue um cheiro leve de planos abandonados.',
+            'Nenhum feriado assumiu o comando aqui, entao o dia virou lazer de criacao livre com fiacao frouxa.',
+            'O fim de semana nao tem enredo oficial hoje, so impulso e o que restou na geladeira.',
+            'Nada cerimonial apareceu, entao a data esta andando por ai de meia e sem supervisao.',
+          ]
+        : [
+            'Isto e um dia util comum e o calendario nao forneceu equipamento de protecao.',
+            'Nenhuma celebracao salvou a data, entao o dia esta encarando reunioes sem assistencia.',
+            'O dia util e completamente comum e, portanto, exposto a todo o absurdo operacional habitual.',
+            'Nenhuma tradicao esta carregando esta data. E so voce, o relogio e uma cadeia meio instavel de decisoes.',
+          ];
+    }
+    return isWeekend
+      ? [
+          'E um fim de semana comum, vagando por ai sem fantasia oficial e com surpreendentemente pouca doutrina.',
+          'Nenhum feriado reivindicou a data. Ela virou um bolso de lazer flutuando em roupa civil.',
+          'O fim de semana esta hoje sem supervisao da tradicao, o que lhe confere uma qualidade levemente experimental.',
+          'Nada formal esta acontecendo. A data basicamente se deitou no sofa dentro do calendario.',
+        ]
+      : [
+          'Isto e um dia util padrao sem festa associada, um retangulo bege de relogio no pulso.',
+          'Nenhuma celebracao chegou, entao o dia foi deixado para caminhar ereto por conta propria.',
+          'O calendario enviou um dia util sem adornos e esperou que todos fingissem que isso era normal.',
+          'Nenhuma desculpa publica esta disponivel. A data esta apenas ali, em sapatos sociais.',
+        ];
+  }
+
+  if (mood === 'cheerful') {
+    return isWeekend
+      ? [
+          'Det är en vanlig helg, vilket fortfarande är en fullt respektabel ursäkt att ta det lugnt och dricka något varmt.',
+          'Ingen högtid bär datumet, men schemat har åtminstone släppt käkarna lite.',
+          'Datumet erbjuder ingen officiell fest, bara ledig tid med hygglig återhämtningspotential.',
+          'Inget ceremoniellt pågår, vilket lämnar mer utrymme för fika, luft och rimliga småplaner.',
+        ]
+      : [
+          'Det är en vanlig arbetsdag, men dagen är fortfarande räddningsbar med kaffe och måttlig kompetens.',
+          'Ingen högtid kom och räddade datumet, men det är fortfarande strukturellt kapabelt att bli helt okej.',
+          'Det här är en vanlig vardag, vilket också betyder att ribban för framgång får vara behagligt låg.',
+          'Kalendern bjöd inte på fanfarer, men dagen rymmer fortfarande ett klokt beslut och en vettig lunch.',
+        ];
+  }
+
+  if (mood === 'formal') {
+    return isWeekend
+      ? [
+          'Denna helgdag saknar officiell ceremoniell belastning.',
+          'Ingen högtidsanvisning har knutits till datumet. Privat hantering rekommenderas.',
+          'Helgen befinner sig i standardläge, utan större traditionellt ingrepp.',
+          'Ingen formell observans intervenerar här; datumet fortgår under ordinarie fritidsregim.',
+        ]
+      : [
+          'Detta är en standardarbetsdag utan sanktionerat festundantag.',
+          'Ingen officiell observans har tilldelats datumet.',
+          'Vardagen förblir operativt ordinär och kräver självförsörjd motivation.',
+          'Ingen offentlig tradition har registrerats här; rutinmässiga förfaranden gäller fortsatt.',
+        ];
+  }
+
+  if (mood === 'warm') {
+    return isWeekend
+      ? [
+          'Det är bara en vanlig helg, men det lämnar ändå plats för ett lite vänligare tempo.',
+          'Ingen högtid lyfter datumet, men dagen kan fortfarande bli mild om folk tillåter det.',
+          'Helgen kom utan fanfarer, vilket inte är samma sak som att den kom tomhänt.',
+          'Inget officiellt pågår, och det kan faktiskt räcka långt för en stunds återhämtning.',
+        ]
+      : [
+          'Det är en vanlig arbetsdag, men inte varje hygglig dag behöver ceremoniell hjälp.',
+          'Ingen högtid kom och bar datumet, men lugn lunch och mänskligt tonfall hjälper fortfarande.',
+          'Dagen är ordinär, vilket inte är idealiskt men heller inte ett moraliskt misslyckande.',
+          'Ingen tradition bär den här vardagen. Folk får vara lite trevligare på eget initiativ.',
+        ];
+  }
+
+  if (mood === 'chaotic') {
+    return isWeekend
+      ? [
+          'Det är tekniskt sett helg, även om datumet luktar svagt av övergivna planer.',
+          'Ingen högtid tog kommandot här, så dagen blev frilansfritid med lös kabeldragning.',
+          'Helgen har ingen officiell intrig idag, bara momentum och det som låg kvar i kylen.',
+          'Inget ceremoniellt dök upp, så datumet går mest runt i strumplästen utan vuxenstöd.',
+        ]
+      : [
+          'Det här är en vanlig arbetsdag och kalendern har inte tillhandahållit skyddsutrustning.',
+          'Ingen högtid räddade datumet, så dagen får ta ögonkontakt med möten helt oskyddad.',
+          'Vardagen är fullt ordinär och därmed utsatt för all den vanliga operativa dårskapen.',
+          'Ingen tradition bär det här datumet. Det är bara du, klockan och en lätt instabil kedja av beslut.',
+        ];
+  }
+
+  return isWeekend
+    ? [
+        'Det är en vanlig helg som glider runt utan officiell kostym och med misstänkt lite doktrin.',
+        'Ingen högtid gjorde anspråk på datumet. Det blev alltså ett fritt flytande fritidsfack i civila kläder.',
+        'Helgen saknar idag tillsyn från traditionen, vilket ger den en lätt experimentell kvalitet.',
+        'Inget formellt pågår. Datumet ligger i princip på en soffa inne i kalendern.',
+      ]
+    : [
+        'Det här är en standardvardag utan fest kopplad till sig, en beige rektangel med armbandsur.',
+        'Ingen högtid anlände, så dagen lämnades åt att gå upprätt under egen administrativ kraft.',
+        'Kalendern skickade fram en osmyckad vardag och väntade sig att alla skulle låtsas att det var normalt.',
+        'Ingen offentlig ursäkt står till buds. Datumet står bara där i kontorsskor.',
+      ];
+}
+
+function getMoodCelebrationBlurbs(
+  content: CelebrationContent,
+  locale: Locale,
+  mood: Mood
+): string[] | null {
+  if (mood === 'dry') {
+    return null;
+  }
+
+  const subject = content.alt ?? content.title;
+
+  if (locale === 'en') {
+    switch (mood) {
+      case 'cheerful':
+        return [
+          `${subject} is in charge today, which is honestly a decent reason to lighten up a little.`,
+          `The date has handed itself over to ${content.kicker.toLowerCase()}, and the atmosphere is better for it.`,
+          `If ${subject} gets to run the day, the sensible response is snacks, generosity, and lower shoulders.`,
+          `${subject} gives the calendar enough energy to make even routine look slightly more forgivable.`,
+        ];
+      case 'formal':
+        return [
+          `${subject} has been granted temporary ceremonial priority.`,
+          `Today's operational mood is best summarized as ${content.kicker.toLowerCase()}.`,
+          `${subject} carries sufficient symbolic weight to justify a modest change in posture.`,
+          `The date is now proceeding under the influence of ${subject}.`,
+        ];
+      case 'warm':
+        return [
+          `${subject} is steering the date today, and the day is probably better for being treated a little more gently.`,
+          `There are harsher ways to spend a date than under the influence of ${content.kicker.toLowerCase()}.`,
+          `${subject} makes the day feel less mechanical and a bit more human.`,
+          `If the calendar insists on ${subject}, we may as well meet it with some grace.`,
+        ];
+      case 'chaotic':
+        return [
+          `${subject} has clearly seized the controls, and the schedule is not recovering elegantly.`,
+          `Today's official energy is ${content.kicker.toLowerCase()}, which explains quite a lot.`,
+          `${subject} is now running the room with more confidence than the adults present.`,
+          `The date has tilted hard toward ${subject}, and normal procedure can only wave from the shore.`,
+        ];
+      default:
+        return [
+          `${subject} has slipped into the date and started rearranging the furniture.`,
+          `Today's atmosphere can only be described as ${content.kicker.toLowerCase()} wearing a borrowed badge.`,
+          `${subject} gives the calendar a strangely specific face and expects everyone to accept it.`,
+          `The day is now under the decorative authority of ${subject}. Resistance would be theatrical.`,
+        ];
+    }
+  }
+
+  if (locale === 'pt-BR') {
+    switch (mood) {
+      case 'cheerful':
+        return [
+          `${subject} esta no comando hoje, o que honestamente ja e um bom motivo para relaxar um pouco.`,
+          `A data se entregou a ${content.kicker.toLowerCase()}, e o clima ficou melhor por isso.`,
+          `Se ${subject} vai conduzir o dia, a resposta sensata e lanches, generosidade e ombros menos tensos.`,
+          `${subject} da ao calendario energia suficiente para tornar a rotina um pouco mais perdoavel.`,
+        ];
+      case 'formal':
+        return [
+          `${subject} recebeu prioridade cerimonial temporaria.`,
+          `O estado operacional de hoje pode ser resumido como ${content.kicker.toLowerCase()}.`,
+          `${subject} carrega peso simbolico suficiente para justificar uma pequena mudanca de postura.`,
+          `A data prossegue agora sob influencia de ${subject}.`,
+        ];
+      case 'warm':
+        return [
+          `${subject} esta conduzindo a data hoje, e o dia provavelmente melhora se for tratado com um pouco mais de gentileza.`,
+          `Existem maneiras bem mais duras de passar uma data do que sob a influencia de ${content.kicker.toLowerCase()}.`,
+          `${subject} faz o dia parecer menos mecanico e um pouco mais humano.`,
+          `Se o calendario insiste em ${subject}, o minimo e responder com alguma graca.`,
+        ];
+      case 'chaotic':
+        return [
+          `${subject} claramente tomou os controles, e a agenda nao vai se recuperar com elegancia.`,
+          `A energia oficial de hoje e ${content.kicker.toLowerCase()}, o que explica muita coisa.`,
+          `${subject} esta comandando o ambiente com mais confianca do que os adultos presentes.`,
+          `A data tombou forte na direcao de ${subject}, e o procedimento normal so consegue acenar de longe.`,
+        ];
+      default:
+        return [
+          `${subject} entrou na data e comecou a rearranjar os moveis.`,
+          `A atmosfera de hoje so pode ser descrita como ${content.kicker.toLowerCase()} usando um cracha emprestado.`,
+          `${subject} deu ao calendario um rosto estranhamente especifico e espera que todo mundo aceite.`,
+          `O dia agora opera sob a autoridade decorativa de ${subject}. Resistir seria puro teatro.`,
+        ];
+    }
+  }
+
+  switch (mood) {
+    case 'cheerful':
+      return [
+        `${subject} håller i taktpinnen idag, vilket faktiskt är en rätt hygglig anledning att lätta lite på axlarna.`,
+        `Datumet har överlämnat sig till ${content.kicker.toLowerCase()}, och stämningen mår märkbart bättre av det.`,
+        `Om ${subject} får styra dagen är det klokast att svara med fika, generositet och lägre axelparti.`,
+        `${subject} ger kalendern precis nog energi för att till och med rutinen ska kännas lite mer förlåtlig.`,
+      ];
+    case 'formal':
+      return [
+        `${subject} har tilldelats tillfällig ceremoniell prioritet.`,
+        `Dagens operativa läge kan sammanfattas som ${content.kicker.toLowerCase()}.`,
+        `${subject} bär tillräcklig symbolisk tyngd för att motivera viss hållningsförändring.`,
+        `Datumet fortgår nu under påverkan av ${subject}.`,
+      ];
+    case 'warm':
+      return [
+        `${subject} styr datumet idag, och dagen blir sannolikt bättre om den behandlas lite vänligare än vanligt.`,
+        `Det finns betydligt hårdare sätt att tillbringa ett datum än under inflytande av ${content.kicker.toLowerCase()}.`,
+        `${subject} gör dagen mindre mekanisk och något mer mänsklig.`,
+        `Om kalendern nu insisterar på ${subject}, kan vi åtminstone möta det med viss grace.`,
+      ];
+    case 'chaotic':
+      return [
+        `${subject} har tydligt tagit kontrollerna och schemat återhämtar sig inte särskilt värdigt.`,
+        `Dagens officiella energi är ${content.kicker.toLowerCase()}, vilket förklarar en hel del.`,
+        `${subject} driver nu rummet med större självförtroende än de vuxna som råkar vara där.`,
+        `Datumet har lutat hårt åt ${subject}, och normalförfarandet får mest stå vid strandlinjen och vinka.`,
+      ];
+    default:
+      return [
+        `${subject} har glidit in i datumet och börjat möblera om.`,
+        `Dagens atmosfär kan bara beskrivas som ${content.kicker.toLowerCase()} med lånat tjänstekort.`,
+        `${subject} ger kalendern ett märkligt specifikt ansikte och förväntar sig att alla accepterar läget.`,
+        `Dagen står nu under dekorativ auktoritet från ${subject}. Motstånd vore mest teater.`,
+      ];
+  }
+}
 
 function getCelebrationThemeAliasesSv(dayType: Exclude<DayType, 'ordinary'>): string[] {
   switch (dayType) {
@@ -593,7 +1005,12 @@ const { shared: sharedAliasesEn, teamOnly: teamAliasesEn } =
 const { shared: sharedAliasesPtBr, teamOnly: teamAliasesPtBr } =
   splitCelebrationsByPack(portugueseCelebrationContent.celebrationThemeAliases);
 
-export function getOrdinaryBlurb(locale: Locale): string {
+export function getOrdinaryBlurb(locale: Locale, mood: Mood = 'dry'): string {
+  const moodSpecific = getMoodOrdinaryBlurb(locale, mood);
+  if (moodSpecific) {
+    return moodSpecific;
+  }
+
   if (locale === 'en') {
     return englishCelebrationContent.ordinaryBlurb;
   }
@@ -605,7 +1022,16 @@ export function getOrdinaryBlurb(locale: Locale): string {
   return ordinaryBlurbSv;
 }
 
-export function getOrdinaryDayBlurbs(locale: Locale, isWeekend: boolean): string[] {
+export function getOrdinaryDayBlurbs(
+  locale: Locale,
+  isWeekend: boolean,
+  mood: Mood = 'dry'
+): string[] {
+  const moodSpecific = getMoodOrdinaryDayBlurbs(locale, isWeekend, mood);
+  if (moodSpecific) {
+    return moodSpecific;
+  }
+
   if (locale === 'en') {
     return isWeekend
       ? englishCelebrationContent.ordinaryWeekendBlurbs
@@ -649,8 +1075,10 @@ export function getCelebrationThemeAliases(
 
 export function getCelebrations(
   locale: Locale,
-  contentPack: ContentPack = getActiveContentPack()
+  contentPack: ContentPack = getActiveContentPack(),
+  mood: Mood = 'dry'
 ): Record<Exclude<DayType, 'ordinary'>, CelebrationContent> {
+  const base = (() => {
   if (locale === 'en') {
     return (contentPack === 'team'
       ? { ...sharedCelebrationsEn, ...teamCelebrationsEn }
@@ -666,4 +1094,19 @@ export function getCelebrations(
   return (contentPack === 'team'
     ? { ...sharedCelebrationsSv, ...teamCelebrationsSv }
     : sharedCelebrationsSv) as Record<Exclude<DayType, 'ordinary'>, CelebrationContent>;
+  })();
+
+  if (mood === 'dry') {
+    return base;
+  }
+
+  return Object.fromEntries(
+    Object.entries(base).map(([dayType, content]) => [
+      dayType,
+      {
+        ...content,
+        blurbs: getMoodCelebrationBlurbs(content, locale, mood) ?? content.blurbs,
+      },
+    ])
+  ) as Record<Exclude<DayType, 'ordinary'>, CelebrationContent>;
 }

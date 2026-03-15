@@ -1,4 +1,5 @@
 import { Locale } from './locale';
+import { Mood } from './mood';
 import { includesAny, normalizeLabel } from './themeDayTextUtils';
 
 function lower(value: string): string {
@@ -8,10 +9,131 @@ function lower(value: string): string {
 export function getThemeDayCategoryBlurbs(
   themeDay: string,
   locale: Locale = 'sv',
-  displayThemeDay = themeDay
+  displayThemeDay = themeDay,
+  mood: Mood = 'dry'
 ): string[] {
   const normalized = normalizeLabel(themeDay);
   const shownDay = displayThemeDay;
+
+  if (mood !== 'dry') {
+    if (locale === 'en') {
+      switch (mood) {
+        case 'cheerful':
+          return [
+            `${shownDay} gives the date a welcome little pulse of personality.`,
+            `It's ${lower(shownDay)} today, which is still more fun than a blank weekday.`,
+            `${shownDay} makes the calendar feel a little more alive and a little less bureaucratic.`,
+            `If the day wants to be about ${lower(shownDay)}, that seems harmless enough to enjoy.`,
+          ];
+        case 'formal':
+          return [
+            `${shownDay} has been designated as the day's operative theme.`,
+            `It is ${lower(shownDay)} today, and the calendar is treating that as sufficient structure.`,
+            `${shownDay} provides a narrow but valid framework for the date.`,
+            `The schedule is now proceeding under the thematic influence of ${lower(shownDay)}.`,
+          ];
+        case 'warm':
+          return [
+            `${shownDay} gives the date a little more warmth than it would otherwise have had.`,
+            `It's ${lower(shownDay)} today, which at least makes the calendar feel less cold.`,
+            `${shownDay} helps the day feel less empty and a bit easier to like.`,
+            `If the date gets to lean on ${lower(shownDay)}, that is not the worst arrangement.`,
+          ];
+        case 'chaotic':
+          return [
+            `${shownDay} has attached itself to the date and made the whole thing wobble a little.`,
+            `It's ${lower(shownDay)} today, which explains the sudden loss of conventional discipline.`,
+            `${shownDay} gives the schedule a very specific instability.`,
+            `The calendar has handed the controls to ${lower(shownDay)} and then quietly backed away.`,
+          ];
+        default:
+          return [
+            `${shownDay} is so specific that the date now feels oddly curated.`,
+            `It's ${lower(shownDay)} today, which means the calendar has once again acquired a costume.`,
+            `${shownDay} lends the day a strangely intentional shape.`,
+            `The date is currently being supervised by ${lower(shownDay)} with mixed but memorable results.`,
+          ];
+      }
+    }
+
+    if (locale === 'pt-BR') {
+      switch (mood) {
+        case 'cheerful':
+          return [
+            `${shownDay} da a data uma pequena e bem-vinda pulsacao de personalidade.`,
+            `Hoje e ${lower(shownDay)}, o que ainda e mais divertido do que um dia vazio.`,
+            `${shownDay} faz o calendario parecer um pouco mais vivo e um pouco menos burocratico.`,
+            `Se o dia quer ser sobre ${lower(shownDay)}, isso parece inofensivo o bastante para aproveitar.`,
+          ];
+        case 'formal':
+          return [
+            `${shownDay} foi designado como tema operativo do dia.`,
+            `Hoje e ${lower(shownDay)}, e o calendario trata isso como estrutura suficiente.`,
+            `${shownDay} fornece uma moldura estreita, mas valida, para a data.`,
+            `A agenda segue agora sob influencia tematica de ${lower(shownDay)}.`,
+          ];
+        case 'warm':
+          return [
+            `${shownDay} da a data um pouco mais de calor do que ela teria sozinha.`,
+            `Hoje e ${lower(shownDay)}, o que pelo menos faz o calendario parecer menos frio.`,
+            `${shownDay} ajuda o dia a parecer menos vazio e um pouco mais facil de gostar.`,
+            `Se a data pode se apoiar em ${lower(shownDay)}, isso esta longe de ser um mau arranjo.`,
+          ];
+        case 'chaotic':
+          return [
+            `${shownDay} se prendeu a data e fez o conjunto inteiro balancar um pouco.`,
+            `Hoje e ${lower(shownDay)}, o que explica a perda repentina de disciplina convencional.`,
+            `${shownDay} da a agenda uma instabilidade muito especifica.`,
+            `O calendario entregou os controles a ${lower(shownDay)} e depois se afastou em silencio.`,
+          ];
+        default:
+          return [
+            `${shownDay} e tao especifico que a data agora parece estranhamente curada.`,
+            `Hoje e ${lower(shownDay)}, o que significa que o calendario ganhou figurino mais uma vez.`,
+            `${shownDay} empresta ao dia uma forma estranhamente intencional.`,
+            `A data esta atualmente sendo supervisionada por ${lower(shownDay)} com resultados mistos, mas memoraveis.`,
+          ];
+      }
+    }
+
+    switch (mood) {
+      case 'cheerful':
+        return [
+          `${shownDay} ger datumet en välkommen liten puls av personlighet.`,
+          `Det är ${lower(shownDay)} idag, vilket fortfarande är roligare än ren blankvardag.`,
+          `${shownDay} gör kalendern lite mer levande och lite mindre byråkratisk.`,
+          `Om dagen vill handla om ${lower(shownDay)} så känns det ofarligt nog att uppskatta.`,
+        ];
+      case 'formal':
+        return [
+          `${shownDay} har utsetts till dagens operativa tema.`,
+          `Det är ${lower(shownDay)} idag, och kalendern behandlar det som tillräcklig struktur.`,
+          `${shownDay} tillför datumet en smal men giltig ram.`,
+          `Schemat fortgår nu under tematisk påverkan av ${lower(shownDay)}.`,
+        ];
+      case 'warm':
+        return [
+          `${shownDay} ger datumet lite mer värme än det annars hade haft.`,
+          `Det är ${lower(shownDay)} idag, vilket åtminstone gör kalendern mindre kall i tonen.`,
+          `${shownDay} hjälper dagen att kännas mindre tom och lite lättare att tycka om.`,
+          `Om datumet får luta sig mot ${lower(shownDay)} så är det långt ifrån den sämsta lösningen.`,
+        ];
+      case 'chaotic':
+        return [
+          `${shownDay} har hängt sig fast i datumet och gjort hela upplägget lite mer svajigt.`,
+          `Det är ${lower(shownDay)} idag, vilket förklarar den plötsliga bristen på konventionell disciplin.`,
+          `${shownDay} ger schemat en väldigt specifik instabilitet.`,
+          `Kalendern lämnade över kontrollerna till ${lower(shownDay)} och backade sedan långsamt ut ur rummet.`,
+        ];
+      default:
+        return [
+          `${shownDay} är så specifik att datumet nu känns märkligt kurerat.`,
+          `Det är ${lower(shownDay)} idag, vilket betyder att kalendern återigen tagit på sig kostym.`,
+          `${shownDay} lånar dagen en märkligt avsiktlig form.`,
+          `Datumet står just nu under tillsyn av ${lower(shownDay)} med blandat men minnesvärt resultat.`,
+        ];
+    }
+  }
 
   if (
     includesAny(normalized, [
