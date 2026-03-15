@@ -5,8 +5,6 @@ import mojoLogo from './mojo-logo.png';
 import publicLogo from './vkmf-logo-public.png';
 import {
   appText,
-  ordinaryThemeDayCardNotesByLocale,
-  ordinaryThemeDayTitleEndingsByLocale,
 } from './appText';
 import { buildInfo } from './buildInfo.generated';
 import { usesCompactPrimaryMedia, formatTitle, hasLongTitleWord } from './celebrationPresentation';
@@ -40,7 +38,16 @@ import {
 } from './locale';
 import { fetchNameDays } from './nameDays';
 import { getNationalDayPanel } from './nationalDays';
+import {
+  getAsIfThatWasNotEnough,
+  getOrdinaryNoHitBody,
+  getOrdinaryThemeDayCardNotes,
+  getOrdinaryThemeDayLead,
+  getOrdinaryThemeDayTitleEndings,
+  getOrdinaryTitle,
+} from './editorialText';
 import { getSeasonalNotes } from './seasonalNotes';
+import { getInitialMood, getMoodLabel, moodOptions, MOOD_STORAGE_KEY, Mood } from './mood';
 import { buildThemeDayBlurbs, filterThemeDays, joinWithAnd } from './themeDayBlurbs';
 import { getThemeDaysForDate } from './temadagar';
 import { getUpcomingNotables } from './upcomingNotables';
@@ -156,6 +163,7 @@ function App({
   const [showLanguageMenu, setShowLanguageMenu] = useState(false);
   const [showImageCredits, setShowImageCredits] = useState(false);
   const [isMobileLayout, setIsMobileLayout] = useState(getInitialMobileLayout);
+  const [mood, setMood] = useState<Mood>(getInitialMood);
   const [showUpcoming, setShowUpcoming] = useState(true);
   const [expandedMobileSections, setExpandedMobileSections] = useState<
     Record<MobileSectionKey, boolean>
@@ -170,18 +178,21 @@ function App({
   const [nameDays, setNameDays] = useState<string[]>([]);
   const [nameDayState, setNameDayState] = useState<NameDayState>('loading');
   const [aiBundle, setAiBundle] = useState<AiBlurbBundle | null>(null);
-  const [blurb, setBlurb] = useState(getOrdinaryBlurb(getInitialLocale()));
+  const [blurb, setBlurb] = useState(getOrdinaryBlurb(getInitialLocale(), getInitialMood()));
   const [themeDayTitleEnding, setThemeDayTitleEnding] = useState(
-    ordinaryThemeDayTitleEndingsByLocale[getInitialLocale()][0]
+    getOrdinaryThemeDayTitleEndings(getInitialLocale(), getInitialMood())[0]
   );
   const [themeDayCardNote, setThemeDayCardNote] = useState(
-    ordinaryThemeDayCardNotesByLocale[getInitialLocale()][0]
+    getOrdinaryThemeDayCardNotes(getInitialLocale(), getInitialMood())[0]
   );
 
   const text = appText[locale];
   const buildStamp = useMemo(() => formatBuildStamp(locale), [locale]);
-  const celebrations = useMemo(() => getCelebrations(locale, contentPack), [contentPack, locale]);
-  const ordinaryBlurb = useMemo(() => getOrdinaryBlurb(locale), [locale]);
+  const celebrations = useMemo(
+    () => getCelebrations(locale, contentPack, mood),
+    [contentPack, locale, mood]
+  );
+  const ordinaryBlurb = useMemo(() => getOrdinaryBlurb(locale, mood), [locale, mood]);
   const selectedDateObject = useMemo(
     () => new Date(`${selectedDate}T12:00:00`),
     [selectedDate]
@@ -233,8 +244,8 @@ function App({
   const theme = celebration?.theme ?? 'ordinary';
   const compactPrimaryMedia = usesCompactPrimaryMedia(dayStatus.dayType);
   const themeDayBlurbs = useMemo(
-    () => (!celebration && hasThemeDays ? buildThemeDayBlurbs(visibleThemeDays, locale) : null),
-    [celebration, hasThemeDays, locale, visibleThemeDays]
+    () => (!celebration && hasThemeDays ? buildThemeDayBlurbs(visibleThemeDays, locale, mood) : null),
+    [celebration, hasThemeDays, locale, mood, visibleThemeDays]
   );
   const currentBlurbs = useMemo(() => {
     if (aiBundle?.blurbs.length) {
@@ -253,8 +264,12 @@ function App({
       return null;
     }
 
-    return getOrdinaryDayBlurbs(locale, selectedDateObject.getDay() === 0 || selectedDateObject.getDay() === 6);
-  }, [aiBundle, celebration, dayStatus.dayType, locale, selectedDateObject, themeDayBlurbs]);
+    return getOrdinaryDayBlurbs(
+      locale,
+      selectedDateObject.getDay() === 0 || selectedDateObject.getDay() === 6,
+      mood
+    );
+  }, [aiBundle, celebration, dayStatus.dayType, locale, mood, selectedDateObject, themeDayBlurbs]);
   const kicker = celebration
     ? celebration.kicker
     : hasThemeDays
@@ -276,7 +291,7 @@ function App({
     ? celebration.title
     : hasThemeDays
       ? `${themeDayDisplayTitle}. ${themeDayTitleEnding}`
-      : text.ordinaryTitle;
+      : getOrdinaryTitle(locale, mood);
   const hasLongWordTitle = hasLongTitleWord(themeDayDisplayTitle ?? mainTitle);
 
   useEffect(() => {
@@ -302,13 +317,17 @@ function App({
   }, [locale]);
 
   useEffect(() => {
+    window.localStorage.setItem(MOOD_STORAGE_KEY, mood);
+  }, [mood]);
+
+  useEffect(() => {
     setShowLanguageMenu(false);
   }, [locale]);
 
   useEffect(() => {
     const controller = new AbortController();
-    const fallbackTitleEnding = ordinaryThemeDayTitleEndingsByLocale[locale][0];
-    const fallbackCardNote = ordinaryThemeDayCardNotesByLocale[locale][0];
+    const fallbackTitleEnding = getOrdinaryThemeDayTitleEndings(locale, mood)[0];
+    const fallbackCardNote = getOrdinaryThemeDayCardNotes(locale, mood)[0];
     const fallbackBlurbs = celebration
       ? celebration.blurbs
       : themeDayBlurbs
@@ -316,7 +335,8 @@ function App({
         : dayStatus.dayType === 'ordinary'
           ? getOrdinaryDayBlurbs(
               locale,
-              selectedDateObject.getDay() === 0 || selectedDateObject.getDay() === 6
+              selectedDateObject.getDay() === 0 || selectedDateObject.getDay() === 6,
+              mood
             )
           : [];
 
@@ -325,10 +345,11 @@ function App({
       locale,
       contentPack,
       kind,
+      mood,
       date: selectedDate,
       dateLabel: dayStatus.dateLabel,
       dayType: dayStatus.dayType,
-      title: celebration ? celebration.title : themeDayDisplayTitle ?? text.ordinaryTitle,
+      title: celebration ? celebration.title : themeDayDisplayTitle ?? getOrdinaryTitle(locale, mood),
       subtitle: celebration?.subtitle,
       kicker,
       fallbackTitleEnding,
@@ -374,11 +395,11 @@ function App({
     hasThemeDays,
     kicker,
     locale,
+    mood,
     nationalDayPanel,
     selectedDate,
     selectedDateObject,
     seasonalNotes,
-    text.ordinaryTitle,
     themeDayBlurbs,
     themeDayDisplayTitle,
     upcomingHolidayName,
@@ -398,27 +419,27 @@ function App({
     const endings =
       aiBundle?.titleEndings.length && themeDayDisplayTitle && !celebration
         ? aiBundle.titleEndings
-        : ordinaryThemeDayTitleEndingsByLocale[locale];
+        : getOrdinaryThemeDayTitleEndings(locale, mood);
     if (!themeDayDisplayTitle || celebration) {
       setThemeDayTitleEnding(endings[0]);
       return;
     }
 
     setThemeDayTitleEnding(getRandomItem(endings, endings[0]));
-  }, [aiBundle, selectedDate, locale, themeDayDisplayTitle, celebration]);
+  }, [aiBundle, selectedDate, locale, mood, themeDayDisplayTitle, celebration]);
 
   useEffect(() => {
     const notes =
       aiBundle?.cardNotes.length && hasThemeDays && !celebration
         ? aiBundle.cardNotes
-        : ordinaryThemeDayCardNotesByLocale[locale];
+        : getOrdinaryThemeDayCardNotes(locale, mood);
     if (!hasThemeDays || celebration) {
       setThemeDayCardNote(notes[0]);
       return;
     }
 
     setThemeDayCardNote(getRandomItem(notes, notes[0]));
-  }, [aiBundle, selectedDate, locale, hasThemeDays, celebration]);
+  }, [aiBundle, selectedDate, locale, mood, hasThemeDays, celebration]);
 
   useEffect(() => {
     let isCurrent = true;
@@ -543,6 +564,24 @@ function App({
               <span>{humanDate}</span>
               <span>{dayStatus.dateLabel}</span>
             </div>
+          </div>
+
+          <label htmlFor="mood-picker" className="picker-label">
+            {text.moodLabel}
+          </label>
+          <div className="picker-shell">
+            <select
+              id="mood-picker"
+              value={mood}
+              onChange={(event) => setMood(event.target.value as Mood)}
+              className="date-picker mood-picker"
+            >
+              {moodOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {getMoodLabel(option.value, locale)}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div className="nameday-card">
@@ -770,7 +809,9 @@ function App({
                   <div className="theme-day-panel">
                     <span className="ordinary-badge">{text.extraThemeDays}</span>
                     <p>
-                      {text.asIfThatWasNotEnough(
+                      {getAsIfThatWasNotEnough(
+                        locale,
+                        mood,
                         extraThemeDayLead ?? '',
                         joinWithAnd(extraDisplayThemeDays, locale)
                       )}
@@ -791,8 +832,13 @@ function App({
               </span>
               <p>
                 {hasThemeDays
-                  ? text.ordinaryThemeDayLead(joinWithAnd(displayThemeDays, locale), themeDayCardNote)
-                  : text.ordinaryNoHitBody}
+                  ? getOrdinaryThemeDayLead(
+                      locale,
+                      mood,
+                      joinWithAnd(displayThemeDays, locale),
+                      themeDayCardNote
+                    )
+                  : getOrdinaryNoHitBody(locale, mood)}
               </p>
               {hasThemeDays ? (
                 <ul className="theme-day-list">

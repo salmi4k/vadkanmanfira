@@ -1,4 +1,5 @@
 import { Locale } from './locale';
+import { Mood } from './mood';
 import { includesAny, joinWithAnd, normalizeLabel } from './themeDayTextUtils';
 
 function lowerFirst(value: string): string {
@@ -398,12 +399,118 @@ function buildFallbackBlurbs(
 export function buildThemeDayDynamicBlurbs(
   themeDays: string[],
   locale: Locale = 'sv',
-  displayThemeDays = themeDays
+  displayThemeDays = themeDays,
+  mood: Mood = 'dry'
 ): string[] {
   const leadDay = displayThemeDays[0];
   const allDays = joinWithAnd(displayThemeDays, locale);
   const themeDayCount = displayThemeDays.length;
   const normalized = normalizeLabel(themeDays[0]);
+
+  if (mood !== 'dry') {
+    if (locale === 'en') {
+      switch (mood) {
+        case 'cheerful':
+          return [
+            `${leadDay} gives the date a welcome little lift all by itself.`,
+            `${allDays} share the slot today, which at least means the calendar did not arrive empty-handed.`,
+            `The date is carrying ${leadDay.toLowerCase()} with more enthusiasm than usual, and that is probably good for morale.`,
+          ];
+        case 'formal':
+          return [
+            `${leadDay} has been entered as the lead thematic item for the date.`,
+            `${allDays} are concurrently attached to the day in supporting roles.`,
+            `The calendar is presently operating under a clearly non-neutral thematic brief.`,
+          ];
+        case 'warm':
+          return [
+            `${leadDay} makes the date feel less bare than it otherwise might have.`,
+            `${allDays} are sharing the day, which gives it at least some human texture.`,
+            `It is easier to like the calendar when ${leadDay.toLowerCase()} shows up and softens the edges.`,
+          ];
+        case 'chaotic':
+          return [
+            `${leadDay} has clearly taken the wheel, and the rest of the date is just trying not to spill.`,
+            `${allDays} are piled onto the same slot, which is not exactly helping the schedule breathe evenly.`,
+            `The day now has the energy of a committee that refused to pick one strange thing and go home.`,
+          ];
+        default:
+          return [
+            `${leadDay} sits on the date like a very specific hat.`,
+            `${allDays} are all crowding onto the same calendar square with notable confidence.`,
+            `The day now looks less like a date and more like a themed waiting room.`,
+          ];
+      }
+    }
+
+    if (locale === 'pt-BR') {
+      switch (mood) {
+        case 'cheerful':
+          return [
+            `${leadDay} ja da a data uma elevacao bem-vinda por conta propria.`,
+            `${allDays} dividem o espaco hoje, o que ao menos significa que o calendario nao chegou de maos vazias.`,
+            `A data esta carregando ${leadDay.toLowerCase()} com mais entusiasmo do que o normal, e isso provavelmente ajuda o moral.`,
+          ];
+        case 'formal':
+          return [
+            `${leadDay} foi registrado como item tematico principal da data.`,
+            `${allDays} estao associados ao dia em papeis de apoio.`,
+            `O calendario opera neste momento sob uma diretriz tematica claramente nao neutra.`,
+          ];
+        case 'warm':
+          return [
+            `${leadDay} faz a data parecer menos vazia do que pareceria sozinha.`,
+            `${allDays} dividem o dia, o que lhe da alguma textura humana.`,
+            `Fica mais facil gostar do calendario quando ${leadDay.toLowerCase()} aparece e amacia as quinas.`,
+          ];
+        case 'chaotic':
+          return [
+            `${leadDay} claramente tomou o volante, e o resto da data esta so tentando nao derramar nada.`,
+            `${allDays} foram empilhados no mesmo espaco, o que nao ajuda a agenda a respirar com calma.`,
+            `O dia agora tem a energia de um comite que se recusou a escolher uma coisa esquisita so e ir para casa.`,
+          ];
+        default:
+          return [
+            `${leadDay} pousou na data como um chapeu muito especifico.`,
+            `${allDays} estao todos amontoados no mesmo quadrado do calendario com notavel confianca.`,
+            `O dia agora parece menos uma data e mais uma sala de espera tematica.`,
+          ];
+      }
+    }
+
+    switch (mood) {
+      case 'cheerful':
+        return [
+          `${leadDay} ger datumet ett välkommet litet lyft alldeles på egen hand.`,
+          `${allDays} samsas här idag, vilket åtminstone betyder att kalendern inte dök upp tomhänt.`,
+          `Datumet bär ${leadDay.toLowerCase()} med mer entusiasm än vanligt, och det är sannolikt bra för moralen.`,
+        ];
+      case 'formal':
+        return [
+          `${leadDay} har registrerats som datumets ledande tematiska inslag.`,
+          `${allDays} är samtidigt knutna till dagen i understödjande roller.`,
+          `Kalendern arbetar för närvarande under ett tydligt icke-neutralt tematiskt uppdrag.`,
+        ];
+      case 'warm':
+        return [
+          `${leadDay} gör datumet mindre kalt än det annars hade varit.`,
+          `${allDays} delar dagen, vilket ger den åtminstone lite mänsklig struktur.`,
+          `Det blir lättare att tycka om kalendern när ${leadDay.toLowerCase()} dyker upp och rundar av kanterna.`,
+        ];
+      case 'chaotic':
+        return [
+          `${leadDay} har tydligt tagit ratten och resten av datumet försöker mest att inte spilla.`,
+          `${allDays} har staplats på samma ruta, vilket inte direkt hjälper schemat att andas jämnt.`,
+          `Dagen har nu energin hos en kommitté som vägrade välja en märklig sak och gå hem.`,
+        ];
+      default:
+        return [
+          `${leadDay} sitter på datumet som en väldigt specifik hatt.`,
+          `${allDays} trängs alla i samma kalenderfyrkant med anmärkningsvärd självklarhet.`,
+          `Dagen ser nu mindre ut som ett datum och mer som ett tematiserat väntrum.`,
+        ];
+    }
+  }
 
   if (
     includesAny(normalized, [

@@ -9,10 +9,27 @@ function getLocaleLabel(locale) {
   }
 }
 
+function getMoodGuidance(mood) {
+  switch (mood) {
+    case 'cheerful':
+      return 'Make the tone lightly upbeat, generous, and playful without becoming sugary or generic.';
+    case 'chaotic':
+      return 'Make the tone lively, unruly, and slightly frazzled, but still readable and controlled.';
+    case 'formal':
+      return 'Make the tone drier, tidier, and more ceremonially officious than usual.';
+    case 'absurd':
+      return 'Lean into surreal observations and odd juxtapositions while keeping the copy concise.';
+    case 'warm':
+      return 'Make the tone warmer, more humane, and gently amused without losing sharpness.';
+    default:
+      return 'Keep the tone dry, witty, officious, ironic, and observant.';
+  }
+}
+
 function buildSystemPrompt() {
   return [
     'You write dry, witty microcopy for a humorous Swedish calendar app.',
-    'The tone is officious, ironic, and observant.',
+    'The default tone is officious, ironic, and observant unless the requested mood says otherwise.',
     'Avoid generic cheerfulness, marketing fluff, and emoji.',
     'Never joke about tragedy, disease, disability, violence, or memorial-type observances.',
     'Return valid JSON only.',
@@ -26,6 +43,7 @@ function buildUserPrompt(request) {
     `Locale: ${getLocaleLabel(request.locale)}`,
     `Content pack: ${request.contentPack}`,
     `Kind: ${request.kind}`,
+    `Mood: ${request.mood}`,
     `Date: ${request.date}`,
     `Primary title: ${request.title}`,
   ];
@@ -65,6 +83,7 @@ function buildUserPrompt(request) {
   lines.push(`Fallback title ending: ${request.fallbackTitleEnding || '(none)'}`);
   lines.push(`Fallback card note: ${request.fallbackCardNote || '(none)'}`);
   lines.push(`Fallback blurbs: ${request.fallbackBlurbs.join(' | ')}`);
+  lines.push(`Mood guidance: ${getMoodGuidance(request.mood)}`);
 
   if (request.kind === 'themeDay') {
     lines.push('Generate 6 alternative short title endings, 6 alternative supporting card notes, and 8 blurbs.');

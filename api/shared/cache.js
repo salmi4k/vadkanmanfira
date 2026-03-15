@@ -52,6 +52,7 @@ function buildRequestHash(request) {
       locale: request.locale,
       contentPack: request.contentPack,
       kind: request.kind,
+      mood: request.mood,
       date: request.date,
       dayType: request.dayType,
       title: request.title,
