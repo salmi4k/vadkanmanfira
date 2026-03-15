@@ -38,3 +38,9 @@
 
 - Favor small, explicit changes. This project is simple enough that extra
   abstraction usually adds more maintenance cost than value.
+- Review your own diff critically before committing or pushing. Check for
+  broken text encoding, obvious UI regressions, naming drift, and copy that
+  does not actually read the way it is intended to in the app.
+- Do not ship unreviewed string or UI changes just because the code compiles.
+  For user-visible changes, at minimum inspect the rendered result and the
+  final changed files before committing.

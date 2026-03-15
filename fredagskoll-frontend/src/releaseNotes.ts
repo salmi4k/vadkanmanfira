@@ -8,16 +8,29 @@ export type ReleaseNote = {
 
 export const releaseNotes: ReleaseNote[] = [
   {
-    version: '0.1.24',
+    version: '0.1.25',
     shortSummary: {
-      sv: 'Koden Ã¤r bÃ¤ttre uppdelad och mÃ¶rkt lÃ¤ge Ã¤r lÃ¤ttare att lÃ¤sa.',
-      en: 'The code is better organized and dark mode is easier to read.',
-      'pt-BR': 'O cÃ³digo estÃ¡ melhor organizado e o modo escuro ficou mais fÃ¡cil de ler.',
+      sv: 'Trasiga specialtecken är fixade och mörka knappar går lättare att läsa.',
+      en: 'Broken characters are fixed and dark buttons are easier to read.',
+      'pt-BR': 'Os caracteres quebrados foram corrigidos e os botões escuros ficaram mais legíveis.',
     },
     summary: {
-      sv: 'Frontendkoden Ã¤r nu sorterad tydligare efter omrÃ¥de, sÃ¥ AI, temadagar, nationaldagar, namnsdagar och kommande datum ligger samlade i egna delar i stÃ¤llet fÃ¶r att ligga utspridda i en platt mapp. Samtidigt har mÃ¶rkt lÃ¤ge fÃ¥tt tydligare kontrast i knappar, badges och smÃ¥ etiketter som Firardag, sÃ¥ det viktiga innehÃ¥llet blir lÃ¤ttare att lÃ¤sa utan att appens ton fÃ¶rsvinner.',
-      en: 'The frontend code is now grouped more clearly by area, so AI, theme days, national days, name days, and upcoming dates live in their own sections instead of a flat pile. At the same time, dark mode has better contrast in buttons, badges, and smaller labels like Celebration, so the important UI is easier to read without losing the appâ€™s tone.',
-      'pt-BR': 'O cÃ³digo do frontend agora estÃ¡ agrupado de forma mais clara por Ã¡rea, para que IA, datas temÃ¡ticas, datas nacionais, nomes do dia e prÃ³ximas datas fiquem em suas prÃ³prias seÃ§Ãµes em vez de um monte plano. Ao mesmo tempo, o modo escuro ganhou melhor contraste em botÃµes, badges e pequenas etiquetas como ComemoraÃ§Ã£o, deixando a interface mais legÃ­vel sem perder o clima do app.',
+      sv: 'Den senaste versionsnotisen visade trasiga tecken i stället för å, ä och ö, och mörkt läge hade fortfarande vissa knappar och badges som blev för svåra att läsa i de mörkare stämningarna. Det är nu rättat, så både versionsnytt och de mörka knappytorna går att läsa som normalt igen.',
+      en: 'The latest release note showed broken characters instead of proper accented text, and dark mode still had some buttons and badges that became too hard to read in the darker moods. That is now fixed, so both the changelog and those darker button surfaces read normally again.',
+      'pt-BR': 'A última nota de versão mostrava caracteres quebrados no lugar dos acentos corretos, e o modo escuro ainda tinha alguns botões e badges difíceis de ler nos tons mais escuros. Isso foi corrigido, então tanto o changelog quanto essas superfícies escuras voltaram a ficar legíveis.',
+    },
+  },
+  {
+    version: '0.1.24',
+    shortSummary: {
+      sv: 'Koden är bättre uppdelad och mörkt läge är lättare att läsa.',
+      en: 'The code is better organized and dark mode is easier to read.',
+      'pt-BR': 'O código está melhor organizado e o modo escuro ficou mais fácil de ler.',
+    },
+    summary: {
+      sv: 'Frontendkoden är nu sorterad tydligare efter område, så AI, temadagar, nationaldagar, namnsdagar och kommande datum ligger samlade i egna delar i stället för att ligga utspridda i en platt mapp. Samtidigt har mörkt läge fått tydligare kontrast i knappar, badges och små etiketter som Firardag, så det viktiga innehållet blir lättare att läsa utan att appens ton försvinner.',
+      en: 'The frontend code is now grouped more clearly by area, so AI, theme days, national days, name days, and upcoming dates live in their own sections instead of a flat pile. At the same time, dark mode has better contrast in buttons, badges, and smaller labels like Celebration, so the important UI is easier to read without losing the app’s tone.',
+      'pt-BR': 'O código do frontend agora está agrupado de forma mais clara por área, para que IA, datas temáticas, datas nacionais, nomes do dia e próximas datas fiquem em suas próprias seções em vez de um monte plano. Ao mesmo tempo, o modo escuro ganhou melhor contraste em botões, badges e pequenas etiquetas como Comemoração, deixando a interface mais legível sem perder o clima do app.',
     },
   },
   {
