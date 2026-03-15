@@ -8,6 +8,19 @@ export type ReleaseNote = {
 
 export const releaseNotes: ReleaseNote[] = [
   {
+    version: '0.1.28',
+    shortSummary: {
+      sv: 'Firardagarna har fått en tydligare regelmodell bakom kulisserna.',
+      en: 'Celebration days now have a clearer rule model behind the scenes.',
+      'pt-BR': 'As datas de celebração agora têm um modelo de regras mais claro nos bastidores.',
+    },
+    summary: {
+      sv: 'Firardagarna bygger nu på en tydligare gemensam modell för fasta datum, påskrelaterade datum, återkommande veckodagar och specialregler. Det förändrar inte hur appen känns för användaren, men gör logiken lättare att förstå, testa och bygga vidare på utan fler hårdkodade specialfall.',
+      en: 'Celebration days now use a clearer shared model for fixed dates, Easter-based dates, recurring weekdays, and special rules. It does not change how the app feels for users, but it makes the logic easier to understand, test, and extend without adding more hardcoded branches.',
+      'pt-BR': 'As datas de celebração agora usam um modelo compartilhado mais claro para datas fixas, datas ligadas à Páscoa, dias recorrentes da semana e regras especiais. Isso não muda como o app parece para o usuário, mas torna a lógica mais fácil de entender, testar e expandir sem adicionar mais desvios hardcoded.',
+    },
+  },
+  {
     version: '0.1.27',
     shortSummary: {
       sv: 'Appen är uppdelad tydligare och huvudvyn är lättare att bygga vidare på.',
