@@ -1,8 +1,8 @@
 # Vad kan man fira?
 
-`Vad kan man fira?` is a frontend-only React app that decides whether a Swedish
-date deserves celebration, resignation, baked goods, or a dry remark about
-calendar reality.
+`Vad kan man fira?` is a React app with managed Azure Static Web Apps APIs that
+decides whether a Swedish date deserves celebration, resignation, baked goods,
+or a dry remark about calendar reality.
 
 The shipped product lives in `fredagskoll-frontend` and is deployed to Azure
 Static Web Apps from the `main` branch.
@@ -119,30 +119,28 @@ npm run build
 
 ## Deployment
 
-- GitHub Actions deploys the frontend from `main`
+- GitHub Actions deploys the frontend and managed API from `main`
 - `.github/workflows/deploy-static-apps.yml` builds the app twice:
   - `REACT_APP_CONTENT_PACK=public` deploys to `vadkanmanfira`
   - `REACT_APP_CONTENT_PACK=team` deploys to `fredagskoll`
-- The workflow sets `REACT_APP_AI_API_BASE_URL=https://vkmf-blurbs-api.azurewebsites.net`
-  for both builds
+- Both deployments include the managed API from `api/`
 - Required GitHub Actions secrets:
   - `AZURE_STATIC_WEB_APPS_API_TOKEN_THANKFUL_BUSH_0D8565003_1`
   - `AZURE_STATIC_WEB_APPS_API_TOKEN_DELIGHTFUL_GROUND_0B3AA2B03`
 - Azure Static Web Apps hosts both variants
-- The AI backend is a separate Azure Function App at
-  `https://vkmf-blurbs-api.azurewebsites.net`
+- The frontend calls the same-origin managed API at `/api/blurbs`
 - SPA routing fallback lives in
   `fredagskoll-frontend/public/staticwebapp.config.json`
 
 ## Optional AI blurbs
 
-The app can now ask an Azure Function for generated blurb bundles. This is optional:
-if the API is unavailable or Azure OpenAI is not configured, the frontend keeps using
-the existing handwritten/static blurbs.
+The app can now ask a managed Azure Functions API for generated blurb bundles.
+This is optional: if the API is unavailable or Azure OpenAI is not configured,
+the frontend keeps using the existing handwritten/static blurbs.
 
 The frontend calls:
 
-- `https://vkmf-blurbs-api.azurewebsites.net/api/blurbs`
+- `/api/blurbs`
 
 What it does:
 
@@ -167,7 +165,7 @@ Current table layout:
   - stores `bundleId`, `requestHash`, `generatedAt`, `model`, `useCount`, `lastUsedAt`,
     `titleEndingsJson`, `cardNotesJson`, and `blurbsJson`
 
-Required Azure app settings for the dedicated Function App:
+Required Azure app settings for each Static Web App managed API:
 
 - `AZURE_OPENAI_ENDPOINT`
 - `AZURE_OPENAI_API_KEY`
