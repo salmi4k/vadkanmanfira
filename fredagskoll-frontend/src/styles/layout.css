@@ -84,7 +84,7 @@
   align-items: center;
   gap: 0.45rem;
   background: transparent;
-  color: var(--tone-ink);
+  color: var(--tone-ink-text);
   border: 1px solid color-mix(in srgb, var(--tone-accent) 28%, var(--panel-border));
   box-shadow: none;
   padding-inline: 0.75rem;
@@ -252,8 +252,12 @@
   letter-spacing: 0.18em;
   font-size: 0.78rem;
   font-weight: 800;
-  color: var(--tone-accent);
+  color: var(--tone-accent-text);
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+.App.dark .eyebrow {
+  text-shadow: none;
 }
 
 .brand-title,
@@ -383,7 +387,7 @@
 
 .mood-note {
   margin: 0;
-  color: color-mix(in srgb, var(--tone-ink) 82%, var(--muted));
+  color: color-mix(in srgb, var(--tone-ink-text) 72%, var(--muted));
   font-size: 0.88rem;
   line-height: 1.38;
   max-width: 28ch;
@@ -518,7 +522,7 @@
   letter-spacing: 0.18em;
   font-size: 0.78rem;
   font-weight: 800;
-  color: var(--tone-accent);
+  color: var(--tone-accent-text);
 }
 
 .disclosure-chevron {
@@ -831,7 +835,7 @@
   font-weight: 900;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--tone-accent);
+  color: var(--tone-accent-text);
 }
 
 .source-link {

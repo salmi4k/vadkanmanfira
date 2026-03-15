@@ -10,6 +10,8 @@
   --tone-accent: #6a5e89;
   --tone-soft: rgba(106, 94, 137, 0.16);
   --tone-ink: #433d58;
+  --tone-accent-text: var(--tone-accent);
+  --tone-ink-text: var(--tone-ink);
   --mood-ui-font: "Trebuchet MS", "Segoe UI", sans-serif;
   --mood-display-font: Georgia, "Times New Roman", serif;
   --mood-wash:
@@ -89,11 +91,14 @@
   --panel-border: rgba(255, 233, 205, 0.12);
   --text: #f7eedf;
   --muted: rgba(247, 238, 223, 0.76);
+  --tone-accent-text: color-mix(in srgb, var(--tone-accent) 38%, white);
+  --tone-ink-text: color-mix(in srgb, var(--tone-ink) 34%, white);
   --shadow: 0 24px 80px rgba(0, 0, 0, 0.38);
   --mood-panel-tint: rgba(255, 255, 255, 0.04);
   --mood-panel-border: rgba(255, 255, 255, 0.06);
   --mood-card-shadow: 0 26px 72px rgba(0, 0, 0, 0.28);
   --mood-outline: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  --mood-button-text: var(--tone-ink-text);
 }
 
 .App[data-mood="dry"] {

@@ -8,6 +8,19 @@ export type ReleaseNote = {
 
 export const releaseNotes: ReleaseNote[] = [
   {
+    version: '0.1.23',
+    shortSummary: {
+      sv: 'Mörkt läge har fått tydligare kontrast i knappar och etiketter.',
+      en: 'Dark mode now has clearer contrast in buttons and labels.',
+      'pt-BR': 'O modo escuro agora tem contraste mais claro em botões e etiquetas.',
+    },
+    summary: {
+      sv: 'Mörkt läge använder nu ljusare accentfärger där text faktiskt måste gå att läsa, som i knappar, badges och små etiketter. Resultatet är att appen fortfarande känns som samma stämning, men utan att viktiga delar blir grumliga eller svåra att urskilja.',
+      en: 'Dark mode now uses brighter accent text where people actually need to read it, such as buttons, badges, and small labels. The app still keeps the same mood, but important UI details are no longer muddy or hard to pick out.',
+      'pt-BR': 'O modo escuro agora usa textos de destaque mais claros onde as pessoas realmente precisam ler, como em botões, badges e pequenas etiquetas. O app continua com o mesmo clima, mas sem deixar partes importantes confusas ou difíceis de enxergar.',
+    },
+  },
+  {
     version: '0.1.22',
     shortSummary: {
       sv: 'Mobilvyn väntar nu med scroll tills datumväljaren faktiskt stängs.',
