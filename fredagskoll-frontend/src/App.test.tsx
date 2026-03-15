@@ -114,6 +114,10 @@ test('renders Fettisdag content on the actual Fettisdag date', async () => {
   expect(
     screen.getByRole('heading', { level: 2, name: /Nationen hålls ihop av grädde/i })
   ).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: /Överraska mig/i })).toBeInTheDocument();
+  expect(screen.getByText(/Dagens ursäkt att fika/i)).toBeInTheDocument();
+  expect(screen.getByText(/^semla$/i, { selector: '.fika-item' })).toBeInTheDocument();
+  expect(screen.getAllByText(/Fika\/fest/i)).toHaveLength(2);
 });
 
 test('renders Kanelbullens dag ahead of the generic Saturday fallback', async () => {

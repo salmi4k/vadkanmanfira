@@ -14,11 +14,11 @@ const initialExpandedSections: Record<MobileSectionKey, boolean> = {
   worldNationalDays: true,
 };
 
-type UseAppChromeArgs = {
+type UseAppShellStateArgs = {
   initialDate: Date;
 };
 
-export function useAppShellState({ initialDate }: UseAppChromeArgs) {
+export function useAppShellState({ initialDate }: UseAppShellStateArgs) {
   const [locale, setLocale] = useState<Locale>(getInitialLocale);
   const [darkMode, setDarkMode] = useState(getInitialDarkMode);
   const [showLanguageMenu, setShowLanguageMenu] = useState(false);
@@ -66,6 +66,25 @@ export function useAppShellState({ initialDate }: UseAppChromeArgs) {
     shouldScrollAfterDateCommitRef.current = isMobileLayout;
   }
 
+  function jumpToDate(
+    nextDate: string,
+    mainCardRef?: RefObject<HTMLElement | null>
+  ): void {
+    setSelectedDate(nextDate);
+    shouldScrollAfterDateCommitRef.current = false;
+
+    if (!isMobileLayout || !mainCardRef || typeof window === 'undefined') {
+      return;
+    }
+
+    window.setTimeout(() => {
+      mainCardRef.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    }, 120);
+  }
+
   function handleDateCommit(mainCardRef: RefObject<HTMLElement | null>): void {
     if (
       !isMobileLayout ||
@@ -109,6 +128,7 @@ export function useAppShellState({ initialDate }: UseAppChromeArgs) {
     setShowReleaseNotes,
     handleDateChange,
     handleDateCommit,
+    jumpToDate,
     toggleMobileSection,
   };
 }

@@ -8,6 +8,19 @@ export type ReleaseNote = {
 
 export const releaseNotes: ReleaseNote[] = [
   {
+    version: '0.1.32',
+    shortSummary: {
+      sv: 'Appen hjälper nu mer aktivt till att hitta bättre dagar att fira.',
+      en: 'The app now helps you find better days to celebrate.',
+      'pt-BR': 'O app agora ajuda melhor a encontrar dias mais interessantes para celebrar.',
+    },
+    summary: {
+      sv: 'Appen har fått ett överraskningsläge för att hoppa till mer firvärda datum, synliga kategorier för olika slags firardagar, en tydligare firarpoäng och en ny liten fika-panel som gör dagens anledning mer lekfull. Tanken är att det ska kännas roligare att utforska kalendern, inte bara slå upp ett datum och gå vidare.',
+      en: 'The app now includes a surprise mode for jumping to more celebration-worthy dates, visible celebration categories, a clearer celebration score, and a small fika panel that makes the daily excuse more playful. The goal is to make exploring the calendar more fun instead of only checking a date and leaving.',
+      'pt-BR': 'O app agora inclui um modo surpresa para pular para datas mais celebráveis, categorias visíveis para os tipos de celebração, uma pontuação mais clara e um pequeno painel de fika que deixa a desculpa do dia mais divertida. A ideia é tornar a exploração do calendário mais prazerosa, em vez de só consultar uma data e ir embora.',
+    },
+  },
+  {
     version: '0.1.31',
     shortSummary: {
       sv: 'Frontendens verktygslåda kör nu på Vite i stället för CRA.',

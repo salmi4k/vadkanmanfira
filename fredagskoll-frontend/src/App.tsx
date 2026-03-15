@@ -35,6 +35,13 @@ import { getUpcomingNotables } from './features/upcoming/upcomingNotables';
 import { useAiContent } from './features/ai/useAiContent';
 import { useNameDays } from './features/name-days/useNameDays';
 import {
+  getCategoryLabel,
+  getDailyFikaSuggestion,
+  getEngagementScoreLabel,
+  pickSurpriseDate,
+  scoreEngagementSnapshot,
+} from './features/engagement/engagement';
+import {
   buildAiRequest,
   buildMainCardViewModel,
   getCurrentCelebration,
@@ -70,6 +77,7 @@ function App({
     showLanguageMenu,
     showReleaseNotes,
     toggleMobileSection,
+    jumpToDate,
   } = useAppShellState({ initialDate });
 
   const text = appText[locale];
@@ -100,6 +108,18 @@ function App({
   const extraDisplayThemeDays = displayThemeDays;
   const hasThemeDays = displayThemeDays.length > 0;
   const humanDate = formatForHumans(selectedDateObject, locale);
+  const engagementSnapshot = useMemo(
+    () => scoreEngagementSnapshot(selectedDateObject, contentPack),
+    [contentPack, selectedDateObject]
+  );
+  const categoryLabel = useMemo(
+    () => getCategoryLabel(engagementSnapshot.category, locale),
+    [engagementSnapshot.category, locale]
+  );
+  const scoreLabel = useMemo(
+    () => getEngagementScoreLabel(engagementSnapshot.score, locale),
+    [engagementSnapshot.score, locale]
+  );
   const centerDate = formatCenterDate(selectedDateObject, locale);
   const upcomingHoliday = getUpcomingOfficialHolidayInWeek(selectedDateObject);
   const upcomingHolidayName = upcomingHoliday
@@ -203,6 +223,26 @@ function App({
     hasThemeDays,
     themeDayDisplayTitle,
   });
+  const fikaSuggestion = useMemo(
+    () =>
+      getDailyFikaSuggestion({
+        celebration:
+          dayStatus.dayType === 'ordinary' ? null : dayStatus.dayType,
+        category: engagementSnapshot.category,
+        themeDays: displayThemeDays,
+        locale,
+        mood,
+        score: engagementSnapshot.score,
+      }),
+    [
+      dayStatus.dayType,
+      displayThemeDays,
+      engagementSnapshot.category,
+      engagementSnapshot.score,
+      locale,
+      mood,
+    ]
+  );
 
   const mainTitle = celebration
     ? celebration.title
@@ -212,6 +252,11 @@ function App({
 
   function stepSelectedDate(days: number): void {
     handleDateChange(formatForInput(addDays(selectedDateObject, days)));
+  }
+
+  function handleSurpriseDate(): void {
+    const surprise = pickSurpriseDate(selectedDateObject, contentPack);
+    jumpToDate(formatForInput(surprise.date), mainCardRef);
   }
 
   return (
@@ -244,11 +289,13 @@ function App({
           onSelectMood={setMood}
           onDateChange={handleDateChange}
           onDateCommit={() => handleDateCommit(mainCardRef)}
+          onSurpriseDate={handleSurpriseDate}
           onToggleMobileSection={toggleMobileSection}
         />
 
         <AppMainColumn
           buildStamp={buildStamp}
+          categoryLabel={categoryLabel}
           centerDate={centerDate}
           celebration={celebration}
           compactPrimaryMedia={compactPrimaryMedia}
@@ -266,6 +313,7 @@ function App({
           mainTitle={mainTitle}
           mood={mood}
           moodLabel={getMoodLabel(mood, locale)}
+          fikaSuggestion={fikaSuggestion}
           nationalDayPanel={nationalDayPanel}
           onOpenImageCredits={() => setShowImageCredits(true)}
           onOpenReleaseNotes={() => setShowReleaseNotes(true)}
@@ -280,6 +328,7 @@ function App({
           themeDayTitleEnding={themeDayTitleEnding}
           upcomingNotables={upcomingNotables}
           visibleBlurb={blurb}
+          scoreLabel={scoreLabel}
         />
       </div>
 

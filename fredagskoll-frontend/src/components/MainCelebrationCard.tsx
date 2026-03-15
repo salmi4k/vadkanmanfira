@@ -22,6 +22,7 @@ import { formatShortSwedishDate } from '../dateUtils';
 import { Mood } from '../mood';
 
 type MainCelebrationCardProps = {
+  categoryLabel: string | null;
   centerDate: string;
   celebration: CelebrationContent | null;
   compactPrimaryMedia: boolean;
@@ -36,6 +37,7 @@ type MainCelebrationCardProps = {
   mainCardRef: React.RefObject<HTMLElement | null>;
   mainTitle: string;
   mood: Mood;
+  scoreLabel: string;
   nationalDayPanel: NationalDayPanel | null;
   onReroll: () => void;
   onStepDate: (days: number) => void;
@@ -52,6 +54,7 @@ type MainCelebrationCardProps = {
 };
 
 export function MainCelebrationCard({
+  categoryLabel,
   centerDate,
   celebration,
   compactPrimaryMedia,
@@ -69,6 +72,7 @@ export function MainCelebrationCard({
   mainTitle,
   mood,
   moodLabel,
+  scoreLabel,
   nationalDayPanel,
   onReroll,
   onStepDate,
@@ -105,7 +109,11 @@ export function MainCelebrationCard({
 
       <div className="card-kicker-row">
         <p className="eyebrow">{kicker}</p>
-        <span className="mood-pill">{moodLabel}</span>
+        <div className="card-kicker-metrics">
+          {categoryLabel ? <span className="mood-pill mood-pill--category">{categoryLabel}</span> : null}
+          <span className="mood-pill mood-pill--score">{scoreLabel}</span>
+          <span className="mood-pill">{moodLabel}</span>
+        </div>
       </div>
 
       {themeDayDisplayTitle && !celebration ? (

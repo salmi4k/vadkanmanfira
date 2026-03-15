@@ -413,6 +413,116 @@
   max-width: 28ch;
 }
 
+.surprise-button {
+  border: 0;
+  border-radius: var(--mood-chip-radius);
+  background: linear-gradient(135deg, var(--tone-accent), color-mix(in srgb, var(--tone-accent) 62%, white));
+  color: #fff9f1;
+  padding: 0.85rem 1rem;
+  font-size: 0.92rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition:
+    transform 220ms ease,
+    filter 220ms ease,
+    box-shadow 220ms ease;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.16), var(--mood-outline);
+}
+
+.surprise-button:hover {
+  transform: translateY(-1px);
+  filter: saturate(1.06) brightness(1.02);
+}
+
+.surprise-hint {
+  margin: -0.45rem 0 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.38;
+}
+
+.card-kicker-metrics {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.mood-pill--category,
+.mood-pill--score {
+  color: var(--mood-button-text);
+  background: var(--mood-button-bg);
+}
+
+.engagement-panel {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.engagement-metrics {
+  display: flex;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+}
+
+.engagement-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.45rem 0.8rem;
+  border-radius: var(--mood-chip-radius);
+  background: var(--mood-button-bg);
+  color: var(--mood-button-text);
+  font-size: 0.76rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--tone-accent) 24%, transparent),
+    var(--mood-badge-shadow);
+}
+
+.engagement-chip--score {
+  background: color-mix(in srgb, var(--tone-soft) 82%, rgba(255, 255, 255, 0.32));
+  color: var(--tone-ink-text);
+}
+
+.fika-card {
+  padding: 1.15rem 1.25rem;
+  border-radius: var(--mood-subpanel-radius);
+  background:
+    linear-gradient(135deg, var(--mood-panel-tint), transparent 72%),
+    linear-gradient(90deg, transparent 0 0.8rem, color-mix(in srgb, var(--tone-accent) 9%, transparent) 0.8rem 100%),
+    var(--accent-soft);
+  border: 1px solid color-mix(in srgb, var(--panel-border) 74%, var(--mood-panel-border) 26%);
+  box-shadow: var(--mood-outline);
+  display: grid;
+  gap: 0.4rem;
+}
+
+.fika-item,
+.fika-score,
+.fika-note {
+  margin: 0;
+}
+
+.fika-item {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.fika-score {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--tone-accent-text);
+}
+
+.fika-note {
+  color: var(--muted);
+  line-height: 1.42;
+}
+
 .nameday-card {
   display: grid;
   gap: 0.45rem;

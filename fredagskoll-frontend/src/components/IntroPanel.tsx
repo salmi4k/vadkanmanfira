@@ -41,6 +41,7 @@ type IntroPanelProps = {
   onSelectMood: (mood: Mood) => void;
   onDateChange: (date: string) => void;
   onDateCommit: () => void;
+  onSurpriseDate: () => void;
   onToggleMobileSection: (section: MobileSectionKey) => void;
 };
 
@@ -67,6 +68,7 @@ export function IntroPanel({
   onSelectMood,
   onDateChange,
   onDateCommit,
+  onSurpriseDate,
   onToggleMobileSection,
 }: IntroPanelProps) {
   const text = appText[locale];
@@ -150,6 +152,10 @@ export function IntroPanel({
           <span>{dateLabel}</span>
         </div>
       </div>
+      <button type="button" className="surprise-button" onClick={onSurpriseDate}>
+        {text.surpriseAction}
+      </button>
+      <p className="surprise-hint">{text.surpriseHint}</p>
 
       <label htmlFor="mood-picker" className="picker-label">
         {text.moodLabel}
