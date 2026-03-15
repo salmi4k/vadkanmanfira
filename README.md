@@ -105,11 +105,14 @@ npm run build
 - `.github/workflows/deploy-static-apps.yml` builds the app twice:
   - `REACT_APP_CONTENT_PACK=public` deploys to `vadkanmanfira`
   - `REACT_APP_CONTENT_PACK=team` deploys to `fredagskoll`
-- The same workflow now also deploys `api/` as a Static Web Apps managed API
+- The workflow sets `REACT_APP_AI_API_BASE_URL=https://vkmf-blurbs-api.azurewebsites.net`
+  for both builds
 - Required GitHub Actions secrets:
   - `AZURE_STATIC_WEB_APPS_API_TOKEN_THANKFUL_BUSH_0D8565003_1`
   - `AZURE_STATIC_WEB_APPS_API_TOKEN_DELIGHTFUL_GROUND_0B3AA2B03`
 - Azure Static Web Apps hosts both variants
+- The AI backend is a separate Azure Function App at
+  `https://vkmf-blurbs-api.azurewebsites.net`
 - SPA routing fallback lives in
   `fredagskoll-frontend/public/staticwebapp.config.json`
 
@@ -119,22 +122,34 @@ The app can now ask an Azure Function for generated blurb bundles. This is optio
 if the API is unavailable or Azure OpenAI is not configured, the frontend keeps using
 the existing handwritten/static blurbs.
 
-The API endpoint:
+The frontend calls:
 
-- `POST /api/blurbs`
+- `https://vkmf-blurbs-api.azurewebsites.net/api/blurbs`
 
 What it does:
 
 - receives a structured date context from the frontend
-- computes a deterministic cache key
-- checks Azure Table Storage first
-- only calls Azure OpenAI on cache miss
+- computes a deterministic request hash
+- checks a hot cache row in Azure Table Storage first
+- rotates between multiple cached AI bundles for the same request when available
+- refreshes stale bundles older than 15 minutes one slot at a time
+- stores generated bundles in a separate bundle library table for reuse and tracking
 - returns multiple options for:
   - `blurbs`
   - `titleEndings` for ordinary theme-day headlines
   - `cardNotes` for ordinary theme-day support text
 
-Required Azure app settings for each Static Web App if you want the AI path enabled:
+Current table layout:
+
+- `blurbcache`
+  - one hot row per request key
+  - stores request metadata, `useCount`, `lastUsedAt`, `lastBundleId`, and `bundleIdsJson`
+- `blurblibrary`
+  - one row per generated bundle
+  - stores `bundleId`, `requestHash`, `generatedAt`, `model`, `useCount`, `lastUsedAt`,
+    `titleEndingsJson`, `cardNotesJson`, and `blurbsJson`
+
+Required Azure app settings for the dedicated Function App:
 
 - `AZURE_OPENAI_ENDPOINT`
 - `AZURE_OPENAI_API_KEY`

@@ -1,4 +1,11 @@
-const { getCachedBundle, setCachedBundle } = require('../shared/cache');
+const {
+  MAX_VARIANTS_PER_KEY,
+  chooseVariant,
+  createVariant,
+  getCacheState,
+  recordVariantUsage,
+  saveCacheState,
+} = require('../shared/cache');
 const { normalizeRequestBody, isValidRequest } = require('../shared/blurbSchema');
 const { generateBlurbBundle } = require('../shared/azureOpenAi');
 
@@ -22,32 +29,81 @@ module.exports = async function blurbHandler(context, req) {
       return;
     }
 
-    const cached = await getCachedBundle(request);
-    if (cached) {
+    let cacheState = await getCacheState(request);
+    let responseSource = 'cache';
+
+    if (!cacheState) {
+      const generated = await generateBlurbBundle(request);
+      if (!generated.enabled || !generated.bundle) {
+        context.res = json(204, null);
+        return;
+      }
+
       context.res = json(200, {
-        source: 'cache',
-        titleEndings: cached.titleEndings,
-        cardNotes: cached.cardNotes,
-        blurbs: cached.blurbs,
-        model: cached.model,
+        source: 'azure-openai',
+        titleEndings: generated.bundle.titleEndings,
+        cardNotes: generated.bundle.cardNotes,
+        blurbs: generated.bundle.blurbs,
+        model: generated.model,
       });
       return;
     }
 
-    const generated = await generateBlurbBundle(request);
-    if (!generated.enabled || !generated.bundle) {
+    const shouldGenerateVariant =
+      cacheState.freshVariants.length === 0 ||
+      cacheState.variants.length < MAX_VARIANTS_PER_KEY ||
+      cacheState.staleVariants.length > 0;
+
+    if (shouldGenerateVariant) {
+      const generated = await generateBlurbBundle(request);
+      if (!generated.enabled || !generated.bundle) {
+        if (!cacheState || cacheState.freshVariants.length === 0) {
+          context.res = json(204, null);
+          return;
+        }
+      } else {
+        const generatedVariant = createVariant(generated.bundle, generated.model);
+        let updatedVariants = cacheState ? [...cacheState.variants] : [];
+
+        if (updatedVariants.length < MAX_VARIANTS_PER_KEY) {
+          updatedVariants.push(generatedVariant);
+        } else {
+          const staleIds = new Set(cacheState.staleVariants.map((variant) => variant.id));
+          const replacementIndex = updatedVariants.findIndex((variant) => staleIds.has(variant.id));
+          const targetIndex = replacementIndex >= 0 ? replacementIndex : 0;
+          updatedVariants[targetIndex] = generatedVariant;
+        }
+
+        cacheState = {
+          ...(cacheState || {}),
+          variants: updatedVariants,
+          freshVariants: updatedVariants,
+          staleVariants: [],
+          createdAt: cacheState?.createdAt || generatedVariant.createdAt,
+        };
+        responseSource = 'azure-openai';
+      }
+    }
+
+    const selectedVariant = chooseVariant(
+      cacheState ? cacheState.freshVariants : [],
+      cacheState ? cacheState.lastServedVariantId : null
+    );
+
+    if (!selectedVariant) {
       context.res = json(204, null);
       return;
     }
 
-    await setCachedBundle(request, generated.bundle, generated.model);
+    cacheState = recordVariantUsage(cacheState, selectedVariant);
+    await saveCacheState(request, cacheState);
 
     context.res = json(200, {
-      source: 'azure-openai',
-      titleEndings: generated.bundle.titleEndings,
-      cardNotes: generated.bundle.cardNotes,
-      blurbs: generated.bundle.blurbs,
-      model: generated.model,
+      source: responseSource,
+      titleEndings: selectedVariant.bundle.titleEndings,
+      cardNotes: selectedVariant.bundle.cardNotes,
+      blurbs: selectedVariant.bundle.blurbs,
+      model: selectedVariant.model,
     });
   } catch (error) {
     if (context && context.log && typeof context.log.error === 'function') {

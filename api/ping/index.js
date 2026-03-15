@@ -6,7 +6,7 @@ module.exports = async function pingHandler(context) {
     },
     body: JSON.stringify({
       ok: true,
-      runtime: 'managed-api',
+      runtime: 'azure-function',
     }),
   };
 };
