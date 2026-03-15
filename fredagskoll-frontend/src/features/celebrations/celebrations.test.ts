@@ -4,6 +4,11 @@ test('high-priority Swedish celebrations have image coverage', () => {
   const celebrations = getCelebrations('sv', 'public', 'dry');
 
   expect(celebrations.fettisdag.primaryImage).toBeTruthy();
+  expect(celebrations.skartorsdag.primaryImage).toBeTruthy();
+  expect(celebrations.langfredag.primaryImage).toBeTruthy();
+  expect(celebrations.paskafton.primaryImage).toBeTruthy();
+  expect(celebrations.paskdagen.primaryImage).toBeTruthy();
+  expect(celebrations.annandagpask.primaryImage).toBeTruthy();
   expect(celebrations.valborg.primaryImage).toBeTruthy();
   expect(celebrations.nationaldagen.primaryImage).toBeTruthy();
   expect(celebrations.midsommarafton.primaryImage).toBeTruthy();
@@ -15,6 +20,10 @@ test('priority Swedish celebrations use more specific local fallback copy', () =
   const celebrations = getCelebrations('sv', 'public', 'dry');
 
   expect(celebrations.fettisdag.title).toMatch(/Nationen hålls ihop av grädde/i);
+  expect(celebrations.skartorsdag.title).toMatch(/Påsken står redan i hallen/i);
+  expect(celebrations.langfredag.blurbs.some((blurb) => blurb.includes('stillhet'))).toBe(true);
+  expect(celebrations.paskdagen.blurbs.some((blurb) => blurb.includes('godis'))).toBe(true);
+  expect(celebrations.annandagpask.blurbs.some((blurb) => blurb.includes('återhämtning'))).toBe(true);
   expect(celebrations.valborg.blurbs.some((blurb) => blurb.includes('brasa'))).toBe(true);
   expect(celebrations.nationaldagen.blurbs.some((blurb) => blurb.includes('flagga'))).toBe(true);
   expect(celebrations.midsommarafton.blurbs.some((blurb) => blurb.includes('jordgubbar'))).toBe(true);

@@ -36,8 +36,8 @@ type CelebrationLocalePayload = {
   ordinaryBlurb: string;
   ordinaryWeekdayBlurbs: string[];
   ordinaryWeekendBlurbs: string[];
-  celebrationThemeAliases: Record<Exclude<DayType, 'ordinary'>, string[]>;
-  celebrations: Record<
+  celebrationThemeAliases: Partial<Record<Exclude<DayType, 'ordinary'>, string[]>>;
+  celebrations: Partial<Record<
     Exclude<DayType, 'ordinary'>,
     Pick<
       CelebrationContent,
@@ -51,7 +51,7 @@ type CelebrationLocalePayload = {
       | 'visualBody'
       | 'theme'
     >
-  >;
+  >>;
 };
 
 const englishCelebrationContent = celebrationsEn as CelebrationLocalePayload;
@@ -613,6 +613,42 @@ const celebrationsSv: Record<Exclude<DayType, 'ordinary'>, CelebrationContent> =
     secondaryImage: '/520321381_10234349504453830_7039877959207209298_n.jpg',
     theme: 'cream',
   },
+  skartorsdag: {
+    title: 'Skärtorsdag. Påsken står redan i hallen.',
+    subtitle: 'Ägg, godis och lågintensiv utflyttning från vardagen.',
+    kicker: 'Förväntan med fjädrar',
+    alt: 'Skärtorsdag',
+    blurbs: [
+      'Skärtorsdagen är dagen då veckan fortfarande låtsas vara normal medan påsken redan packat bilen.',
+      'Det här är upptakten där godis, ägg och ledighetsplaner börjar ta över på ett sätt ingen riktigt tänker stoppa.',
+      'Skärtorsdag känns som arbetslivets sista artiga nick innan hela helgen går över i chokladlogistik.',
+      'Påsken är inte helt här än, men den står så tydligt i dörröppningen att ingen längre tror på vanlig drift.',
+      'Det här datumet bär exakt rätt blandning av förväntan, lätt splittrad koncentration och pynt som vägrar be om ursäkt.',
+      'Skärtorsdagen markerar övergången från kalenderdisciplin till ägg, fjädrar och diskret flyktberedskap.',
+      'Det är dagen då allt börjar luta åt ledighet, trots att vissa fortfarande försöker kalla det arbetsvecka.',
+      'Skärtorsdag är påskens mjuka uppvärmning: mindre högtidston, mer tydlig känsla av att något gott är på väg.',
+    ],
+    primaryImage: '/images/paskafton.jpg',
+    theme: 'gold',
+  },
+  langfredag: {
+    title: 'Långfredag. Allt går med avsikt långsamt.',
+    subtitle: 'Stillhet, godisrester och ett mycket försiktigt tempo.',
+    kicker: 'Lugn med historisk tyngd',
+    alt: 'Långfredag',
+    blurbs: [
+      'Långfredagen är byggd för stillhet, låg puls och den sortens tystnad som får hela dagen att gå lite långsammare.',
+      'Det här är datumet då påsken tar ett steg bort från upptakt och in i något märkbart mer eftertänksamt.',
+      'Långfredag bär en gammal tyngd, men i modern svensk tappning också filt, kaffe och ett respektfullt frånkopplat tempo.',
+      'Det är en stilla helgdag där ingen egentligen förväntas prestera mer än att existera lugnt och hålla godisskålen inom räckhåll.',
+      'Långfredagen känns som om hela landet skruvat ner volymen och bestämt sig för att inte störa stämningen i onödan.',
+      'Det här är en dag för lågmäld närvaro, långsam tid och att inte kräva alltför mycket dramatik av kalendern.',
+      'Långfredag fungerar bäst när den får vara just lite utdragen, lite stilla och märkbart mindre angelägen än vanliga fredagar.',
+      'Det är en av de där få dagarna då lugn faktiskt räcker ganska långt som innehåll i sig självt.',
+    ],
+    primaryImage: '/images/paskafton.jpg',
+    theme: 'cream',
+  },
   paskafton: {
     title: 'Påskafton. Sill, godis och fri disciplin.',
     subtitle: 'Ingen vuxenstyrning överlever ägg och smågodis.',
@@ -635,6 +671,42 @@ const celebrationsSv: Record<Exclude<DayType, 'ordinary'>, CelebrationContent> =
       'Det finns dagar med högre stringens. Påskafton nöjer sig med färg, socker och att ingen försöker låta vuxen i onödan.',
     primaryImage: '/images/paskafton.jpg',
     theme: 'gold',
+  },
+  paskdagen: {
+    title: 'Påskdagen. Helgen har landat ordentligt nu.',
+    subtitle: 'Mjukare tempo, mer godis och mindre behov av plan.',
+    kicker: 'Påsk i full drift',
+    alt: 'Påskdagen',
+    blurbs: [
+      'Påskdagen är när allt redan är i rullning: äggen är öppnade, godiset inventerat och tempot behagligt sänkt.',
+      'Det här är den del av påsken där högtiden känns som mest etablerad och minst intresserad av att förklara sig.',
+      'Påskdagen bär sig själv ganska bra med hjälp av lugn, rester och en allmän känsla av att man får ta dagen som den kommer.',
+      'Det är en söndag med extra symbolik men också med fullt rimlig rätt att mest ägna sig åt kaffe och småätande.',
+      'Påskdagen känns som en helgdag som redan vet att den har vunnit och därför inte behöver anstränga sig i onödan.',
+      'Det här är ett datum där påskens färger, socker och stilla självbelåtenhet ligger helt öppet på bordet.',
+      'Påskdagen gör inget väsen av sig. Den bara breder ut sig och räknar med att du följer med.',
+      'Helgen har nått den punkt där allting får vara lite långsamt, lite sött och väldigt lite akut.',
+    ],
+    primaryImage: '/images/paskafton.jpg',
+    theme: 'cream',
+  },
+  annandagpask: {
+    title: 'Annandag påsk. Ledigheten håller fortfarande linjen.',
+    subtitle: 'En extra dag för återhämtning, rester och mycket låg ambitionsnivå.',
+    kicker: 'Bonusdag med chokladstöd',
+    alt: 'Annandag påsk',
+    blurbs: [
+      'Annandag påsk är kalenderns sätt att ge högtiden en mjuk landning i stället för att bara kasta folk rakt tillbaka i veckan.',
+      'Det här är bonusdagen då rester, godis och lätt planlöshet fortfarande räknas som ett helt rimligt upplägg.',
+      'Annandag påsk bär samma färger som helgen men med märkbart lägre puls och betydligt mindre behov av att göra något alls.',
+      'Det är en helgdag som mest känns som ett vänligt eko av påsken, fast med större utrymme för soffor och återhämtning.',
+      'Annandag påsk fungerar eftersom ingen längre försöker låtsas att energin är på topp och ingen egentligen behöver det heller.',
+      'Det här datumet håller fast vid ledigheten precis tillräckligt länge för att göra återgången till vardag något mindre brutal.',
+      'Annandag påsk är i grunden en mycket god idé: lite mer stillhet, lite mer choklad och betydligt mindre brådska.',
+      'Påsken är inte riktigt färdig än, och annandagen ser till att den får klinga av med någon sorts värdighet.',
+    ],
+    primaryImage: '/images/paskafton.jpg',
+    theme: 'cream',
   },
   vaffeldagen: {
     title: 'Våffeldagen har tagit över',
@@ -970,11 +1042,11 @@ const celebrationsPtBrLocalized = Object.fromEntries(
   ])
 ) as Record<Exclude<DayType, 'ordinary'>, CelebrationContent>;
 
-function splitCelebrationsByPack<T extends Record<Exclude<DayType, 'ordinary'>, unknown>>(
+function splitCelebrationsByPack<T extends Partial<Record<Exclude<DayType, 'ordinary'>, unknown>>>(
   celebrations: T
 ): {
   shared: Omit<T, TeamWeekdayDayType>;
-  teamOnly: Pick<T, TeamWeekdayDayType>;
+  teamOnly: Partial<Pick<T, TeamWeekdayDayType>>;
 } {
   const entries = Object.entries(celebrations) as Array<[Exclude<DayType, 'ordinary'>, T[keyof T]]>;
   const sharedEntries = entries.filter(([dayType]) => !isTeamWeekdayDayType(dayType));
@@ -982,7 +1054,7 @@ function splitCelebrationsByPack<T extends Record<Exclude<DayType, 'ordinary'>, 
 
   return {
     shared: Object.fromEntries(sharedEntries) as Omit<T, TeamWeekdayDayType>,
-    teamOnly: Object.fromEntries(teamEntries) as Pick<T, TeamWeekdayDayType>,
+    teamOnly: Object.fromEntries(teamEntries) as Partial<Pick<T, TeamWeekdayDayType>>,
   };
 }
 

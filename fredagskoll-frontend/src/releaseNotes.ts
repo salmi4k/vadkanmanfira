@@ -8,6 +8,19 @@ export type ReleaseNote = {
 
 export const releaseNotes: ReleaseNote[] = [
   {
+    version: '0.1.30',
+    shortSummary: {
+      sv: 'Påskhelgen har fått tydligare egen känsla över flera dagar i rad.',
+      en: 'The Easter stretch now has a clearer identity across several consecutive days.',
+      'pt-BR': 'O período da Páscoa agora tem uma identidade mais clara ao longo de vários dias seguidos.',
+    },
+    summary: {
+      sv: 'Påskhelgen känns nu mer genomtänkt som en sammanhängande följd i appen. Skärtorsdag, Långfredag, Påskafton, Påskdagen och Annandag påsk har fått egen text och egen plats i stället för att nästan allt fokus låg på bara Påskafton.',
+      en: 'The Easter run now feels more intentional as a connected sequence in the app. Maundy Thursday, Good Friday, Easter Eve, Easter Sunday, and Easter Monday now have their own writing and their own place instead of nearly all the attention landing on Easter Eve alone.',
+      'pt-BR': 'O período da Páscoa agora parece mais intencional como uma sequência conectada no app. Quinta-feira Santa, Sexta-feira Santa, Sábado de Aleluia, Domingo de Páscoa e Segunda-feira de Páscoa agora têm seus próprios textos e seu próprio lugar, em vez de quase toda a atenção cair só no sábado.',
+    },
+  },
+  {
     version: '0.1.29',
     shortSummary: {
       sv: 'Flera stora firardagar har fått vassare och mer egen text.',

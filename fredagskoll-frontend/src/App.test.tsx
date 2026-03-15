@@ -243,6 +243,46 @@ test('renders Påskafton with an actual image', async () => {
   expect(screen.getByAltText(/Påskafton/i)).toHaveAttribute('src', '/images/paskafton.jpg');
 });
 
+test('renders Skärtorsdag ahead of the generic Thursday fallback', async () => {
+  await renderAppAt(new Date(2026, 3, 2));
+
+  expect(
+    screen.getByRole('heading', { level: 2, name: /Skärtorsdag\./i })
+  ).toBeInTheDocument();
+  expect(screen.getByAltText(/Skärtorsdag/i)).toHaveAttribute('src', '/images/paskafton.jpg');
+  expect(screen.queryByText(/FISKTORSDAG/i)).not.toBeInTheDocument();
+});
+
+test('renders Långfredag as its own Easter holiday instead of ordinary Friday tone', async () => {
+  await renderAppAt(new Date(2026, 3, 3));
+
+  expect(
+    screen.getByRole('heading', { level: 2, name: /Långfredag\./i })
+  ).toBeInTheDocument();
+  expect(screen.getByAltText(/Långfredag/i)).toHaveAttribute('src', '/images/paskafton.jpg');
+  expect(screen.queryByText(/MARMELADFREDAG/i)).not.toBeInTheDocument();
+});
+
+test('renders Påskdagen as its own Easter holiday instead of ordinary Sunday copy', async () => {
+  await renderAppAt(new Date(2026, 3, 5));
+
+  expect(
+    screen.getByRole('heading', { level: 2, name: /Påskdagen\./i })
+  ).toBeInTheDocument();
+  expect(screen.getByAltText(/Påskdagen/i)).toHaveAttribute('src', '/images/paskafton.jpg');
+  expect(screen.queryByText(/En vanlig dag/i)).not.toBeInTheDocument();
+});
+
+test('renders Annandag påsk as its own Easter holiday instead of ordinary Monday copy', async () => {
+  await renderAppAt(new Date(2026, 3, 6));
+
+  expect(
+    screen.getByRole('heading', { level: 2, name: /Annandag påsk\./i })
+  ).toBeInTheDocument();
+  expect(screen.getByAltText(/Annandag påsk/i)).toHaveAttribute('src', '/images/paskafton.jpg');
+  expect(screen.queryByText(/En vanlig dag/i)).not.toBeInTheDocument();
+});
+
 test('renders Våffeldagen with an actual image', async () => {
   await renderAppAt(new Date(2026, 2, 25));
 
