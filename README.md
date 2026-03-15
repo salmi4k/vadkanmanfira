@@ -1,6 +1,7 @@
 # Vad kan man fira?
 
-`Vad kan man fira?` is a React app with managed Azure Static Web Apps APIs that
+`Vad kan man fira?` is a React app with a managed Azure Static Web Apps API at
+`/api` that
 decides whether a Swedish date deserves celebration, resignation, baked goods,
 or a dry remark about calendar reality.
 
@@ -34,18 +35,24 @@ If the variable is unset, the app defaults to `public`.
   Content-pack selection, public/team boundaries, and recurring weekday rules.
 - `fredagskoll-frontend/src/dayLogic.ts`
   Date classification and official Swedish holiday calculations.
-- `fredagskoll-frontend/src/celebrations.ts`
+- `fredagskoll-frontend/src/features/celebrations/celebrations.ts`
   Built-in celebration content and pack-filtered exports.
-- `fredagskoll-frontend/src/themeDaySpecificBlurbs.ts`
+- `fredagskoll-frontend/src/features/theme-days/themeDaySpecificBlurbs.ts`
   Handwritten temadag overrides.
-- `fredagskoll-frontend/src/themeDayCategoryBlurbs.ts`
+- `fredagskoll-frontend/src/features/theme-days/themeDayCategoryBlurbs.ts`
   Category fallback blurbs for temadagar.
+- `fredagskoll-frontend/src/features/ai`
+  Frontend request types, fetch logic, and AI content hook.
+- `fredagskoll-frontend/src/features/upcoming`
+  Upcoming notables and seasonal context blocks.
+- `fredagskoll-frontend/src/features/national-days`
+  World/national day panel logic and localization.
 - `fredagskoll-frontend/src/data/temadagarByDate.json`
   Curated unofficial temadag dataset.
 - `fredagskoll-frontend/public/images`
   Celebration images and source metadata.
 - `api/blurbs`
-  Azure Function endpoint for optional AI-generated blurb bundles.
+  Managed Static Web Apps API route for optional AI-generated blurb bundles.
 - `api/shared`
   Request validation, prompt building, Azure OpenAI calling, and Table Storage cache logic.
 
@@ -145,7 +152,8 @@ npm run build
 
 ## Optional AI blurbs
 
-The app can now ask a managed Azure Functions API for generated blurb bundles.
+The app can ask the managed Static Web Apps API route at `/api/blurbs` for
+generated blurb bundles.
 This is optional: if the API is unavailable or Azure OpenAI is not configured,
 the frontend keeps using the existing handwritten/static blurbs.
 
@@ -153,7 +161,7 @@ The frontend calls:
 
 - `/api/blurbs`
 
-What it does:
+What the managed API does:
 
 - receives a structured date context from the frontend
 - computes a deterministic request hash
