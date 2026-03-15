@@ -2,6 +2,7 @@ const SUPPORTED_LOCALES = new Set(['sv', 'en', 'pt-BR']);
 const SUPPORTED_PACKS = new Set(['public', 'team']);
 const SUPPORTED_KINDS = new Set(['celebration', 'themeDay', 'ordinary']);
 const SUPPORTED_MOODS = new Set(['dry', 'cheerful', 'chaotic', 'formal', 'absurd', 'warm']);
+const SUPPORTED_REQUEST_MODES = new Set(['default', 'reroll']);
 
 function coerceString(value, fallback = '') {
   return typeof value === 'string' ? value.trim() : fallback;
@@ -28,12 +29,16 @@ function normalizeRequestBody(body) {
   const contentPack = SUPPORTED_PACKS.has(source.contentPack) ? source.contentPack : 'public';
   const kind = SUPPORTED_KINDS.has(source.kind) ? source.kind : 'ordinary';
   const mood = SUPPORTED_MOODS.has(source.mood) ? source.mood : 'dry';
+  const requestMode = SUPPORTED_REQUEST_MODES.has(source.requestMode)
+    ? source.requestMode
+    : 'default';
 
   return {
     locale,
     contentPack,
     kind,
     mood,
+    requestMode,
     date: coerceString(source.date),
     dateLabel: coerceString(source.dateLabel),
     dayType: coerceString(source.dayType, 'ordinary'),

@@ -7,6 +7,7 @@ export type AiBlurbRequest = {
   contentPack: ContentPack;
   kind: 'celebration' | 'themeDay' | 'ordinary';
   mood: Mood;
+  requestMode?: 'default' | 'reroll';
   date: string;
   dateLabel: string;
   dayType: string;
@@ -33,20 +34,11 @@ export type AiBlurbBundle = {
   model?: string | null;
 };
 
-function getAiBlurbsEndpoint(): string {
-  const configuredBaseUrl = process.env.REACT_APP_AI_API_BASE_URL?.trim();
-  if (!configuredBaseUrl) {
-    return '/api/blurbs';
-  }
-
-  return `${configuredBaseUrl.replace(/\/+$/, '')}/api/blurbs`;
-}
-
 export async function fetchAiBlurbBundle(
   request: AiBlurbRequest,
   signal?: AbortSignal
 ): Promise<AiBlurbBundle | null> {
-  const response = await fetch(getAiBlurbsEndpoint(), {
+  const response = await fetch('/api/blurbs', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

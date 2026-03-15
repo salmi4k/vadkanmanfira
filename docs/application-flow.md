@@ -35,7 +35,7 @@ flowchart TD
     M --> M6[fallback blurbs and theme-day support text]
     M --> M7[seasonal, upcoming, and national-day context]
 
-    M --> N[POST to Azure Function /api/blurbs]
+    M --> N[POST to same-origin managed API /api/blurbs]
     N --> O[normalizeRequestBody validates and trims request]
     O --> P[buildRequestHash creates request key]
     P --> Q[Lookup hot row in blurbcache]
@@ -74,9 +74,10 @@ flowchart TD
 
     N -. request pending .-> AF[While waiting, frontend hides AI-driven text and shows loading copy]
 
-    AG[GitHub Actions deploy-static-apps.yml] --> AH[Build public variant]
-    AG --> AI[Build team variant]
+    AG[GitHub Actions deploy-static-apps.yml] --> AH[Build public variant plus managed API]
+    AG --> AI[Build team variant plus managed API]
     AH --> AJ[Azure Static Web App public site]
     AI --> AK[Azure Static Web App team site]
-    N --> AL[Dedicated Azure Function App]
+    AJ --> AL[Managed API runtime for public site]
+    AK --> AM[Managed API runtime for team site]
 ```
