@@ -6,6 +6,7 @@ import { buildInfo } from './buildInfo.generated';
 import { ContentPack } from './contentPack';
 import { MOOD_STORAGE_KEY } from './mood';
 import { getReleaseNote } from './releaseNotes';
+import { getThemeDaysForDate } from './temadagar';
 
 jest.mock('./aiBlurbs', () => ({
   fetchAiBlurbBundle: jest.fn().mockResolvedValue(null),
@@ -271,13 +272,14 @@ test('renders Nyårsafton ahead of the generic Thursday fallback with an actual 
 
 test('renders filtered temadagar for an otherwise ordinary date', async () => {
   const randomSpy = jest.spyOn(Math, 'random').mockReturnValue(0);
+  const leadThemeDay = getThemeDaysForDate(new Date(2027, 2, 23))[0];
 
   await renderAppAt(new Date(2027, 2, 23));
 
   expect(
     screen.getByRole('heading', {
       level: 2,
-      name: /Matlådans dag\.\s*Det får väl bära dagen då\./i,
+      name: new RegExp(`${leadThemeDay}\\.\\s*Det får väl bära dagen då\\.`, 'i'),
     })
   ).toBeInTheDocument();
   expect(screen.getAllByRole('list').length).toBeGreaterThan(0);
@@ -285,9 +287,25 @@ test('renders filtered temadagar for an otherwise ordinary date', async () => {
   expect(screen.getAllByText(/Världsmeteorologidagen/i).length).toBeGreaterThan(0);
   expect(screen.queryByText(/Internationella barnreumatikerdagen/i)).not.toBeInTheDocument();
   expect(screen.getByText(/Dagens temadagar/i)).toBeInTheDocument();
+  expect(screen.getAllByText(new RegExp(leadThemeDay, 'i')).length).toBeGreaterThan(0);
+
+  randomSpy.mockRestore();
+});
+
+test('picks the more meaningful March 21 theme day instead of blindly using source order', async () => {
+  const randomSpy = jest.spyOn(Math, 'random').mockReturnValue(0);
+  const leadThemeDay = getThemeDaysForDate(new Date(2026, 2, 21))[0];
+
+  await renderAppAt(new Date(2026, 2, 21));
+
   expect(
-    screen.getByText(/Matlådans dag är i praktiken ett erkännande av kall disciplin i plastform\./i)
+    screen.getByRole('heading', {
+      level: 2,
+      name: new RegExp(`${leadThemeDay}\\.\\s*Det får väl bära dagen då\\.`, 'i'),
+    })
   ).toBeInTheDocument();
+  expect(leadThemeDay).toBe('Rocka sockorna-dagen');
+  expect(screen.getAllByText(/Internationella dagen för Nowruz/i).length).toBeGreaterThan(0);
 
   randomSpy.mockRestore();
 });
