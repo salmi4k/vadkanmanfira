@@ -7,6 +7,7 @@ This folder contains the actual product application for `Vad kan man fira?`.
 - classifies dates into built-in Swedish celebration types
 - enriches ordinary dates with curated temadagar
 - fetches namnsdag data from the `sholiday` API
+- can optionally fetch AI-generated blurb bundles from `/api/blurbs`
 - shows upcoming official holidays and notable dates
 - renders themed media, blurbs, and public image credits
 - supports separate `public` and `team` content packs on the same shared core
@@ -65,3 +66,5 @@ That workflow builds the same app twice from `main`:
 
 - `REACT_APP_CONTENT_PACK=public` -> `vadkanmanfira`
 - `REACT_APP_CONTENT_PACK=team` -> `fredagskoll`
+
+The same workflow also deploys the managed API in `../api`.

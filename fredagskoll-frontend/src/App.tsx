@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import './App.css';
+import { AiBlurbBundle, fetchAiBlurbBundle } from './aiBlurbs';
 import mojoLogo from './mojo-logo.png';
 import publicLogo from './vkmf-logo-public.png';
 import {
@@ -168,6 +169,7 @@ function App({
   const [selectedDate, setSelectedDate] = useState(formatForInput(initialDate));
   const [nameDays, setNameDays] = useState<string[]>([]);
   const [nameDayState, setNameDayState] = useState<NameDayState>('loading');
+  const [aiBundle, setAiBundle] = useState<AiBlurbBundle | null>(null);
   const [blurb, setBlurb] = useState(getOrdinaryBlurb(getInitialLocale()));
   const [themeDayTitleEnding, setThemeDayTitleEnding] = useState(
     ordinaryThemeDayTitleEndingsByLocale[getInitialLocale()][0]
@@ -235,6 +237,10 @@ function App({
     [celebration, hasThemeDays, locale, visibleThemeDays]
   );
   const currentBlurbs = useMemo(() => {
+    if (aiBundle?.blurbs.length) {
+      return aiBundle.blurbs;
+    }
+
     if (celebration) {
       return celebration.blurbs;
     }
@@ -248,7 +254,7 @@ function App({
     }
 
     return getOrdinaryDayBlurbs(locale, selectedDateObject.getDay() === 0 || selectedDateObject.getDay() === 6);
-  }, [celebration, dayStatus.dayType, locale, selectedDateObject, themeDayBlurbs]);
+  }, [aiBundle, celebration, dayStatus.dayType, locale, selectedDateObject, themeDayBlurbs]);
   const kicker = celebration
     ? celebration.kicker
     : hasThemeDays
@@ -300,6 +306,86 @@ function App({
   }, [locale]);
 
   useEffect(() => {
+    const controller = new AbortController();
+    const fallbackTitleEnding = ordinaryThemeDayTitleEndingsByLocale[locale][0];
+    const fallbackCardNote = ordinaryThemeDayCardNotesByLocale[locale][0];
+    const fallbackBlurbs = celebration
+      ? celebration.blurbs
+      : themeDayBlurbs
+        ? themeDayBlurbs
+        : dayStatus.dayType === 'ordinary'
+          ? getOrdinaryDayBlurbs(
+              locale,
+              selectedDateObject.getDay() === 0 || selectedDateObject.getDay() === 6
+            )
+          : [];
+
+    const kind = celebration ? 'celebration' : hasThemeDays ? 'themeDay' : 'ordinary';
+    const request = {
+      locale,
+      contentPack,
+      kind,
+      date: selectedDate,
+      dateLabel: dayStatus.dateLabel,
+      dayType: dayStatus.dayType,
+      title: celebration ? celebration.title : themeDayDisplayTitle ?? text.ordinaryTitle,
+      subtitle: celebration?.subtitle,
+      kicker,
+      fallbackTitleEnding,
+      fallbackCardNote,
+      fallbackBlurbs,
+      themeDays: displayThemeDays,
+      extraThemeDays: extraDisplayThemeDays,
+      seasonalTitles: seasonalNotes.map((item) => item.title),
+      upcomingTitles: upcomingNotables.map((item) => item.title),
+      upcomingHolidayName: upcomingHolidayName ?? undefined,
+      nationalDaySummary: nationalDayPanel?.summary,
+      allowHumor: true,
+    } as const;
+
+    setAiBundle(null);
+
+    Promise.resolve(fetchAiBlurbBundle(request, controller.signal))
+      .then((bundle) => {
+        if (bundle === null) {
+          return;
+        }
+
+        setAiBundle(bundle);
+      })
+      .catch(() => {
+        if (controller.signal.aborted) {
+          return;
+        }
+
+        setAiBundle(null);
+      });
+
+    return () => {
+      controller.abort();
+    };
+  }, [
+    celebration,
+    contentPack,
+    dayStatus.dateLabel,
+    dayStatus.dayType,
+    displayThemeDays,
+    extraDisplayThemeDays,
+    hasThemeDays,
+    kicker,
+    locale,
+    nationalDayPanel,
+    selectedDate,
+    selectedDateObject,
+    seasonalNotes,
+    text.ordinaryTitle,
+    themeDayBlurbs,
+    themeDayDisplayTitle,
+    upcomingHolidayName,
+    upcomingNotables,
+  ]);
+
+  useEffect(() => {
     if (!currentBlurbs) {
       setBlurb(ordinaryBlurb);
       return;
@@ -309,24 +395,30 @@ function App({
   }, [selectedDate, locale, currentBlurbs, ordinaryBlurb]);
 
   useEffect(() => {
-    const endings = ordinaryThemeDayTitleEndingsByLocale[locale];
+    const endings =
+      aiBundle?.titleEndings.length && themeDayDisplayTitle && !celebration
+        ? aiBundle.titleEndings
+        : ordinaryThemeDayTitleEndingsByLocale[locale];
     if (!themeDayDisplayTitle || celebration) {
       setThemeDayTitleEnding(endings[0]);
       return;
     }
 
     setThemeDayTitleEnding(getRandomItem(endings, endings[0]));
-  }, [selectedDate, locale, themeDayDisplayTitle, celebration]);
+  }, [aiBundle, selectedDate, locale, themeDayDisplayTitle, celebration]);
 
   useEffect(() => {
-    const notes = ordinaryThemeDayCardNotesByLocale[locale];
+    const notes =
+      aiBundle?.cardNotes.length && hasThemeDays && !celebration
+        ? aiBundle.cardNotes
+        : ordinaryThemeDayCardNotesByLocale[locale];
     if (!hasThemeDays || celebration) {
       setThemeDayCardNote(notes[0]);
       return;
     }
 
     setThemeDayCardNote(getRandomItem(notes, notes[0]));
-  }, [selectedDate, locale, hasThemeDays, celebration]);
+  }, [aiBundle, selectedDate, locale, hasThemeDays, celebration]);
 
   useEffect(() => {
     let isCurrent = true;

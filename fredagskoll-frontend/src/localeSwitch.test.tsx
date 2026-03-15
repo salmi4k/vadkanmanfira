@@ -2,13 +2,29 @@ import React from 'react';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import App from './App';
 
+jest.mock('./aiBlurbs', () => ({
+  fetchAiBlurbBundle: () => Promise.resolve(null),
+}));
+
 beforeEach(() => {
   window.localStorage.clear();
 
-  jest.spyOn(global, 'fetch').mockResolvedValue({
-    ok: true,
-    json: async () => ({ dagar: [{ namnsdag: [] }] }),
-  } as Response);
+  jest.spyOn(global, 'fetch').mockImplementation(async (input: RequestInfo | URL) => {
+    const url = String(input);
+
+    if (url.includes('/api/blurbs')) {
+      return {
+        ok: true,
+        status: 204,
+        json: async () => ({}),
+      } as Response;
+    }
+
+    return {
+      ok: true,
+      json: async () => ({ dagar: [{ namnsdag: [] }] }),
+    } as Response;
+  });
 });
 
 afterEach(() => {
