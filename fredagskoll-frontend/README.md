@@ -1,6 +1,8 @@
 # Vad kan man fira? Frontend
 
-This folder contains the actual product application for `Vad kan man fira?`.
+This folder contains the actual product application for `Vad kan man fira?`,
+including the frontend that is deployed together with a managed Azure Static
+Web Apps API from the repository root.
 
 ## What it does
 
@@ -62,14 +64,12 @@ workflow:
 
 - `.github/workflows/deploy-static-apps.yml`
 
-That workflow builds the same app twice from `main`:
+That workflow builds the same app twice from `main` and includes the shared
+managed API from `../api`:
 
 - `REACT_APP_CONTENT_PACK=public` -> `vadkanmanfira`
 - `REACT_APP_CONTENT_PACK=team` -> `fredagskoll`
 
-The workflow sets `REACT_APP_AI_API_BASE_URL=https://vkmf-blurbs-api.azurewebsites.net`
-for both builds.
+In production, the frontend calls the same-origin managed API path:
 
-The AI backend is a separate Azure Function App:
-
-- `https://vkmf-blurbs-api.azurewebsites.net/api/blurbs`
+- `/api/blurbs`
