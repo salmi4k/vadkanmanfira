@@ -111,7 +111,7 @@ test('renders team-pack Wednesday content when the team pack is active', async (
 test('renders Fettisdag content on the actual Fettisdag date', async () => {
   await renderAppAt(new Date(2026, 1, 17));
   expect(
-    screen.getByRole('heading', { level: 2, name: /FETTISDAG/i })
+    screen.getByRole('heading', { level: 2, name: /Nationen hålls ihop av grädde/i })
   ).toBeInTheDocument();
 });
 
@@ -128,21 +128,21 @@ test('renders Kanelbullens dag ahead of the generic Saturday fallback', async ()
 test('renders Valborg as a fixed celebration date', async () => {
   await renderAppAt(new Date(2026, 3, 30));
   expect(
-    screen.getByRole('heading', { level: 2, name: /Valborg, alltså vår med dåligt omdöme/i })
+    screen.getByRole('heading', { level: 2, name: /Valborg\./i })
   ).toBeInTheDocument();
 });
 
 test('renders Nationaldagen ahead of the generic Saturday fallback', async () => {
   await renderAppAt(new Date(2026, 5, 6));
   expect(
-    screen.getByRole('heading', { level: 2, name: /Nationaldagen får väl firas då/i })
+    screen.getByRole('heading', { level: 2, name: /Nationaldagen\./i })
   ).toBeInTheDocument();
 });
 
 test('renders Midsommarafton ahead of the generic Friday fallback', async () => {
   await renderAppAt(new Date(2026, 5, 19));
   expect(
-    screen.getByRole('heading', { level: 2, name: /MIDSOMMARAFTON/i })
+    screen.getByRole('heading', { level: 2, name: /Landet är mentalt otillgängligt/i })
   ).toBeInTheDocument();
   expect(screen.queryByText(/MARMELADFREDAG/i)).not.toBeInTheDocument();
 });
@@ -259,9 +259,9 @@ test('renders Valborg with an actual image', async () => {
   await renderAppAt(new Date(2026, 3, 30));
 
   expect(
-    screen.getByRole('heading', { level: 2, name: /Valborg, alltså vår med dåligt omdöme/i })
+    screen.getByRole('heading', { level: 2, name: /Valborg\./i })
   ).toBeInTheDocument();
-  expect(screen.getByAltText(/Valborg, alltså vår med dåligt omdöme/i)).toHaveAttribute(
+  expect(screen.getByAltText(/Valborg\. Nu räcker april och alla går ut ändå/i)).toHaveAttribute(
     'src',
     '/images/valborg.jpg'
   );
