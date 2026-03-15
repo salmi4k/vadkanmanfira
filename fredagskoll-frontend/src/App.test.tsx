@@ -1,12 +1,18 @@
 import React from 'react';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import App from './App';
+import { fetchAiBlurbBundle } from './aiBlurbs';
 import { buildInfo } from './buildInfo.generated';
 import { ContentPack } from './contentPack';
+import { MOOD_STORAGE_KEY } from './mood';
 
 jest.mock('./aiBlurbs', () => ({
   fetchAiBlurbBundle: jest.fn().mockResolvedValue(null),
 }));
+
+const mockedFetchAiBlurbBundle = fetchAiBlurbBundle as jest.MockedFunction<
+  typeof fetchAiBlurbBundle
+>;
 
 async function renderAppAt(date: Date, contentPack?: ContentPack): Promise<void> {
   render(<App initialDate={date} contentPack={contentPack} />);
@@ -18,6 +24,9 @@ async function renderAppAt(date: Date, contentPack?: ContentPack): Promise<void>
 }
 
 beforeEach(() => {
+  window.localStorage.clear();
+  mockedFetchAiBlurbBundle.mockClear();
+
   jest.spyOn(global, 'fetch').mockImplementation(async (input: RequestInfo | URL) => {
     const url = String(input);
 
@@ -391,4 +400,35 @@ test('steps between days from the center navigation buttons', async () => {
   expect(
     screen.getByRole('heading', { level: 2, name: /Våffeldagen har tagit över/i })
   ).toBeInTheDocument();
+});
+
+test('persists the selected mood and exposes it on the app root', async () => {
+  await renderAppAt(new Date(2026, 2, 14));
+
+  fireEvent.change(screen.getByLabelText(/Ton/i), {
+    target: { value: 'chaotic' },
+  });
+
+  await waitFor(() =>
+    expect(window.localStorage.getItem(MOOD_STORAGE_KEY)).toBe('chaotic')
+  );
+  expect(document.querySelector('.App')).toHaveAttribute('data-mood', 'chaotic');
+});
+
+test('sends the selected mood in ai blurb requests', async () => {
+  await renderAppAt(new Date(2026, 2, 14));
+
+  await waitFor(() => expect(mockedFetchAiBlurbBundle).toHaveBeenCalled());
+  mockedFetchAiBlurbBundle.mockClear();
+
+  fireEvent.change(screen.getByLabelText(/Ton/i), {
+    target: { value: 'warm' },
+  });
+
+  await waitFor(() =>
+    expect(mockedFetchAiBlurbBundle).toHaveBeenLastCalledWith(
+      expect.objectContaining({ mood: 'warm' }),
+      expect.any(AbortSignal)
+    )
+  );
 });
