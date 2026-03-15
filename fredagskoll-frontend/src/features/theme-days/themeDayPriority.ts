@@ -1,4 +1,4 @@
-import curatedThemeDayPriorityByDate from './data/themeDayPriorityByDate.json';
+import curatedThemeDayPriorityByDate from '../../data/themeDayPriorityByDate.json';
 import { normalizeLabel } from './themeDayTextUtils';
 
 const curatedDateOverrides = curatedThemeDayPriorityByDate as Record<string, string[]>;

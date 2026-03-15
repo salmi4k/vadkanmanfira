@@ -1,16 +1,16 @@
-import carltonGif from './gifs/carlton.gif';
-import carltonChristmasGif from './gifs/carltonchristmas.gif';
+import carltonGif from '../../gifs/carlton.gif';
+import carltonChristmasGif from '../../gifs/carltonchristmas.gif';
 import {
   ContentPack,
   TeamWeekdayDayType,
   getActiveContentPack,
   isTeamWeekdayDayType,
-} from './contentPack';
-import celebrationsEn from './data/celebrations.en.json';
-import celebrationsPtBr from './data/celebrations.pt-BR.json';
-import { DayType } from './dayLogic';
-import { Locale } from './locale';
-import { Mood } from './mood';
+} from '../../contentPack';
+import celebrationsEn from '../../data/celebrations.en.json';
+import celebrationsPtBr from '../../data/celebrations.pt-BR.json';
+import { DayType } from '../../dayLogic';
+import { Locale } from '../../locale';
+import { Mood } from '../../mood';
 export type CelebrationTheme =
   | 'ordinary'
   | 'jam'

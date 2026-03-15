@@ -6,6 +6,8 @@
   --muted: rgba(36, 21, 11, 0.72);
   --accent: #9d4b17;
   --accent-soft: rgba(157, 75, 23, 0.14);
+  --accent-ui-text: var(--accent);
+  --accent-ui-bg: var(--accent-soft);
   --shadow: 0 24px 80px rgba(73, 41, 14, 0.16);
   --tone-accent: #6a5e89;
   --tone-soft: rgba(106, 94, 137, 0.16);
@@ -91,14 +93,25 @@
   --panel-border: rgba(255, 233, 205, 0.12);
   --text: #f7eedf;
   --muted: rgba(247, 238, 223, 0.76);
-  --tone-accent-text: color-mix(in srgb, var(--tone-accent) 38%, white);
-  --tone-ink-text: color-mix(in srgb, var(--tone-ink) 34%, white);
+  --accent-ui-text: color-mix(in srgb, var(--accent) 24%, white);
+  --accent-ui-bg: color-mix(in srgb, var(--accent) 24%, rgba(255, 255, 255, 0.12));
+  --tone-accent-text: color-mix(in srgb, var(--tone-accent) 22%, white);
+  --tone-ink-text: color-mix(in srgb, var(--tone-ink) 16%, white);
   --shadow: 0 24px 80px rgba(0, 0, 0, 0.38);
   --mood-panel-tint: rgba(255, 255, 255, 0.04);
   --mood-panel-border: rgba(255, 255, 255, 0.06);
   --mood-card-shadow: 0 26px 72px rgba(0, 0, 0, 0.28);
   --mood-outline: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  --mood-button-bg:
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--tone-accent) 24%, rgba(255, 255, 255, 0.14)),
+      rgba(255, 255, 255, 0.08)
+    );
   --mood-button-text: var(--tone-ink-text);
+  --mood-badge-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06),
+    0 10px 24px rgba(0, 0, 0, 0.26);
 }
 
 .App[data-mood="dry"] {

@@ -1,14 +1,14 @@
 import React from 'react';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import App from './App';
-import { fetchAiBlurbBundle } from './aiBlurbs';
+import { fetchAiBlurbBundle } from './features/ai/aiBlurbs';
 import { buildInfo } from './buildInfo.generated';
 import { ContentPack } from './contentPack';
 import { MOOD_STORAGE_KEY } from './mood';
 import { getReleaseNote } from './releaseNotes';
-import { getThemeDaysForDate } from './temadagar';
+import { getThemeDaysForDate } from './features/theme-days/temadagar';
 
-jest.mock('./aiBlurbs', () => ({
+jest.mock('./features/ai/aiBlurbs', () => ({
   fetchAiBlurbBundle: jest.fn().mockResolvedValue(null),
 }));
 

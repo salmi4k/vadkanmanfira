@@ -2,7 +2,7 @@ import React from 'react';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import App from './App';
 
-jest.mock('./aiBlurbs', () => ({
+jest.mock('./features/ai/aiBlurbs', () => ({
   fetchAiBlurbBundle: () => Promise.resolve(null),
 }));
 

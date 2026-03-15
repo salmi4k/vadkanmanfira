@@ -5,10 +5,10 @@ test('returns national-day data for dates that match the generated dataset', () 
 
   expect(panel).not.toBeNull();
   expect(panel?.items[0]).toMatchObject({
-    nation: 'Greece',
+    nation: 'Grekland',
     significance: 'Självständighetsdagen',
   });
-  expect(panel?.summary).toMatch(/Greece/i);
+  expect(panel?.summary).toMatch(/Grekland/i);
 });
 
 test('returns null when the selected date has no mapped national day entries', () => {

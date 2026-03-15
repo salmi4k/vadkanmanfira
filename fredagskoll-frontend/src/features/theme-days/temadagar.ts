@@ -1,4 +1,4 @@
-import temadagarByDate from './data/temadagarByDate.json';
+import temadagarByDate from '../../data/temadagarByDate.json';
 import { prioritizeThemeDays } from './themeDayPriority';
 
 const themeDaysByDate = temadagarByDate as Record<string, string[]>;

@@ -1,5 +1,5 @@
-import { Locale } from './locale';
-import { Mood } from './mood';
+import { Locale } from '../../locale';
+import { Mood } from '../../mood';
 import { normalizeLabel } from './themeDayTextUtils';
 
 function getMoodSpecificBlurbs(

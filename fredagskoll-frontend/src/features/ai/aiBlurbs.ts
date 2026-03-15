@@ -1,6 +1,6 @@
-import { ContentPack } from './contentPack';
-import { Locale } from './locale';
-import { Mood } from './mood';
+import { ContentPack } from '../../contentPack';
+import { Locale } from '../../locale';
+import { Mood } from '../../mood';
 
 export type AiBlurbRequest = {
   locale: Locale;
