@@ -8,6 +8,19 @@ export type ReleaseNote = {
 
 export const releaseNotes: ReleaseNote[] = [
   {
+    version: '0.1.29',
+    shortSummary: {
+      sv: 'Flera stora firardagar har fått vassare och mer egen text.',
+      en: 'Several major celebration days now have sharper and more distinctive writing.',
+      'pt-BR': 'Várias grandes datas de celebração agora têm textos mais fortes e mais próprios.',
+    },
+    summary: {
+      sv: 'Några av de största återkommande firardagarna, som Fettisdag, Valborg, Nationaldagen, Midsommarafton, Julafton och Nyårsafton, har fått mer specifik och mer minnesvärd fallbacktext. Appen känns därför mindre generisk även när den inte lutar sig på AI-genererat innehåll.',
+      en: 'Some of the biggest recurring celebration days, such as Fettisdagen, Walpurgis Night, National Day, Midsummer Eve, Christmas Eve, and New Year’s Eve, now have more specific and more memorable fallback writing. That makes the app feel less generic even when it is not leaning on AI-generated content.',
+      'pt-BR': 'Algumas das maiores datas recorrentes de celebração, como Fettisdagen, Valborg, Dia Nacional, Véspera de Midsommar, Véspera de Natal e Véspera de Ano-Novo, agora têm textos de fallback mais específicos e mais memoráveis. Isso faz o app parecer menos genérico mesmo quando não está apoiado em conteúdo gerado por IA.',
+    },
+  },
+  {
     version: '0.1.28',
     shortSummary: {
       sv: 'Firardagarna har fått en tydligare regelmodell bakom kulisserna.',
