@@ -16,6 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       REACT_APP_CONTENT_PACK: public
+      REACT_APP_AI_API_BASE_URL: https://vkmf-blurbs-api.azurewebsites.net
       GITHUB_SHA: ${{ github.sha }}
       GITHUB_RUN_NUMBER: ${{ github.run_number }}
     steps:
@@ -32,7 +33,6 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: upload
           app_location: fredagskoll-frontend
-          api_location: api
           output_location: build
 
   deploy_team:
@@ -40,6 +40,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       REACT_APP_CONTENT_PACK: team
+      REACT_APP_AI_API_BASE_URL: https://vkmf-blurbs-api.azurewebsites.net
       GITHUB_SHA: ${{ github.sha }}
       GITHUB_RUN_NUMBER: ${{ github.run_number }}
     steps:
@@ -56,5 +57,4 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: upload
           app_location: fredagskoll-frontend
-          api_location: api
           output_location: build

@@ -31,11 +31,20 @@ export type AiBlurbBundle = {
   model?: string | null;
 };
 
+function getAiBlurbsEndpoint(): string {
+  const configuredBaseUrl = process.env.REACT_APP_AI_API_BASE_URL?.trim();
+  if (!configuredBaseUrl) {
+    return '/api/blurbs';
+  }
+
+  return `${configuredBaseUrl.replace(/\/+$/, '')}/api/blurbs`;
+}
+
 export async function fetchAiBlurbBundle(
   request: AiBlurbRequest,
   signal?: AbortSignal
 ): Promise<AiBlurbBundle | null> {
-  const response = await fetch('/api/blurbs', {
+  const response = await fetch(getAiBlurbsEndpoint(), {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
