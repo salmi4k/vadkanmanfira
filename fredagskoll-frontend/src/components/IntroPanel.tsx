@@ -7,9 +7,7 @@ import { formatShortSwedishDate } from '../dateUtils';
 import { formatDaysUntilLabel, getUpcomingHolidayBlurb } from '../holidayPresentation';
 import { joinWithConjunction, Locale, localeOptions } from '../locale';
 import { getMoodLabel, getMoodNote, Mood, moodOptions } from '../mood';
-import { getReleaseNote } from '../releaseNotes';
 import { MobileSectionKey } from '../appTypes';
-import { DisclosurePanel } from './DisclosurePanel';
 import { MobileSection } from './MobileSection';
 
 type SeasonalNote = {
@@ -20,20 +18,10 @@ type SeasonalNote = {
   note: string;
 };
 
-type UpcomingNote = {
-  dateLabel: string;
-  label: string;
-  daysUntil: number;
-  title: string;
-  date: Date;
-  note: string;
-};
-
 type IntroPanelProps = {
   locale: Locale;
   darkMode: boolean;
   contentPack: ContentPack;
-  buildStamp: string;
   mood: Mood;
   selectedDate: string;
   humanDate: string;
@@ -44,26 +32,21 @@ type IntroPanelProps = {
   upcomingHolidayDate?: Date;
   daysUntilHoliday: number | null;
   seasonalNotes: SeasonalNote[];
-  upcomingNotables: UpcomingNote[];
   isMobileLayout: boolean;
   showLanguageMenu: boolean;
   expandedSections: Record<MobileSectionKey, boolean>;
-  currentReleaseVersion: string;
   onToggleLanguageMenu: () => void;
   onToggleDarkMode: () => void;
   onSelectLocale: (locale: Locale) => void;
   onSelectMood: (mood: Mood) => void;
   onDateChange: (date: string) => void;
   onToggleMobileSection: (section: MobileSectionKey) => void;
-  onOpenImageCredits: () => void;
-  onOpenReleaseNotes: () => void;
 };
 
 export function IntroPanel({
   locale,
   darkMode,
   contentPack,
-  buildStamp,
   mood,
   selectedDate,
   humanDate,
@@ -74,22 +57,17 @@ export function IntroPanel({
   upcomingHolidayDate,
   daysUntilHoliday,
   seasonalNotes,
-  upcomingNotables,
   isMobileLayout,
   showLanguageMenu,
   expandedSections,
-  currentReleaseVersion,
   onToggleLanguageMenu,
   onToggleDarkMode,
   onSelectLocale,
   onSelectMood,
   onDateChange,
   onToggleMobileSection,
-  onOpenImageCredits,
-  onOpenReleaseNotes,
 }: IntroPanelProps) {
   const text = appText[locale];
-  const currentReleaseNote = getReleaseNote(currentReleaseVersion);
 
   return (
     <header className="app-panel app-panel--intro">
@@ -247,68 +225,6 @@ export function IntroPanel({
         </MobileSection>
       ) : null}
 
-      {upcomingNotables.length > 0 ? (
-        <DisclosurePanel
-          className="upcoming-card"
-          isOpen={expandedSections.upcoming}
-          onToggle={() => onToggleMobileSection('upcoming')}
-          title={text.upcoming}
-        >
-          <div className="upcoming-list">
-            {upcomingNotables.map((item) => (
-              <article key={item.dateLabel} className="upcoming-item">
-                <div className="upcoming-item-top">
-                  <span className="upcoming-label">{item.label}</span>
-                  <span className="upcoming-days">
-                    {item.daysUntil === 1
-                      ? text.upcomingTomorrow
-                      : text.upcomingInDays(item.daysUntil)}
-                  </span>
-                </div>
-                <p className="upcoming-title">{item.title}</p>
-                <p className="upcoming-date">{formatShortSwedishDate(item.date, locale)}</p>
-                <p className="upcoming-note">{item.note}</p>
-              </article>
-            ))}
-          </div>
-        </DisclosurePanel>
-      ) : null}
-
-      <footer className="intro-footer">
-        <div className="intro-footer-links">
-          <button
-            type="button"
-            className="source-link source-link--button"
-            onClick={onOpenImageCredits}
-          >
-            {text.imageCredits}
-          </button>
-          <a
-            className="source-link"
-            href="https://temadagar.se/kalender/"
-            target="_blank"
-            rel="noreferrer"
-          >
-            {text.themeDaySource}
-          </a>
-          <span className="build-stamp">
-            {text.buildInfoLabel} {buildStamp}
-          </span>
-        </div>
-        <div className="release-note-card release-note-card--subtle">
-          <p className="eyebrow">{text.releaseNotesLabel}</p>
-          <p className="release-note-current">
-            {currentReleaseNote?.shortSummary[locale] ?? buildStamp}
-          </p>
-          <button
-            type="button"
-            className="source-link source-link--button release-note-button"
-            onClick={onOpenReleaseNotes}
-          >
-            {text.releaseNotesOpen}
-          </button>
-        </div>
-      </footer>
     </header>
   );
 }

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import './App.css';
 import { AiBlurbRequest } from './aiBlurbs';
 import { appText } from './appText';
@@ -21,6 +21,7 @@ import {
   formatCenterDate,
   formatForHumans,
   formatForInput,
+  formatShortSwedishDate,
   getDaysUntil,
 } from './dateUtils';
 import { getDayStatus, getUpcomingOfficialHolidayInWeek } from './dayLogic';
@@ -36,6 +37,7 @@ import {
 import { getNationalDayPanel } from './nationalDays';
 import { getSeasonalNotes } from './seasonalNotes';
 import { getInitialMood, getMoodLabel, MOOD_STORAGE_KEY, Mood } from './mood';
+import { getReleaseNote } from './releaseNotes';
 import { buildThemeDayBlurbs, filterThemeDays, joinWithAnd } from './themeDayBlurbs';
 import { getThemeDaysForDate } from './temadagar';
 import { getUpcomingNotables } from './upcomingNotables';
@@ -70,9 +72,11 @@ function App({
     worldNationalDays: true,
   });
   const [selectedDate, setSelectedDate] = useState(formatForInput(initialDate));
+  const mainCardRef = useRef<HTMLElement | null>(null);
 
   const text = appText[locale];
   const buildStamp = useMemo(() => formatBuildStamp(locale), [locale]);
+  const currentReleaseNote = useMemo(() => getReleaseNote(buildInfo.version), []);
   const celebrations = useMemo(
     () => getCelebrations(locale, contentPack, mood),
     [contentPack, locale, mood]
@@ -259,6 +263,21 @@ function App({
     setSelectedDate(formatForInput(addDays(selectedDateObject, days)));
   }
 
+  function handleDateChange(nextDate: string): void {
+    setSelectedDate(nextDate);
+
+    if (!isMobileLayout || typeof window === 'undefined') {
+      return;
+    }
+
+    window.setTimeout(() => {
+      mainCardRef.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    }, 120);
+  }
+
   function toggleMobileSection(section: MobileSectionKey): void {
     setExpandedSections((current) => ({
       ...current,
@@ -277,7 +296,6 @@ function App({
           locale={locale}
           darkMode={darkMode}
           contentPack={contentPack}
-          buildStamp={buildStamp}
           mood={mood}
           selectedDate={selectedDate}
           humanDate={humanDate}
@@ -288,209 +306,280 @@ function App({
           upcomingHolidayDate={upcomingHoliday?.date}
           daysUntilHoliday={daysUntilHoliday}
           seasonalNotes={seasonalNotes}
-          upcomingNotables={upcomingNotables}
           isMobileLayout={isMobileLayout}
           showLanguageMenu={showLanguageMenu}
           expandedSections={expandedSections}
-          currentReleaseVersion={buildInfo.version}
           onToggleLanguageMenu={() => setShowLanguageMenu((current) => !current)}
           onToggleDarkMode={() => setDarkMode((current) => !current)}
           onSelectLocale={setLocale}
           onSelectMood={setMood}
-          onDateChange={setSelectedDate}
+          onDateChange={handleDateChange}
           onToggleMobileSection={toggleMobileSection}
-          onOpenImageCredits={() => setShowImageCredits(true)}
-          onOpenReleaseNotes={() => setShowReleaseNotes(true)}
         />
 
-        <main className="app-panel celebration-card">
-          <div className="card-nav" aria-label={text.dateNavigationAria}>
-            <button
-              type="button"
-              className="card-nav-button"
-              onClick={() => stepSelectedDate(-1)}
-            >
-              {text.previousDay}
-            </button>
-            <p className="card-date">{centerDate}</p>
-            <button
-              type="button"
-              className="card-nav-button"
-              onClick={() => stepSelectedDate(1)}
-            >
-              {text.nextDay}
-            </button>
-          </div>
-
-          <div className="card-kicker-row">
-            <p className="eyebrow">{kicker}</p>
-            <span className="mood-pill">{getMoodLabel(mood, locale)}</span>
-          </div>
-
-          {themeDayDisplayTitle && !celebration ? (
-            <h2
-              className={`celebration-title celebration-title--stacked${
-                hasLongWordTitle ? ' celebration-title--longword' : ''
-              }`}
-            >
-              {themeDayDisplayTitle}.
-              <span className="celebration-title-subline">
-                {isAiBundleLoading ? text.blurbLoading : themeDayTitleEnding}
-              </span>
-            </h2>
-          ) : celebrationSubtitle ? (
-            <h2
-              className={`celebration-title celebration-title--stacked${
-                hasLongWordTitle ? ' celebration-title--longword' : ''
-              }`}
-            >
-              {formatTitle(mainTitle)}
-              <span className="celebration-title-subline">{celebrationSubtitle}</span>
-            </h2>
-          ) : (
-            <h2
-              className={`celebration-title${
-                hasLongWordTitle ? ' celebration-title--longword' : ''
-              }`}
-            >
-              {formatTitle(mainTitle)}
-            </h2>
-          )}
-
-          <div className="blurb-row">
-            {isAiBundleLoading ? (
-              <p className="celebration-blurb celebration-blurb--loading" aria-live="polite">
-                {text.blurbLoading}
-              </p>
-            ) : (
-              <p className="celebration-blurb">{blurb}</p>
-            )}
-            {currentBlurbs && !isAiBundleLoading ? (
+        <div className="app-main-column">
+          <main ref={mainCardRef} className="app-panel celebration-card">
+            <div className="card-nav" aria-label={text.dateNavigationAria}>
               <button
                 type="button"
-                className="reroll-button"
-                onClick={() => {
-                  void handleReroll();
-                }}
-                disabled={isAiRerolling}
+                className="card-nav-button"
+                onClick={() => stepSelectedDate(-1)}
               >
-                {text.reroll}
+                {text.previousDay}
               </button>
-            ) : null}
-          </div>
+              <p className="card-date">{centerDate}</p>
+              <button
+                type="button"
+                className="card-nav-button"
+                onClick={() => stepSelectedDate(1)}
+              >
+                {text.nextDay}
+              </button>
+            </div>
 
-          {celebration ? (
-            <>
-              <div className="media-grid">
-                {celebration.primaryImage ? (
-                  <figure
-                    className={`media-card media-card--primary${
-                      compactPrimaryMedia ? ' media-card--compact' : ''
-                    }`}
-                  >
-                    <img src={celebration.primaryImage} alt={celebration.alt ?? celebration.title} />
-                  </figure>
-                ) : null}
-                {celebration.secondaryImage ? (
-                  <figure className="media-card">
-                    <img
-                      src={celebration.secondaryImage}
-                      alt={`${celebration.alt ?? celebration.title} extra`}
-                    />
-                  </figure>
-                ) : null}
-                {!celebration.primaryImage && !celebration.secondaryImage ? (
-                  <div className="placeholder-card placeholder-card--visual">
-                    <span>{celebration.visualBadge ?? text.noImageBadge}</span>
-                    <strong>{celebration.visualTitle ?? text.noImageTitle}</strong>
-                    <p>{celebration.visualBody ?? text.noImageBody}</p>
-                  </div>
-                ) : null}
-              </div>
+            <div className="card-kicker-row">
+              <p className="eyebrow">{kicker}</p>
+              <span className="mood-pill">{getMoodLabel(mood, locale)}</span>
+            </div>
 
-              {extraDisplayThemeDays.length > 0 ? (
-                <DisclosurePanel
-                  className="theme-day-panel"
-                  isOpen={expandedSections.extraThemeDays}
-                  onToggle={() => toggleMobileSection('extraThemeDays')}
-                  badge={text.extraThemeDays}
-                  title={text.extraThemeDays}
+            {themeDayDisplayTitle && !celebration ? (
+              <h2
+                className={`celebration-title celebration-title--stacked${
+                  hasLongWordTitle ? ' celebration-title--longword' : ''
+                }`}
+              >
+                {themeDayDisplayTitle}.
+                <span className="celebration-title-subline">
+                  {isAiBundleLoading ? text.blurbLoading : themeDayTitleEnding}
+                </span>
+              </h2>
+            ) : celebrationSubtitle ? (
+              <h2
+                className={`celebration-title celebration-title--stacked${
+                  hasLongWordTitle ? ' celebration-title--longword' : ''
+                }`}
+              >
+                {formatTitle(mainTitle)}
+                <span className="celebration-title-subline">{celebrationSubtitle}</span>
+              </h2>
+            ) : (
+              <h2
+                className={`celebration-title${
+                  hasLongWordTitle ? ' celebration-title--longword' : ''
+                }`}
+              >
+                {formatTitle(mainTitle)}
+              </h2>
+            )}
+
+            <div className="blurb-row">
+              {isAiBundleLoading ? (
+                <p className="celebration-blurb celebration-blurb--loading" aria-live="polite">
+                  {text.blurbLoading}
+                </p>
+              ) : (
+                <p className="celebration-blurb">{blurb}</p>
+              )}
+              {currentBlurbs && !isAiBundleLoading ? (
+                <button
+                  type="button"
+                  className="reroll-button"
+                  onClick={() => {
+                    void handleReroll();
+                  }}
+                  disabled={isAiRerolling}
                 >
-                  <p>
-                    {getAsIfThatWasNotEnough(
-                      locale,
-                      mood,
-                      extraThemeDayLead ?? '',
-                      joinWithAnd(extraDisplayThemeDays, locale)
-                    )}
-                  </p>
+                  {text.reroll}
+                </button>
+              ) : null}
+            </div>
+
+            {celebration ? (
+              <>
+                <div className="media-grid">
+                  {celebration.primaryImage ? (
+                    <figure
+                      className={`media-card media-card--primary${
+                        compactPrimaryMedia ? ' media-card--compact' : ''
+                      }`}
+                    >
+                      <img src={celebration.primaryImage} alt={celebration.alt ?? celebration.title} />
+                    </figure>
+                  ) : null}
+                  {celebration.secondaryImage ? (
+                    <figure className="media-card">
+                      <img
+                        src={celebration.secondaryImage}
+                        alt={`${celebration.alt ?? celebration.title} extra`}
+                      />
+                    </figure>
+                  ) : null}
+                  {!celebration.primaryImage && !celebration.secondaryImage ? (
+                    <div className="placeholder-card placeholder-card--visual">
+                      <span>{celebration.visualBadge ?? text.noImageBadge}</span>
+                      <strong>{celebration.visualTitle ?? text.noImageTitle}</strong>
+                      <p>{celebration.visualBody ?? text.noImageBody}</p>
+                    </div>
+                  ) : null}
+                </div>
+
+                {extraDisplayThemeDays.length > 0 ? (
+                  <DisclosurePanel
+                    className="theme-day-panel"
+                    isOpen={expandedSections.extraThemeDays}
+                    onToggle={() => toggleMobileSection('extraThemeDays')}
+                    badge={text.extraThemeDays}
+                    title={text.extraThemeDays}
+                  >
+                    <p>
+                      {getAsIfThatWasNotEnough(
+                        locale,
+                        mood,
+                        extraThemeDayLead ?? '',
+                        joinWithAnd(extraDisplayThemeDays, locale)
+                      )}
+                    </p>
+                    <ul className="theme-day-list">
+                      {extraDisplayThemeDays.map((themeDay) => (
+                        <li key={themeDay}>{themeDay}</li>
+                      ))}
+                    </ul>
+                  </DisclosurePanel>
+                ) : null}
+              </>
+            ) : (
+              <DisclosurePanel
+                className="ordinary-card"
+                isOpen={!hasThemeDays || expandedSections.themeDays}
+                onToggle={() => {
+                  if (hasThemeDays) {
+                    toggleMobileSection('themeDays');
+                  }
+                }}
+                badge={hasThemeDays ? text.todayThemeDays : text.noHit}
+                title={hasThemeDays ? text.todayThemeDays : text.noHit}
+              >
+                <p>
+                  {hasThemeDays && isAiBundleLoading
+                    ? text.blurbLoading
+                    : hasThemeDays
+                      ? getOrdinaryThemeDayLead(
+                          locale,
+                          mood,
+                          joinWithAnd(displayThemeDays, locale),
+                          themeDayCardNote
+                        )
+                      : getOrdinaryNoHitBody(locale, mood)}
+                </p>
+                {hasThemeDays ? (
                   <ul className="theme-day-list">
-                    {extraDisplayThemeDays.map((themeDay) => (
+                    {displayThemeDays.map((themeDay) => (
                       <li key={themeDay}>{themeDay}</li>
                     ))}
                   </ul>
-                </DisclosurePanel>
-              ) : null}
-            </>
-          ) : (
-            <DisclosurePanel
-              className="ordinary-card"
-              isOpen={!hasThemeDays || expandedSections.themeDays}
-              onToggle={() => {
-                if (hasThemeDays) {
-                  toggleMobileSection('themeDays');
-                }
-              }}
-              badge={hasThemeDays ? text.todayThemeDays : text.noHit}
-              title={hasThemeDays ? text.todayThemeDays : text.noHit}
-            >
-              <p>
-                {hasThemeDays && isAiBundleLoading
-                  ? text.blurbLoading
-                  : hasThemeDays
-                    ? getOrdinaryThemeDayLead(
-                        locale,
-                        mood,
-                        joinWithAnd(displayThemeDays, locale),
-                        themeDayCardNote
-                      )
-                    : getOrdinaryNoHitBody(locale, mood)}
-              </p>
-              {hasThemeDays ? (
-                <ul className="theme-day-list">
-                  {displayThemeDays.map((themeDay) => (
-                    <li key={themeDay}>{themeDay}</li>
+                ) : null}
+              </DisclosurePanel>
+            )}
+
+            {nationalDayPanel ? (
+              <DisclosurePanel
+                className="world-day-panel"
+                isOpen={expandedSections.worldNationalDays}
+                onToggle={() => toggleMobileSection('worldNationalDays')}
+                badge={text.worldNationalDaysBadge}
+                title={text.worldNationalDays}
+              >
+                <p className="world-day-summary">{nationalDayPanel.summary}</p>
+                <ul className="theme-day-list world-day-list">
+                  {nationalDayPanel.items.map((item) => (
+                    <li key={`${item.nation}-${item.significance}`}>
+                      <strong>{item.nation}</strong>
+                      <span>{item.significance}</span>
+                    </li>
                   ))}
                 </ul>
-              ) : null}
-            </DisclosurePanel>
-          )}
+                {nationalDayPanel.hiddenCount > 0 ? (
+                  <p className="world-day-more">
+                    {text.worldNationalDaysMore(nationalDayPanel.hiddenCount)}
+                  </p>
+                ) : null}
+              </DisclosurePanel>
+            ) : null}
 
-          {nationalDayPanel ? (
-            <DisclosurePanel
-              className="world-day-panel"
-              isOpen={expandedSections.worldNationalDays}
-              onToggle={() => toggleMobileSection('worldNationalDays')}
-              badge={text.worldNationalDaysBadge}
-              title={text.worldNationalDays}
-            >
-              <p className="world-day-summary">{nationalDayPanel.summary}</p>
-              <ul className="theme-day-list world-day-list">
-                {nationalDayPanel.items.map((item) => (
-                  <li key={`${item.nation}-${item.significance}`}>
-                    <strong>{item.nation}</strong>
-                    <span>{item.significance}</span>
-                  </li>
-                ))}
-              </ul>
-              {nationalDayPanel.hiddenCount > 0 ? (
-                <p className="world-day-more">
-                  {text.worldNationalDaysMore(nationalDayPanel.hiddenCount)}
-                </p>
-              ) : null}
-            </DisclosurePanel>
-          ) : null}
-        </main>
+            {upcomingNotables.length > 0 ? (
+              <DisclosurePanel
+                className="upcoming-card"
+                isOpen={expandedSections.upcoming}
+                onToggle={() => toggleMobileSection('upcoming')}
+                title={text.upcoming}
+              >
+                <div className="upcoming-list">
+                  {upcomingNotables.map((item) => (
+                    <article key={item.dateLabel} className="upcoming-item">
+                      <div className="upcoming-item-top">
+                        <span className="upcoming-label">{item.label}</span>
+                        <span className="upcoming-days">
+                          {item.daysUntil === 1
+                            ? text.upcomingTomorrow
+                            : text.upcomingInDays(item.daysUntil)}
+                        </span>
+                      </div>
+                      <p className="upcoming-title">{item.title}</p>
+                      <p className="upcoming-date">
+                        {formatShortSwedishDate(item.date, locale)}
+                      </p>
+                      <p className="upcoming-note">{item.note}</p>
+                    </article>
+                  ))}
+                </div>
+              </DisclosurePanel>
+            ) : null}
+          </main>
+
+          <footer className="app-panel main-footer-meta">
+            <div className="main-footer-links">
+              <button
+                type="button"
+                className="source-link source-link--button"
+                onClick={() => setShowImageCredits(true)}
+              >
+                {text.imageCredits}
+              </button>
+              <a
+                className="source-link"
+                href="https://temadagar.se/kalender/"
+                target="_blank"
+                rel="noreferrer"
+              >
+                {text.themeDaySource}
+              </a>
+              <a
+                className="source-link"
+                href="https://sholiday.faboul.se/"
+                target="_blank"
+                rel="noreferrer"
+              >
+                {text.namedaySource}
+              </a>
+            </div>
+            <div className="release-note-card release-note-card--subtle main-release-note-card">
+              <p className="eyebrow">{text.releaseNotesLabel}</p>
+              <p className="release-note-current">
+                {currentReleaseNote?.shortSummary[locale] ?? buildStamp}
+              </p>
+              <button
+                type="button"
+                className="source-link source-link--button release-note-button"
+                onClick={() => setShowReleaseNotes(true)}
+              >
+                {text.releaseNotesOpen}
+              </button>
+            </div>
+            <span className="build-stamp">
+              {text.buildInfoLabel} {buildStamp}
+            </span>
+          </footer>
+        </div>
       </div>
 
       <AppDialogs

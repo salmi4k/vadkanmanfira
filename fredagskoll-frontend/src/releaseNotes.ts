@@ -8,6 +8,32 @@ export type ReleaseNote = {
 
 export const releaseNotes: ReleaseNote[] = [
   {
+    version: '0.1.21',
+    shortSummary: {
+      sv: 'På gång har flyttat till högersidan och footern ligger lägre.',
+      en: 'Upcoming dates moved to the right side and the footer now sits lower.',
+      'pt-BR': 'O bloco de próximas datas foi para a direita e o rodapé agora fica mais baixo.',
+    },
+    summary: {
+      sv: 'På gång ligger nu i en egen panel på högersidan under Också idag, så vänsterspalten kan fokusera på val och snabb överblick. Samtidigt ligger källor, versionsnytt och bygge längre ner och följer helheten bättre i layouten.',
+      en: 'Upcoming dates now live in their own panel on the right side below Also today, so the left column can focus on controls and quick context. At the same time, sources, release notes, and build info sit lower and follow the overall layout more naturally.',
+      'pt-BR': 'As próximas datas agora ficam em seu próprio painel à direita, abaixo de Também hoje, para a coluna da esquerda focar nos controles e no contexto rápido. Ao mesmo tempo, fontes, novidades da versão e build ficaram mais embaixo e acompanham melhor o layout.',
+    },
+  },
+  {
+    version: '0.1.20',
+    shortSummary: {
+      sv: 'Versionsinfo flyttad till huvudkortet och mobil datumväljare hoppar rätt.',
+      en: 'Version info moved to the main card and the mobile date picker now jumps back correctly.',
+      'pt-BR': 'As informações de versão foram para o cartão principal e o seletor de data no celular agora volta para o lugar certo.',
+    },
+    summary: {
+      sv: 'Bygge, Bildkällor och versionsnytt ligger nu längst ner i huvudkortet i stället för att ta plats i vänsterspalten. På mobil scrollar appen också tillbaka till huvudkortet när du bekräftar ett nytt datum, så resultatet hamnar direkt där blicken borde vara.',
+      en: 'Build info, Image credits, and version notes now live at the bottom of the main card instead of taking space in the left column. On mobile, the app also scrolls back to the main card after you confirm a new date so the result appears where your attention should be.',
+      'pt-BR': 'As informações de build, os créditos das imagens e as notas da versão agora ficam no rodapé do cartão principal em vez de ocupar espaço na coluna da esquerda. No celular, o app também volta para o cartão principal depois que você confirma uma nova data, para que o resultado apareça exatamente onde deveria.',
+    },
+  },
+  {
     version: '0.1.19',
     shortSummary: {
       sv: 'Fler temadagar har fått mer egen röst och mindre generisk text.',
