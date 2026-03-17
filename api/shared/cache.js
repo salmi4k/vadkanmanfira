@@ -2,9 +2,9 @@ const crypto = require('crypto');
 
 const CACHE_TABLE_NAME = 'blurbcache';
 const LIBRARY_TABLE_NAME = 'blurblibrary';
-const CACHE_MAX_AGE_MS = 15 * 60 * 1000;
-const GENERATION_COOLDOWN_MS = 15 * 60 * 1000;
-const MAX_VARIANTS_PER_KEY = 3;
+const CACHE_MAX_AGE_MS = 24 * 60 * 60 * 1000;
+const GENERATION_COOLDOWN_MS = 5 * 60 * 1000;
+const MAX_VARIANTS_PER_KEY = 5;
 
 function loadTableClient() {
   try {
@@ -146,6 +146,17 @@ function chooseVariant(variants, lastBundleId) {
     variants.length > 1 ? variants.filter((variant) => variant.bundleId !== lastBundleId) : variants;
 
   return pool[Math.floor(Math.random() * pool.length)];
+}
+
+function choosePreferredVariant(state) {
+  if (!state) {
+    return null;
+  }
+
+  return (
+    chooseVariant(state.freshVariants, state.lastBundleId) ||
+    chooseVariant(state.variants, state.lastBundleId)
+  );
 }
 
 function buildBundleEntity(requestHash, variant) {
@@ -507,6 +518,7 @@ module.exports = {
   buildRequestHash,
   canGenerateVariant,
   chooseVariant,
+  choosePreferredVariant,
   createVariant,
   getCacheState,
   recordVariantUsage,

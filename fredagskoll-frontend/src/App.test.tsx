@@ -34,6 +34,7 @@ function buildMockAiContent(
 ): ReturnType<typeof useAiContent> {
   return {
     blurb: 'Standardtext.',
+    canReroll: true,
     currentBlurbs: ['Standardtext.'],
     handleReroll: vi.fn(),
     isAiBundleLoading: false,
@@ -137,7 +138,7 @@ test('renders Nationaldagen ahead of the generic Saturday fallback', async () =>
   expect(
     screen.getByRole('heading', { level: 2, name: /Nationaldagen\./i })
   ).toBeInTheDocument();
-  expect(screen.getByRole('button', { name: /Dela dagen/i })).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: /Skicka vidare/i })).toBeInTheDocument();
 });
 
 test('renders Midsommarafton ahead of the generic Friday fallback', async () => {
@@ -399,7 +400,7 @@ test('renders an upcoming official holiday note when one lands later that week',
 
   expect(screen.getByText(/Veckans helgdag/i)).toBeInTheDocument();
   expect(screen.getAllByText(/^Första maj$/i).length).toBeGreaterThan(0);
-  expect(screen.getByText(/4 dagar kvar/i)).toBeInTheDocument();
+  expect(screen.getByText(/ligger senare i veckan/i)).toBeInTheDocument();
 });
 
 test('renders upcoming notable dates with major celebrations ahead of random filler', async () => {
@@ -414,15 +415,15 @@ test('renders upcoming notable dates with major celebrations ahead of random fil
 test('allows collapsing the upcoming panel', async () => {
   await renderAppAt(new Date(2026, 3, 27));
 
-  expect(screen.getByText(/^Valborg$/i)).toBeInTheDocument();
+  expect(screen.getAllByText(/Kristi himmelsfärdsdag/i).length).toBeGreaterThan(0);
 
   fireEvent.click(screen.getByRole('button', { name: /På gång/i }));
 
-  expect(screen.queryByText(/^Valborg$/i)).not.toBeInTheDocument();
+  expect(screen.queryAllByText(/Kristi himmelsfärdsdag/i)).toHaveLength(0);
 
   fireEvent.click(screen.getByRole('button', { name: /På gång/i }));
 
-  expect(screen.getByText(/^Valborg$/i)).toBeInTheDocument();
+  expect(screen.getAllByText(/Kristi himmelsfärdsdag/i).length).toBeGreaterThan(0);
 });
 
 test('allows collapsing the ordinary theme-day panel from its own heading', async () => {

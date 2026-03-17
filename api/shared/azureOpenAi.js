@@ -47,10 +47,10 @@ function sanitizeBundle(bundle, request) {
 
   return {
     titleEndings:
-      request.kind === 'themeDay' ? titleEndings.slice(0, 6) : [],
+      request.kind === 'themeDay' ? titleEndings.slice(0, 8) : [],
     cardNotes:
-      request.kind === 'themeDay' ? cardNotes.slice(0, 6) : [],
-    blurbs: blurbs.slice(0, 8),
+      request.kind === 'themeDay' ? cardNotes.slice(0, 8) : [],
+    blurbs: blurbs.slice(0, 10),
   };
 }
 
@@ -79,8 +79,8 @@ async function generateBlurbBundle(request) {
         { role: 'system', content: buildSystemPrompt() },
         { role: 'user', content: buildUserPrompt(request) },
       ],
-      temperature: 0.95,
-      max_tokens: 900,
+      temperature: 0.9,
+      max_tokens: 1200,
       response_format: { type: 'json_object' },
     }),
   });

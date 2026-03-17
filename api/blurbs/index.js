@@ -1,7 +1,7 @@
 const {
   canGenerateVariant,
   MAX_VARIANTS_PER_KEY,
-  chooseVariant,
+  choosePreferredVariant,
   createVariant,
   getCacheState,
   recordVariantUsage,
@@ -24,7 +24,7 @@ async function tryGenerateVariant(request, cacheState) {
   try {
     return await generateBlurbBundle(request);
   } catch (error) {
-    if (cacheState && cacheState.freshVariants.length > 0) {
+    if (cacheState && cacheState.variants.length > 0) {
       return null;
     }
 
@@ -93,10 +93,7 @@ module.exports = async function blurbHandler(context, req) {
       }
     }
 
-    const selectedVariant = chooseVariant(
-      cacheState ? cacheState.freshVariants : [],
-      cacheState ? cacheState.lastBundleId : null
-    );
+    const selectedVariant = choosePreferredVariant(cacheState);
 
     if (!selectedVariant) {
       context.res = json(204, null);
@@ -118,6 +115,29 @@ module.exports = async function blurbHandler(context, req) {
       context.log.error('Failed to produce AI blurbs', error);
     } else if (context && typeof context.log === 'function') {
       context.log('Failed to produce AI blurbs', error);
+    }
+
+    try {
+      const request = normalizeRequestBody(req.body || {});
+      if (isValidRequest(request)) {
+        const cacheState = await getCacheState(request);
+        const selectedVariant = choosePreferredVariant(cacheState);
+
+        if (selectedVariant) {
+          const updatedCacheState = recordVariantUsage(cacheState, selectedVariant);
+          await saveCacheState(request, updatedCacheState);
+          context.res = json(200, {
+            source: 'cache',
+            titleEndings: selectedVariant.bundle.titleEndings,
+            cardNotes: selectedVariant.bundle.cardNotes,
+            blurbs: selectedVariant.bundle.blurbs,
+            model: selectedVariant.model,
+          });
+          return;
+        }
+      }
+    } catch {
+      // Ignore cache rescue failures and return the fallback marker below.
     }
 
     context.res = json(200, {

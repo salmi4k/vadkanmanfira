@@ -13,6 +13,7 @@ import { ShareableCelebration } from '../features/shareability/shareability';
 type AppMainColumnProps = {
   centerDate: string;
   celebration: CelebrationContent | null;
+  canReroll: boolean;
   compactPrimaryMedia: boolean;
   currentBlurbs: string[] | null;
   displayThemeDays: string[];
@@ -28,6 +29,7 @@ type AppMainColumnProps = {
   mainTitle: string;
   nationalDayPanel: NationalDayPanel | null;
   onOpenImageCredits: () => void;
+  onOpenReleaseNotes: () => void;
   onReroll: () => void;
   onStepDate: (days: number) => void;
   onToggleMobileSection: (section: MobileSectionKey) => void;
@@ -43,6 +45,7 @@ type AppMainColumnProps = {
 export function AppMainColumn({
   centerDate,
   celebration,
+  canReroll,
   compactPrimaryMedia,
   currentBlurbs,
   displayThemeDays,
@@ -58,6 +61,7 @@ export function AppMainColumn({
   mainTitle,
   nationalDayPanel,
   onOpenImageCredits,
+  onOpenReleaseNotes,
   onReroll,
   onStepDate,
   onToggleMobileSection,
@@ -72,8 +76,10 @@ export function AppMainColumn({
   return (
     <div className="app-main-column">
       <MainCelebrationCard
+        key={centerDate}
         centerDate={centerDate}
         celebration={celebration}
+        canReroll={canReroll}
         compactPrimaryMedia={compactPrimaryMedia}
         currentBlurbs={currentBlurbs}
         displayThemeDays={displayThemeDays}
@@ -104,6 +110,7 @@ export function AppMainColumn({
       <MainFooterMeta
         locale={locale}
         onOpenImageCredits={onOpenImageCredits}
+        onOpenReleaseNotes={onOpenReleaseNotes}
       />
     </div>
   );

@@ -43,6 +43,11 @@ export function SharePanel({ locale, shareable }: SharePanelProps) {
       <button type="button" className="share-button" onClick={() => void handleShare()}>
         {copyState === 'copied' ? text.shareCopied : text.shareOpen}
       </button>
+      {copyState === 'copied' ? (
+        <p className="share-toast" aria-live="polite">
+          {text.shareCopied}
+        </p>
+      ) : null}
     </section>
   );
 }

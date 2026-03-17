@@ -24,6 +24,7 @@ import { Mood } from '../mood';
 type MainCelebrationCardProps = {
   centerDate: string;
   celebration: CelebrationContent | null;
+  canReroll: boolean;
   compactPrimaryMedia: boolean;
   currentBlurbs: string[] | null;
   extraDisplayThemeDays: string[];
@@ -52,6 +53,7 @@ type MainCelebrationCardProps = {
 export function MainCelebrationCard({
   centerDate,
   celebration,
+  canReroll,
   compactPrimaryMedia,
   currentBlurbs,
   displayThemeDays,
@@ -79,9 +81,15 @@ export function MainCelebrationCard({
   const hasLongWordTitle = hasLongTitleWord(themeDayDisplayTitle ?? mainTitle);
   const celebrationSubtitle = celebration?.subtitle ?? null;
   const mood: Mood = 'warm';
+  const featuredUpcoming = upcomingNotables[0] ?? null;
+  const remainingUpcoming = upcomingNotables.slice(1);
+  const hasCeremonialDay = celebration !== null;
 
   return (
-    <main ref={mainCardRef} className="app-panel celebration-card">
+    <main
+      ref={mainCardRef}
+      className={`app-panel celebration-card${hasCeremonialDay ? ' celebration-card--ceremonial' : ''}`}
+    >
       <div className="card-nav" aria-label={text.dateNavigationAria}>
         <button
           type="button"
@@ -142,7 +150,7 @@ export function MainCelebrationCard({
         ) : (
           <p className="celebration-blurb">{visibleBlurb}</p>
         )}
-        {currentBlurbs && !isAiBundleLoading ? (
+        {canReroll && currentBlurbs && !isAiBundleLoading ? (
           <button
             type="button"
             className="reroll-button"
@@ -269,7 +277,20 @@ export function MainCelebrationCard({
         </DisclosurePanel>
       ) : null}
 
-      {upcomingNotables.length > 0 ? (
+      {featuredUpcoming ? (
+        <section className="featured-upcoming-card">
+          <p className="eyebrow">{text.upcoming}</p>
+          <p className="featured-upcoming-label">
+            {featuredUpcoming.daysUntil === 1
+              ? text.upcomingTomorrow
+              : text.upcomingInDays(featuredUpcoming.daysUntil)}
+          </p>
+          <h3 className="featured-upcoming-title">{featuredUpcoming.title}</h3>
+          <p className="featured-upcoming-note">{featuredUpcoming.note}</p>
+        </section>
+      ) : null}
+
+      {remainingUpcoming.length > 0 ? (
         <DisclosurePanel
           className="upcoming-card"
           isOpen={expandedSections.upcoming}
@@ -277,7 +298,7 @@ export function MainCelebrationCard({
           title={text.upcoming}
         >
           <div className="upcoming-list">
-            {upcomingNotables.map((item) => (
+            {remainingUpcoming.map((item) => (
               <article key={item.dateLabel} className="upcoming-item">
                 <div className="upcoming-item-top">
                   <span className="upcoming-label">{item.label}</span>

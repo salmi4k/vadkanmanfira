@@ -6,8 +6,6 @@ import { ContentPack, showsTeamBranding } from '../contentPack';
 import { formatShortSwedishDate } from '../dateUtils';
 import { formatDaysUntilLabel, getUpcomingHolidayBlurb } from '../holidayPresentation';
 import { joinWithConjunction, Locale, localeOptions } from '../locale';
-import { MobileSectionKey } from '../appTypes';
-import { MobileSection } from './MobileSection';
 
 type SeasonalNote = {
   id: string;
@@ -29,15 +27,12 @@ type IntroPanelProps = {
   upcomingHolidayDate?: Date;
   daysUntilHoliday: number | null;
   seasonalNotes: SeasonalNote[];
-  isMobileLayout: boolean;
   showLanguageMenu: boolean;
-  expandedSections: Record<MobileSectionKey, boolean>;
   onToggleLanguageMenu: () => void;
   onSelectLocale: (locale: Locale) => void;
   onDateChange: (date: string) => void;
   onDateCommit: () => void;
   onSurpriseDate: () => void;
-  onToggleMobileSection: (section: MobileSectionKey) => void;
 };
 
 export function IntroPanel({
@@ -52,17 +47,39 @@ export function IntroPanel({
   upcomingHolidayDate,
   daysUntilHoliday,
   seasonalNotes,
-  isMobileLayout,
   showLanguageMenu,
-  expandedSections,
   onToggleLanguageMenu,
   onSelectLocale,
   onDateChange,
   onDateCommit,
   onSurpriseDate,
-  onToggleMobileSection,
 }: IntroPanelProps) {
   const text = appText[locale];
+  const supportItems: Array<{ label: string; title: string; note: string }> = [];
+
+  if (nameDayState === 'ready' && nameDays.length > 0) {
+    supportItems.push({
+      label: text.nameday,
+      title: joinWithConjunction(nameDays, locale),
+      note: humanDate,
+    });
+  }
+
+  if (upcomingHolidayName && upcomingHolidayDate && daysUntilHoliday !== null) {
+    supportItems.push({
+      label: text.weeklyHoliday,
+      title: upcomingHolidayName,
+      note: `${formatDaysUntilLabel(daysUntilHoliday, locale)} ${text.untilLabel} ${formatShortSwedishDate(upcomingHolidayDate, locale)}.`,
+    });
+  }
+
+  if (seasonalNotes.length > 0) {
+    supportItems.push({
+      label: text.nowCard,
+      title: seasonalNotes[0].title,
+      note: seasonalNotes[0].note,
+    });
+  }
 
   return (
     <header className="app-panel app-panel--intro">
@@ -145,63 +162,24 @@ export function IntroPanel({
       </button>
       <p className="surprise-hint">{text.surpriseHint}</p>
 
-      <div className="nameday-card">
-        <p className="eyebrow">{text.nameday}</p>
-        {nameDayState === 'loading' ? <p className="nameday-text">{text.namedayLoading}</p> : null}
-        {nameDayState === 'error' ? <p className="nameday-text">{text.namedayError}</p> : null}
-        {nameDayState === 'ready' && nameDays.length > 0 ? (
-          <p className="nameday-text">{joinWithConjunction(nameDays, locale)}</p>
+      <section className="support-strip" aria-label={text.upcoming}>
+        {nameDayState === 'loading' ? <p className="support-strip-empty">{text.namedayLoading}</p> : null}
+        {nameDayState === 'error' ? <p className="support-strip-empty">{text.namedayError}</p> : null}
+        {nameDayState === 'ready' && supportItems.length === 0 ? (
+          <p className="support-strip-empty">{text.namedayNone}</p>
         ) : null}
-        {nameDayState === 'ready' && nameDays.length === 0 ? (
-          <p className="nameday-text">{text.namedayNone}</p>
-        ) : null}
-      </div>
-
-      {upcomingHolidayName && upcomingHolidayDate && daysUntilHoliday !== null ? (
-        <MobileSection
-          isMobile={isMobileLayout}
-          expanded={expandedSections.holiday}
-          onToggle={() => onToggleMobileSection('holiday')}
-          summary={text.mobileWeeklyHolidaySummary}
-        >
-          <div className="holiday-card">
-            <p className="eyebrow">{text.weeklyHoliday}</p>
-            <p className="holiday-title">{upcomingHolidayName}</p>
-            <p className="nameday-text">
-              {getUpcomingHolidayBlurb(upcomingHolidayName, daysUntilHoliday, locale)}
+        {supportItems.map((item) => (
+          <article key={`${item.label}-${item.title}`} className="support-fact">
+            <p className="support-fact-label">{item.label}</p>
+            <p className="support-fact-title">{item.title}</p>
+            <p className="support-fact-note">
+              {item.label === text.weeklyHoliday && upcomingHolidayName && daysUntilHoliday !== null
+                ? getUpcomingHolidayBlurb(upcomingHolidayName, daysUntilHoliday, locale)
+                : item.note}
             </p>
-            <p className="holiday-meta">
-              {formatDaysUntilLabel(daysUntilHoliday, locale)} {text.untilLabel}{' '}
-              {formatShortSwedishDate(upcomingHolidayDate, locale)}.
-            </p>
-          </div>
-        </MobileSection>
-      ) : null}
-
-      {seasonalNotes.length > 0 ? (
-        <MobileSection
-          isMobile={isMobileLayout}
-          expanded={expandedSections.season}
-          onToggle={() => onToggleMobileSection('season')}
-          summary={text.mobileSeasonSummary(seasonalNotes.length)}
-        >
-          <div className="season-card">
-            <p className="eyebrow">{text.nowCard}</p>
-            <div className="season-list">
-              {seasonalNotes.map((item) => (
-                <article key={item.id} className="season-item">
-                  <div className="season-item-top">
-                    <span className="season-label">{item.label}</span>
-                    <span className="season-meta">{item.meta}</span>
-                  </div>
-                  <p className="season-title">{item.title}</p>
-                  <p className="nameday-text">{item.note}</p>
-                </article>
-              ))}
-            </div>
-          </div>
-        </MobileSection>
-      ) : null}
+          </article>
+        ))}
+      </section>
 
     </header>
   );

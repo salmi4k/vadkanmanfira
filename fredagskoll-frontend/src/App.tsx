@@ -62,7 +62,6 @@ function App({
     expandedSections,
     handleDateChange,
     handleDateCommit,
-    isMobileLayout,
     locale,
     selectedDate,
     setLocale,
@@ -199,6 +198,7 @@ function App({
   const { nameDays, nameDayState } = useNameDays(dayStatus.dateLabel);
   const {
     blurb,
+    canReroll,
     currentBlurbs,
     handleReroll,
     isAiBundleLoading,
@@ -267,20 +267,18 @@ function App({
           upcomingHolidayDate={upcomingHoliday?.date}
           daysUntilHoliday={daysUntilHoliday}
           seasonalNotes={seasonalNotes}
-          isMobileLayout={isMobileLayout}
           showLanguageMenu={showLanguageMenu}
-          expandedSections={expandedSections}
           onToggleLanguageMenu={() => setShowLanguageMenu((current) => !current)}
           onSelectLocale={setLocale}
           onDateChange={handleDateChange}
           onDateCommit={() => handleDateCommit(mainCardRef)}
           onSurpriseDate={handleSurpriseDate}
-          onToggleMobileSection={toggleMobileSection}
         />
 
         <AppMainColumn
           centerDate={centerDate}
           celebration={celebration}
+          canReroll={canReroll}
           compactPrimaryMedia={compactPrimaryMedia}
           currentBlurbs={currentBlurbs}
           displayThemeDays={displayThemeDays}
@@ -296,6 +294,7 @@ function App({
           mainTitle={mainTitle}
           nationalDayPanel={nationalDayPanel}
           onOpenImageCredits={() => setShowImageCredits(true)}
+          onOpenReleaseNotes={() => setShowReleaseNotes(true)}
           onReroll={() => {
             void handleReroll();
           }}

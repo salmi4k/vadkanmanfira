@@ -36,6 +36,24 @@
   }
 }
 
+@keyframes date-reveal {
+  0% {
+    opacity: 0;
+    transform: translateY(16px) scale(0.988);
+    filter: blur(6px);
+  }
+
+  55% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(var(--mood-card-shift)) scale(1);
+    filter: blur(0);
+  }
+}
+
 @keyframes cheerful-arrive {
   0% {
     opacity: 0;
