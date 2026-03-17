@@ -12,7 +12,12 @@ const root = ReactDOM.createRoot(
 const initialDate =
   typeof window === 'undefined'
     ? undefined
-    : resolveInitialDateFromUrl(window.location.search, getActiveContentPack()) ?? undefined;
+    : resolveInitialDateFromUrl(
+        window.location.search,
+        getActiveContentPack(),
+        new Date(),
+        window.location.pathname
+      ) ?? undefined;
 
 registerServiceWorker();
 

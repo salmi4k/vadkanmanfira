@@ -16,6 +16,7 @@ export type ShareableCelebration = {
   dayType: CelebrationDayType;
   entry: ShareCatalogEntry;
   shareUrl: string;
+  sharePreviewUrl: string;
   shareCardUrl: string;
   shareTitle: string;
   shareText: string;
@@ -35,6 +36,13 @@ function getConfiguredSiteOrigin(): string {
 }
 
 export function getShareUrl(dayType: CelebrationDayType, siteOrigin = getConfiguredSiteOrigin()) {
+  return `${siteOrigin}/?share=${getShareCatalogEntry(dayType).slug}`;
+}
+
+export function getSharePreviewUrl(
+  dayType: CelebrationDayType,
+  siteOrigin = getConfiguredSiteOrigin()
+) {
   return `${siteOrigin}/share/${getShareCatalogEntry(dayType).slug}/`;
 }
 
@@ -69,7 +77,8 @@ export function findUpcomingCelebrationDate(
 export function resolveInitialDateFromUrl(
   search: string,
   contentPack: ContentPack,
-  anchorDate = new Date()
+  anchorDate = new Date(),
+  pathname = ''
 ): Date | null {
   const params = new URLSearchParams(search);
   if (params.get('today') === '1') {
@@ -85,7 +94,7 @@ export function resolveInitialDateFromUrl(
     return new Date(`${explicitDate}T12:00:00`);
   }
 
-  const shareSlug = params.get('share');
+  const shareSlug = params.get('share') || getShareSlugFromPathname(pathname);
   if (!shareSlug) {
     return null;
   }
@@ -102,6 +111,15 @@ export function resolveInitialDateFromUrl(
   return findUpcomingCelebrationDate(dayType, anchorDate);
 }
 
+function getShareSlugFromPathname(pathname: string): string | null {
+  if (typeof pathname !== 'string' || pathname.length === 0) {
+    return null;
+  }
+
+  const match = pathname.match(/^\/share\/([^/]+)\/?$/i);
+  return match && match[1] ? match[1].trim().toLowerCase() : null;
+}
+
 export function buildShareableCelebration(args: {
   celebration: CelebrationContent;
   date: Date;
@@ -112,7 +130,8 @@ export function buildShareableCelebration(args: {
 }): ShareableCelebration {
   const { categoryLabel, celebration, date, dayType, locale, scoreLabel } = args;
   const humanDate = formatForHumans(date, locale);
-  const shareUrl = getShareUrl(dayType);
+  const shareUrl = `${getConfiguredSiteOrigin()}${getSharePreviewQuery(date, dayType)}`;
+  const sharePreviewUrl = getSharePreviewUrl(dayType);
   const shareCardUrl = getShareCardUrl(dayType);
   const shareTitle = celebration.title;
   const detailParts = [humanDate, categoryLabel, scoreLabel].filter(Boolean);
@@ -122,6 +141,7 @@ export function buildShareableCelebration(args: {
     dayType,
     entry: getShareCatalogEntry(dayType),
     shareUrl,
+    sharePreviewUrl,
     shareCardUrl,
     shareTitle,
     shareText,
