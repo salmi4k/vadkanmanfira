@@ -174,7 +174,7 @@ What the managed API does:
 - computes a deterministic request hash
 - checks a hot cache row in Azure Table Storage first
 - auto-generates one AI bundle for a new request key and serves cache after that
-- can store up to 3 variants for the same request key, but only creates extra variants on explicit reroll
+- can store up to 5 variants for the same request key, but only creates extra variants on explicit reroll
 - enforces a real generation cooldown per request key before Azure OpenAI is called again
 - rotates between cached variants when more than one already exists
 - stores generated bundles in a separate bundle library table for reuse and tracking
@@ -200,6 +200,12 @@ Required Azure app settings for each Static Web App managed API:
 - `AZURE_OPENAI_DEPLOYMENT`
 - `AZURE_OPENAI_API_VERSION`
 - `AZURE_TABLES_CONNECTION_STRING`
+
+Free-tier guidance:
+
+- the app is intentionally built to reuse cached AI bundles aggressively
+- richer prompt/context work is preferred over extra Azure round-trips
+- integrations should reuse existing generated data and share assets where possible
 
 Local sample config lives in:
 

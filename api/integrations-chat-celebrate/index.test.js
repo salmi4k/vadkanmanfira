@@ -23,6 +23,27 @@ test('returns slack-style response payload', async () => {
   assert.match(payload.text, /Valborg/);
 });
 
+test('returns slack blocks payload with links', async () => {
+  const context = {
+    res: null,
+  };
+
+  await handler(context, {
+    query: {
+      platform: 'slack-blocks',
+      locale: 'sv',
+      date: '2026-04-30',
+    },
+    body: null,
+  });
+
+  assert.equal(context.res.status, 200);
+  const payload = JSON.parse(context.res.body);
+  assert.equal(payload.response_type, 'in_channel');
+  assert.ok(Array.isArray(payload.blocks));
+  assert.match(JSON.stringify(payload.blocks), /share\/cards\/valborg\.svg/i);
+});
+
 test('returns expansion dataset text for discord shape', async () => {
   const context = {
     res: null,
@@ -42,4 +63,26 @@ test('returns expansion dataset text for discord shape', async () => {
   const payload = JSON.parse(context.res.body);
   assert.equal(payload.dataset, 'en-US');
   assert.match(payload.content, /Thanksgiving/i);
+});
+
+test('returns teams adaptive card payload', async () => {
+  const context = {
+    res: null,
+  };
+
+  await handler(context, {
+    query: {
+      platform: 'teams',
+      locale: 'en',
+      dataset: 'en-US',
+      date: '2026-11-26',
+    },
+    body: null,
+  });
+
+  assert.equal(context.res.status, 200);
+  const payload = JSON.parse(context.res.body);
+  assert.equal(payload.type, 'message');
+  assert.equal(payload.dataset, 'en-US');
+  assert.equal(payload.attachments[0].content.type, 'AdaptiveCard');
 });

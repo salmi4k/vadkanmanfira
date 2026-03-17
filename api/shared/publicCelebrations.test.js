@@ -2,6 +2,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 
 const {
+  buildCelebrationLinks,
   loadPublicCelebrationsDataset,
   getCelebrationDateEntry,
   getUpcomingCelebrationEntries,
@@ -46,7 +47,16 @@ test('builds chat text from a celebration entry', () => {
   const text = buildChatText(entry, 'sv');
 
   assert.match(text, /Nationaldagen/);
-  assert.match(text, /Temadagar|Idag firar vi/);
+  assert.match(text, /energi|Temadagar/);
+});
+
+test('builds links for celebratory integrations', () => {
+  const entry = getCelebrationDateEntry('2026-04-30');
+  const links = buildCelebrationLinks(entry);
+
+  assert.match(links.appUrl, /\?date=2026-04-30/);
+  assert.match(links.shareUrl, /share\/valborg/i);
+  assert.match(links.shareCardUrl, /share\/cards\/valborg\.svg/i);
 });
 
 test('returns expansion dataset entries for en-US', () => {

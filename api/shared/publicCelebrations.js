@@ -42,6 +42,18 @@ function normalizeLocale(value) {
   return value === 'en' || value === 'pt-BR' ? value : 'sv';
 }
 
+function getLocalizedNoCelebrationText(locale) {
+  if (locale === 'en') {
+    return 'No celebration found for that date.';
+  }
+
+  if (locale === 'pt-BR') {
+    return 'Nenhuma celebração encontrada para essa data.';
+  }
+
+  return 'Ingen firardag hittades för det datumet.';
+}
+
 function getCelebrationDateEntry(dateLabel, datasetId = 'sv-SE') {
   if (!isValidDateLabel(dateLabel)) {
     return null;
@@ -89,31 +101,41 @@ function localizeEntry(entry, locale = 'sv', datasetId = 'sv-SE') {
 
 function buildChatText(entry, locale = 'sv', datasetId = 'sv-SE') {
   if (!entry || !entry.celebrations || entry.celebrations.length === 0) {
-    if (locale === 'en') {
-      return 'No celebration found for that date.';
-    }
-
-    if (locale === 'pt-BR') {
-      return 'Nenhuma celebracao encontrada para essa data.';
-    }
-
-    return 'Ingen firardag hittades for det datumet.';
+    return getLocalizedNoCelebrationText(locale);
   }
 
   const lines = [];
   const localized = localizeEntry(entry, locale, datasetId);
+  const primary = localized.celebrations[0];
   const heading =
     locale === 'en'
-      ? `Today we celebrate ${localized.date}:`
+      ? `${localized.date} is giving ${primary.copy.title}.`
       : locale === 'pt-BR'
-        ? `Hoje celebramos ${localized.date}:`
-        : `Idag firar vi ${localized.date}:`;
+        ? `${localized.date} está claramente com energia de ${primary.copy.title}.`
+        : `${localized.date} bär tydlig ${primary.copy.title}-energi.`;
 
   lines.push(heading);
 
-  localized.celebrations.forEach((celebration) => {
-    lines.push(`- ${celebration.copy.title}`);
-  });
+  if (primary.copy.subtitle) {
+    lines.push(primary.copy.subtitle);
+  } else if (primary.copy.kicker) {
+    lines.push(primary.copy.kicker);
+  }
+
+  if (localized.celebrations.length > 1) {
+    const moreLabel =
+      locale === 'en'
+        ? 'Also in orbit'
+        : locale === 'pt-BR'
+          ? 'Também rondando'
+          : 'Också i omlopp';
+    lines.push(
+      `${moreLabel}: ${localized.celebrations
+        .slice(1, 3)
+        .map((celebration) => celebration.copy.title)
+        .join(', ')}`
+    );
+  }
 
   if (localized.themeDays.length > 0) {
     const themeDayLabel =
@@ -128,6 +150,17 @@ function buildChatText(entry, locale = 'sv', datasetId = 'sv-SE') {
   return lines.join('\n');
 }
 
+function buildCelebrationLinks(entry) {
+  const primary = entry && Array.isArray(entry.celebrations) ? entry.celebrations[0] : null;
+
+  return {
+    appUrl: `https://vadkanmanfira.se/?date=${entry.date}`,
+    shareUrl: primary && primary.shareSlug ? `https://vadkanmanfira.se/share/${primary.shareSlug}/` : null,
+    shareCardUrl:
+      primary && primary.shareCardPath ? `https://vadkanmanfira.se${primary.shareCardPath}` : null,
+  };
+}
+
 module.exports = {
   loadPublicCelebrationsDataset,
   getCelebrationDateEntry,
@@ -135,6 +168,7 @@ module.exports = {
   getUpcomingCelebrationEntries,
   localizeEntry,
   buildChatText,
+  buildCelebrationLinks,
   normalizeDatasetId,
   normalizeLocale,
 };

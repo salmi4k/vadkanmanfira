@@ -42,17 +42,29 @@ Supported params:
 - `date=YYYY-MM-DD`
 - `locale=sv|en|pt-BR`
 - `dataset=sv-SE|en-US`
-- `platform=text|slack|discord`
+- `platform=text|slack|slack-blocks|teams|discord`
 
 Response shapes:
 - `platform=text`
-  - `{ "text": "..." }`
+  - `{ "text": "...", "links": { "appUrl": "...", "shareUrl": "...", "shareCardUrl": "..." } }`
 - `platform=slack`
   - `{ "response_type": "in_channel", "text": "..." }`
+- `platform=slack-blocks`
+  - Slack block-kit payload with buttons for the day page and share card
+- `platform=teams`
+  - Adaptive Card style payload with the same day object and actions
 - `platform=discord`
   - `{ "content": "..." }`
 
-This is intentionally lightweight. It is meant to be easy to adapt into slash-command or webhook flows later, not to pretend we already built a full bot platform.
+This is intentionally lightweight. It is meant to be easy to adapt into slash-command, webhook, or scheduled-post flows later, not to pretend we already built a full bot platform.
+
+The product stance should stay opinionated across every surface:
+
+- one daily verdict worth sending
+- one elegant card worth posting
+- one deep link back to the exact day
+
+That matters more than shipping a long list of integration toggles.
 
 ## Calendar export
 

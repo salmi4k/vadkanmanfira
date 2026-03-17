@@ -41,6 +41,38 @@ function buildThemeCollisionGuidance(request) {
   ].join(' ');
 }
 
+function buildKindGuidance(request) {
+  if (request.kind === 'celebration') {
+    return [
+      'This is a real celebration or holiday, so the copy should feel culturally anchored rather than invented from thin air.',
+      'Use recognizable rituals, foods, timing, travel patterns, family behavior, flags, awkward host duties, or public mood shifts.',
+      'The joke should come from how people actually behave when this day arrives.',
+    ].join(' ');
+  }
+
+  if (request.kind === 'themeDay') {
+    return [
+      'This is a theme-day driven date, so the humor should come from the collision between niche observances and normal life.',
+      'Make it feel like an observant person noticed how the calendar is trying too hard and decided to make that useful.',
+    ].join(' ');
+  }
+
+  return [
+    'This is an ordinary day or near-ordinary day, so the line should find dignity, pettiness, or ceremonial energy in small social realities.',
+    'Do not overinflate nothingness; find one plausible reason the date still feels mildly charged.',
+  ].join(' ');
+}
+
+function buildEditorialExamples() {
+  return [
+    'Short examples of the level of specificity and synthesis wanted:',
+    '- Good celebration angle: "By three o clock the flag is still up, the cake is gone, and everyone is suddenly prepared to be generous about the country for another hour."',
+    '- Good theme-day collision angle: "When waffle day lands in the same vicinity as budget anxiety and spring optimism, the batter starts sounding like policy."',
+    '- Good ordinary-day angle: "Nothing historic has happened, but the inbox is tense, the weather has opinions, and that is enough structure for a weekday."',
+    '- Bad angle: "Today is Waffle Day and people eat waffles."',
+  ].join('\n');
+}
+
 function buildSystemPrompt() {
   return [
     'You write sharp, vivid microcopy for a humorous Swedish calendar app.',
@@ -116,11 +148,13 @@ function buildUserPrompt(request) {
     }`
   );
   lines.push(`Mood guidance: ${getMoodGuidance(request.mood)}`);
+  lines.push(`Kind-specific guidance: ${buildKindGuidance(request)}`);
   lines.push('Use the reference text only as grounding for topic and rhythm, not as a template to paraphrase.');
   lines.push('Treat the date itself as an editorial constraint: the copy should sound socially plausible for that exact moment in the year.');
   lines.push('Use actual lived details when useful: weather, office behavior, fika logic, family chat energy, travel plans, seasonal food, after-work rituals, and mild social bargaining.');
   lines.push('The humor should come from recognition, contrast, or ceremonial overstatement, not randomness.');
   lines.push('At least a few blurbs should feel good enough to screenshot and send to a friend or a team chat.');
+  lines.push(buildEditorialExamples());
 
   if (request.kind === 'themeDay') {
     lines.push('Generate 8 alternative short title endings, 8 alternative supporting card notes, and 10 blurbs.');
@@ -137,6 +171,7 @@ function buildUserPrompt(request) {
   lines.push('Across the 10 blurbs, vary the angle: some observational, some ceremonial, some social, some slightly petty, some warmly accurate.');
   lines.push('For official holidays or named celebrations, anchor the copy in recognizable rituals or behaviors instead of generic praise.');
   lines.push('When several theme days coexist, mine their contradiction, overlap, or accidental harmony for comedy.');
+  lines.push('Prefer lines that begin inside the scene, not before it.');
   lines.push('Do not mention being an AI, do not explain the joke, and do not use hashtags.');
   lines.push('Return JSON in this shape: {"titleEndings":["..."],"cardNotes":["..."],"blurbs":["..."]}');
 
