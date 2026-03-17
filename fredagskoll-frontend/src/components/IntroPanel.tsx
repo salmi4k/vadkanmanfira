@@ -6,7 +6,6 @@ import { ContentPack, showsTeamBranding } from '../contentPack';
 import { formatShortSwedishDate } from '../dateUtils';
 import { formatDaysUntilLabel, getUpcomingHolidayBlurb } from '../holidayPresentation';
 import { joinWithConjunction, Locale, localeOptions } from '../locale';
-import { getMoodLabel, getMoodNote, Mood, moodOptions } from '../mood';
 import { MobileSectionKey } from '../appTypes';
 import { MobileSection } from './MobileSection';
 
@@ -20,9 +19,7 @@ type SeasonalNote = {
 
 type IntroPanelProps = {
   locale: Locale;
-  darkMode: boolean;
   contentPack: ContentPack;
-  mood: Mood;
   selectedDate: string;
   humanDate: string;
   dateLabel: string;
@@ -36,9 +33,7 @@ type IntroPanelProps = {
   showLanguageMenu: boolean;
   expandedSections: Record<MobileSectionKey, boolean>;
   onToggleLanguageMenu: () => void;
-  onToggleDarkMode: () => void;
   onSelectLocale: (locale: Locale) => void;
-  onSelectMood: (mood: Mood) => void;
   onDateChange: (date: string) => void;
   onDateCommit: () => void;
   onSurpriseDate: () => void;
@@ -47,9 +42,7 @@ type IntroPanelProps = {
 
 export function IntroPanel({
   locale,
-  darkMode,
   contentPack,
-  mood,
   selectedDate,
   humanDate,
   dateLabel,
@@ -63,9 +56,7 @@ export function IntroPanel({
   showLanguageMenu,
   expandedSections,
   onToggleLanguageMenu,
-  onToggleDarkMode,
   onSelectLocale,
-  onSelectMood,
   onDateChange,
   onDateCommit,
   onSurpriseDate,
@@ -114,9 +105,6 @@ export function IntroPanel({
             </div>
           ) : null}
         </div>
-        <button type="button" className="theme-toggle" onClick={onToggleDarkMode}>
-          {darkMode ? text.lightMode : text.darkMode}
-        </button>
       </div>
 
       <div className={`brand-block${showsTeamBranding(contentPack) ? '' : ' brand-block--text-only'}`}>
@@ -156,25 +144,6 @@ export function IntroPanel({
         {text.surpriseAction}
       </button>
       <p className="surprise-hint">{text.surpriseHint}</p>
-
-      <label htmlFor="mood-picker" className="picker-label">
-        {text.moodLabel}
-      </label>
-      <div className="picker-shell picker-shell--mood">
-        <select
-          id="mood-picker"
-          value={mood}
-          onChange={(event) => onSelectMood(event.target.value as Mood)}
-          className="date-picker mood-picker"
-        >
-          {moodOptions.map((option) => (
-            <option key={option.value} value={option.value}>
-              {getMoodLabel(option.value, locale)}
-            </option>
-          ))}
-        </select>
-        <p className="mood-note">{getMoodNote(mood, locale)}</p>
-      </div>
 
       <div className="nameday-card">
         <p className="eyebrow">{text.nameday}</p>

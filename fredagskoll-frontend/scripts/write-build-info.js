@@ -3,6 +3,7 @@ const path = require('path');
 const { execSync } = require('child_process');
 
 const CONTENT_PACK_ENV_KEY = 'VITE_CONTENT_PACK';
+const SITE_ORIGIN_ENV_KEY = 'VITE_SITE_ORIGIN';
 
 function normalizeContentPack(value) {
   return value === 'team' ? 'team' : 'public';
@@ -10,6 +11,15 @@ function normalizeContentPack(value) {
 
 function getActiveContentPack() {
   return normalizeContentPack(process.env[CONTENT_PACK_ENV_KEY]);
+}
+
+function getSiteOrigin() {
+  const value = process.env[SITE_ORIGIN_ENV_KEY];
+  if (typeof value === 'string' && value.trim().length > 0) {
+    return value.trim().replace(/\/+$/, '');
+  }
+
+  return 'http://localhost:3000';
 }
 
 const PACK_BRANDING = {
@@ -103,6 +113,7 @@ function createFaviconSvg(branding) {
 
 function writeBrowserBranding(contentPack) {
   const branding = PACK_BRANDING[contentPack];
+  const siteOrigin = getSiteOrigin();
   const projectRoot = path.resolve(__dirname, '..');
   const publicDir = path.resolve(projectRoot, 'public');
   const manifestPath = path.resolve(publicDir, 'manifest.json');
@@ -153,6 +164,15 @@ function writeBrowserBranding(contentPack) {
     '      name="description"',
     `      content="${branding.appDescription}"`,
     '    />',
+    '    <meta property="og:type" content="website" />',
+    `    <meta property="og:title" content="${branding.appName}" />`,
+    `    <meta property="og:description" content="${branding.appDescription}" />`,
+    `    <meta property="og:url" content="${siteOrigin}/" />`,
+    `    <meta property="og:image" content="${siteOrigin}/logo512.png" />`,
+    '    <meta name="twitter:card" content="summary_large_image" />',
+    `    <meta name="twitter:title" content="${branding.appName}" />`,
+    `    <meta name="twitter:description" content="${branding.appDescription}" />`,
+    `    <meta name="twitter:image" content="${siteOrigin}/logo512.png" />`,
     '    <link rel="apple-touch-icon" href="/logo192.png" />',
     '    <link rel="manifest" href="/manifest.json" />',
     `    <title>${branding.appName}</title>`,

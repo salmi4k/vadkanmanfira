@@ -78,6 +78,8 @@ export const appText: Record<
     pickDate: string;
     surpriseAction: string;
     surpriseHint: string;
+    installApp: string;
+    installHint: string;
     moodLabel: string;
     nameday: string;
     namedayLoading: string;
@@ -103,6 +105,20 @@ export const appText: Record<
     imageCredits: string;
     themeDaySource: string;
     namedaySource: string;
+    publicApiLink: string;
+    calendarExportLink: string;
+    shareLabel: string;
+    shareLead: string;
+    shareOpen: string;
+    shareCopy: string;
+    shareCard: string;
+    shareCopied: string;
+    celebrationStatsLabel: string;
+    celebrationStatsTitle: string;
+    celebrationStatsBusiestMonth: (month: string, count: number) => string;
+    celebrationStatsTopCategory: (category: string, count: number) => string;
+    celebrationStatsTotalDays: (count: number) => string;
+    celebrationStatsTopDates: string;
     previousDay: string;
     nextDay: string;
     reroll: string;
@@ -146,6 +162,8 @@ export const appText: Record<
     pickDate: 'Välj datum',
     surpriseAction: 'Överraska mig',
     surpriseHint: 'Hoppa till ett datum som faktiskt verkar värt att fira.',
+    installApp: 'Installera appen',
+    installHint: 'Spara Vad kan man fira? på hemskärmen för snabbare vardagsbruk.',
     moodLabel: 'Ton',
     nameday: 'Dagens namnsdag',
     namedayLoading: 'Laddar namnsdag från öppet API.',
@@ -174,6 +192,22 @@ export const appText: Record<
     imageCredits: 'Bildkällor',
     themeDaySource: 'Temadagar inspirerade av temadagar.se',
     namedaySource: 'Namnsdagar via sholiday.faboul.se',
+    publicApiLink: 'Publikt API',
+    calendarExportLink: 'Kalenderexport (.ics)',
+    shareLabel: 'Dela vidare',
+    shareLead: 'Den här dagen kan nu få en riktig delningslänk och ett eget delkort.',
+    shareOpen: 'Dela dagen',
+    shareCopy: 'Kopiera länk',
+    shareCard: 'Öppna delkort',
+    shareCopied: 'Länk kopierad.',
+    celebrationStatsLabel: 'Året i korthet',
+    celebrationStatsTitle: 'Firarstatistik',
+    celebrationStatsBusiestMonth: (month: string, count: number) =>
+      `${month} bär mest med ${count} firardagar.`,
+    celebrationStatsTopCategory: (category: string, count: number) =>
+      `${category} leder med ${count} dagar.`,
+    celebrationStatsTotalDays: (count: number) => `${count} dagar i år har egen firardag.`,
+    celebrationStatsTopDates: 'Toppdatum',
     previousDay: 'Föregående dag',
     nextDay: 'Nästa dag',
     reroll: 'Ny ursäkt',
@@ -221,6 +255,8 @@ export const appText: Record<
     pickDate: 'Choose date',
     surpriseAction: 'Surprise me',
     surpriseHint: 'Jump to a date that actually seems worth celebrating.',
+    installApp: 'Install app',
+    installHint: 'Add What can one celebrate? to your home screen for quicker daily use.',
     moodLabel: 'Tone',
     nameday: "Today's name day",
     namedayLoading: 'Loading name day from the open API.',
@@ -249,6 +285,23 @@ export const appText: Record<
     imageCredits: 'Image credits',
     themeDaySource: 'Theme days inspired by temadagar.se',
     namedaySource: 'Name days via sholiday.faboul.se',
+    publicApiLink: 'Public API',
+    calendarExportLink: 'Calendar export (.ics)',
+    shareLabel: 'Share it onward',
+    shareLead: 'This day can now get a proper share link and its own share card.',
+    shareOpen: 'Share this day',
+    shareCopy: 'Copy link',
+    shareCard: 'Open share card',
+    shareCopied: 'Link copied.',
+    celebrationStatsLabel: 'Year at a glance',
+    celebrationStatsTitle: 'Celebration stats',
+    celebrationStatsBusiestMonth: (month: string, count: number) =>
+      `${month} carries the most weight with ${count} celebration days.`,
+    celebrationStatsTopCategory: (category: string, count: number) =>
+      `${category} leads with ${count} days.`,
+    celebrationStatsTotalDays: (count: number) =>
+      `${count} days this year have their own celebration.`,
+    celebrationStatsTopDates: 'Top dates',
     previousDay: 'Previous day',
     nextDay: 'Next day',
     reroll: 'New excuse',
@@ -296,6 +349,8 @@ export const appText: Record<
     pickDate: 'Escolher data',
     surpriseAction: 'Me surpreenda',
     surpriseHint: 'Pule para uma data que realmente pareça valer a comemoração.',
+    installApp: 'Instalar app',
+    installHint: 'Adicione o app à tela inicial para consultar o calendário com menos fricção.',
     moodLabel: 'Tom',
     nameday: 'Nome do dia',
     namedayLoading: 'Carregando nome do dia pela API aberta.',
@@ -324,6 +379,23 @@ export const appText: Record<
     imageCredits: 'Créditos das imagens',
     themeDaySource: 'Datas temáticas inspiradas em temadagar.se',
     namedaySource: 'Nomes do dia via sholiday.faboul.se',
+    publicApiLink: 'API pública',
+    calendarExportLink: 'Exportar calendário (.ics)',
+    shareLabel: 'Compartilhar',
+    shareLead: 'Este dia agora pode ter um link próprio e um cartão de compartilhamento.',
+    shareOpen: 'Compartilhar o dia',
+    shareCopy: 'Copiar link',
+    shareCard: 'Abrir cartão',
+    shareCopied: 'Link copiado.',
+    celebrationStatsLabel: 'O ano em resumo',
+    celebrationStatsTitle: 'Estatísticas de celebração',
+    celebrationStatsBusiestMonth: (month: string, count: number) =>
+      `${month} carrega mais peso com ${count} dias de celebração.`,
+    celebrationStatsTopCategory: (category: string, count: number) =>
+      `${category} lidera com ${count} dias.`,
+    celebrationStatsTotalDays: (count: number) =>
+      `${count} dias deste ano têm sua própria celebração.`,
+    celebrationStatsTopDates: 'Datas em destaque',
     previousDay: 'Dia anterior',
     nextDay: 'Próximo dia',
     reroll: 'Nova desculpa',

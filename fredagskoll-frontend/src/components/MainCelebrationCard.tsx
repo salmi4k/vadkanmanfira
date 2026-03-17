@@ -22,7 +22,6 @@ import { formatShortSwedishDate } from '../dateUtils';
 import { Mood } from '../mood';
 
 type MainCelebrationCardProps = {
-  categoryLabel: string | null;
   centerDate: string;
   celebration: CelebrationContent | null;
   compactPrimaryMedia: boolean;
@@ -36,8 +35,6 @@ type MainCelebrationCardProps = {
   locale: Locale;
   mainCardRef: React.RefObject<HTMLElement | null>;
   mainTitle: string;
-  mood: Mood;
-  scoreLabel: string;
   nationalDayPanel: NationalDayPanel | null;
   onReroll: () => void;
   onStepDate: (days: number) => void;
@@ -49,12 +46,10 @@ type MainCelebrationCardProps = {
   upcomingNotables: UpcomingNotable[];
   visibleBlurb: string;
   displayThemeDays: string[];
-  moodLabel: string;
   kicker: string;
 };
 
 export function MainCelebrationCard({
-  categoryLabel,
   centerDate,
   celebration,
   compactPrimaryMedia,
@@ -70,9 +65,6 @@ export function MainCelebrationCard({
   locale,
   mainCardRef,
   mainTitle,
-  mood,
-  moodLabel,
-  scoreLabel,
   nationalDayPanel,
   onReroll,
   onStepDate,
@@ -86,6 +78,7 @@ export function MainCelebrationCard({
 }: MainCelebrationCardProps) {
   const hasLongWordTitle = hasLongTitleWord(themeDayDisplayTitle ?? mainTitle);
   const celebrationSubtitle = celebration?.subtitle ?? null;
+  const mood: Mood = 'warm';
 
   return (
     <main ref={mainCardRef} className="app-panel celebration-card">
@@ -109,11 +102,6 @@ export function MainCelebrationCard({
 
       <div className="card-kicker-row">
         <p className="eyebrow">{kicker}</p>
-        <div className="card-kicker-metrics">
-          {categoryLabel ? <span className="mood-pill mood-pill--category">{categoryLabel}</span> : null}
-          <span className="mood-pill mood-pill--score">{scoreLabel}</span>
-          <span className="mood-pill">{moodLabel}</span>
-        </div>
       </div>
 
       {themeDayDisplayTitle && !celebration ? (

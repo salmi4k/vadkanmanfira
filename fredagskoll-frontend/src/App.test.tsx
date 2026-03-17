@@ -2,14 +2,11 @@ import React from 'react';
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { vi, type MockedFunction } from 'vitest';
 import App from './App';
-import { buildInfo } from './buildInfo.generated';
 import { ContentPack } from './contentPack';
 import {
   getOrdinaryThemeDayCardNotes,
   getOrdinaryThemeDayTitleEndings,
 } from './editorialText';
-import { PREFERENCES_STORAGE_KEY } from './preferences';
-import { getReleaseNote } from './releaseNotes';
 import { useAiContent } from './features/ai/useAiContent';
 import { useNameDays } from './features/name-days/useNameDays';
 import { getThemeDaysForDate } from './features/theme-days/temadagar';
@@ -115,9 +112,7 @@ test('renders Fettisdag content on the actual Fettisdag date', async () => {
     screen.getByRole('heading', { level: 2, name: /Nationen hålls ihop av grädde/i })
   ).toBeInTheDocument();
   expect(screen.getByRole('button', { name: /Överraska mig/i })).toBeInTheDocument();
-  expect(screen.getByText(/Dagens ursäkt att fika/i)).toBeInTheDocument();
-  expect(screen.getByText(/^semla$/i, { selector: '.fika-item' })).toBeInTheDocument();
-  expect(screen.getAllByText(/Fika\/fest/i)).toHaveLength(2);
+  expect(screen.getByText(/Semlan leder, resten av dagen får försöka hänga med\./i)).toBeInTheDocument();
 });
 
 test('renders Kanelbullens dag ahead of the generic Saturday fallback', async () => {
@@ -142,6 +137,7 @@ test('renders Nationaldagen ahead of the generic Saturday fallback', async () =>
   expect(
     screen.getByRole('heading', { level: 2, name: /Nationaldagen\./i })
   ).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: /Dela dagen/i })).toBeInTheDocument();
 });
 
 test('renders Midsommarafton ahead of the generic Friday fallback', async () => {
@@ -179,7 +175,9 @@ test('renders Fisktorsdag using the cleaned non-branded image', async () => {
 
 test('does not render Fettisdag content on a random Tuesday', async () => {
   await renderAppAt(new Date(2026, 2, 30));
-  expect(screen.queryByText(/FETTISDAG/i)).not.toBeInTheDocument();
+  expect(
+    screen.queryByRole('heading', { level: 2, name: /Nationen hålls ihop av grädde/i })
+  ).not.toBeInTheDocument();
   expect(
     screen.getByRole('heading', { level: 2, name: /En vanlig dag/i })
   ).toBeInTheDocument();
@@ -341,7 +339,7 @@ test('renders filtered temadagar for an otherwise ordinary date', async () => {
   expect(
     screen.getByRole('heading', {
       level: 2,
-      name: new RegExp(`${leadThemeDay}\\.\\s*Det får väl bära dagen då\\.`, 'i'),
+      name: new RegExp(leadThemeDay, 'i'),
     })
   ).toBeInTheDocument();
   expect(screen.getAllByRole('list').length).toBeGreaterThan(0);
@@ -363,7 +361,7 @@ test('picks the more meaningful March 21 theme day instead of blindly using sour
   expect(
     screen.getByRole('heading', {
       level: 2,
-      name: new RegExp(`${leadThemeDay}\\.\\s*Det får väl bära dagen då\\.`, 'i'),
+      name: new RegExp(leadThemeDay, 'i'),
     })
   ).toBeInTheDocument();
   expect(leadThemeDay).toBe('Rocka sockorna-dagen');
@@ -377,25 +375,10 @@ test('renders namnsdag data from the open API lookup', async () => {
   expect(screen.getByText(/Matilda och Maud/i)).toBeInTheDocument();
 });
 
-test('renders a subtle build stamp in the footer', async () => {
+test('renders a restrained footer with image credits access', async () => {
   await renderAppAt(new Date(2026, 2, 14));
-  expect(screen.getByText(new RegExp(buildInfo.gitSha, 'i'))).toBeInTheDocument();
-});
-
-test('shows a simple current release note and opens the changelog history', async () => {
-  await renderAppAt(new Date(2026, 2, 14));
-
-  const currentRelease = getReleaseNote(buildInfo.version);
-  expect(currentRelease).not.toBeNull();
-  expect(screen.getByText(currentRelease!.shortSummary.sv)).toBeInTheDocument();
-
-  fireEvent.click(screen.getByRole('button', { name: /Visa alla ändringar/i }));
-
-  expect(
-    screen.getByRole('heading', { level: 2, name: /Det här har ändrats i appen/i })
-  ).toBeInTheDocument();
-  expect(screen.getByText(currentRelease!.summary.sv)).toBeInTheDocument();
-  expect(screen.getByText(/v0\.1\.12/i)).toBeInTheDocument();
+  expect(screen.getByText(/De nedladdade Commons-bilderna är publikt krediterade här/i)).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: /Bildkällor/i })).toBeInTheDocument();
 });
 
 test('renders public image credits when opening the credits dialog', async () => {
@@ -599,28 +582,8 @@ test('hides the previous ai blurb while a new date request is loading', async ()
   expect(screen.queryByText(/Första rätta texten\./i)).not.toBeInTheDocument();
 });
 
-test('persists the selected mood and exposes it on the app root', async () => {
+test('sends the opinionated warm mood in ai blurb requests', async () => {
   await renderAppAt(new Date(2026, 2, 14));
-
-  fireEvent.change(screen.getByLabelText(/Ton/i), {
-    target: { value: 'chaotic' },
-  });
-
-  await waitFor(() =>
-    expect(JSON.parse(window.localStorage.getItem(PREFERENCES_STORAGE_KEY) ?? '{}')).toMatchObject({
-      version: 1,
-      mood: 'chaotic',
-    })
-  );
-  expect(document.querySelector('.App')).toHaveAttribute('data-mood', 'chaotic');
-});
-
-test('sends the selected mood in ai blurb requests', async () => {
-  await renderAppAt(new Date(2026, 2, 14));
-
-  fireEvent.change(screen.getByLabelText(/Ton/i), {
-    target: { value: 'warm' },
-  });
 
   await waitFor(() =>
     expect(mockedUseAiContent).toHaveBeenLastCalledWith(
@@ -699,44 +662,5 @@ test('keeps Arbetarrorelsens dag visible on Forsta maj', async () => {
   await renderAppAt(new Date(2026, 4, 1));
 
   expect(screen.getAllByText(/^Arbetarrörelsens dag$/i).length).toBeGreaterThan(0);
-});
-
-test('stores the selected mood in shared preferences', async () => {
-  await renderAppAt(new Date(2026, 2, 14));
-
-  fireEvent.change(screen.getByLabelText(/Ton/i), {
-    target: { value: 'chaotic' },
-  });
-
-  await waitFor(() =>
-    expect(JSON.parse(window.localStorage.getItem(PREFERENCES_STORAGE_KEY) ?? '{}')).toMatchObject({
-      version: 1,
-      mood: 'chaotic',
-    })
-  );
-});
-
-test('restores and persists dark mode through shared preferences', async () => {
-  window.localStorage.setItem(
-    PREFERENCES_STORAGE_KEY,
-    JSON.stringify({ version: 1, darkMode: true, locale: 'en', mood: 'warm' })
-  );
-
-  await renderAppAt(new Date(2026, 2, 14));
-
-  expect(document.querySelector('.App')).toHaveClass('dark');
-  expect(document.querySelector('.App')).toHaveAttribute('data-mood', 'warm');
-  expect(screen.getByRole('button', { name: /Light mode/i })).toBeInTheDocument();
-
-  fireEvent.click(screen.getByRole('button', { name: /Light mode/i }));
-
-  await waitFor(() =>
-    expect(JSON.parse(window.localStorage.getItem(PREFERENCES_STORAGE_KEY) ?? '{}')).toMatchObject({
-      version: 1,
-      darkMode: false,
-      locale: 'en',
-      mood: 'warm',
-    })
-  );
 });
 
