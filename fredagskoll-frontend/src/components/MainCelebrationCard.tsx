@@ -18,7 +18,6 @@ import { joinWithAnd } from '../features/theme-days/themeDayBlurbs';
 import { MobileSectionKey } from '../appTypes';
 import { NationalDayPanel } from '../features/national-days/nationalDays';
 import { UpcomingNotable } from '../features/upcoming/upcomingNotables';
-import { formatShortSwedishDate } from '../dateUtils';
 import { Mood } from '../mood';
 
 type MainCelebrationCardProps = {
@@ -82,7 +81,6 @@ export function MainCelebrationCard({
   const celebrationSubtitle = celebration?.subtitle ?? null;
   const mood: Mood = 'warm';
   const featuredUpcoming = upcomingNotables[0] ?? null;
-  const remainingUpcoming = upcomingNotables.slice(1);
   const hasCeremonialDay = celebration !== null;
 
   return (
@@ -279,7 +277,7 @@ export function MainCelebrationCard({
 
       {featuredUpcoming ? (
         <section className="featured-upcoming-card">
-          <p className="eyebrow">{text.upcoming}</p>
+          <p className="eyebrow">{text.nextWorthCaringAbout}</p>
           <p className="featured-upcoming-label">
             {featuredUpcoming.daysUntil === 1
               ? text.upcomingTomorrow
@@ -288,35 +286,6 @@ export function MainCelebrationCard({
           <h3 className="featured-upcoming-title">{featuredUpcoming.title}</h3>
           <p className="featured-upcoming-note">{featuredUpcoming.note}</p>
         </section>
-      ) : null}
-
-      {remainingUpcoming.length > 0 ? (
-        <DisclosurePanel
-          className="upcoming-card"
-          isOpen={expandedSections.upcoming}
-          onToggle={() => onToggleMobileSection('upcoming')}
-          title={text.upcoming}
-        >
-          <div className="upcoming-list">
-            {remainingUpcoming.map((item) => (
-              <article key={item.dateLabel} className="upcoming-item">
-                <div className="upcoming-item-top">
-                  <span className="upcoming-label">{item.label}</span>
-                  <span className="upcoming-days">
-                    {item.daysUntil === 1
-                      ? text.upcomingTomorrow
-                      : text.upcomingInDays(item.daysUntil)}
-                  </span>
-                </div>
-                <p className="upcoming-title">{item.title}</p>
-                <p className="upcoming-date">
-                  {formatShortSwedishDate(item.date, locale)}
-                </p>
-                <p className="upcoming-note">{item.note}</p>
-              </article>
-            ))}
-          </div>
-        </DisclosurePanel>
       ) : null}
     </main>
   );

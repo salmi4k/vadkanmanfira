@@ -3,6 +3,7 @@ const assert = require('node:assert/strict');
 
 const {
   buildCelebrationLinks,
+  buildDigestObject,
   loadPublicCelebrationsDataset,
   getCelebrationDateEntry,
   getUpcomingCelebrationEntries,
@@ -57,6 +58,18 @@ test('builds links for celebratory integrations', () => {
   assert.match(links.appUrl, /\?date=2026-04-30/);
   assert.match(links.shareUrl, /share\/valborg/i);
   assert.match(links.shareCardUrl, /share\/cards\/valborg\.svg/i);
+});
+
+test('builds a digest object with next notable date', () => {
+  const entry = getCelebrationDateEntry('2026-04-30');
+  const digest = buildDigestObject(entry, 'sv');
+
+  assert.equal(digest.date, '2026-04-30');
+  assert.equal(digest.locale, 'sv');
+  assert.equal(digest.datasetId, 'sv-SE');
+  assert.match(digest.headline, /Valborg/);
+  assert.ok(digest.nextNotable);
+  assert.equal(typeof digest.nextNotable.title, 'string');
 });
 
 test('returns expansion dataset entries for en-US', () => {

@@ -204,9 +204,9 @@ test('renders a rerollable blurb on an ordinary weekday', async () => {
       /Det är en vanlig arbetsdag\. Du får skapa din egen stämning, och det känns ju tveksamt\./i
     )
   ).toBeInTheDocument();
-  expect(screen.getByRole('button', { name: /Ny ursäkt/i })).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: /Ny vinkel/i })).toBeInTheDocument();
 
-  fireEvent.click(screen.getByRole('button', { name: /Ny ursäkt/i }));
+  fireEvent.click(screen.getByRole('button', { name: /Ny vinkel/i }));
 
   expect(handleReroll).toHaveBeenCalledTimes(1);
 });
@@ -231,9 +231,9 @@ test('renders a rerollable blurb on an ordinary weekend date', async () => {
       /Det är helg, men inte på det minsta glittriga sättet\. Bara frihet med lätt städsmak i bakgrunden\./i
     )
   ).toBeInTheDocument();
-  expect(screen.getByRole('button', { name: /Ny ursäkt/i })).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: /Ny vinkel/i })).toBeInTheDocument();
 
-  fireEvent.click(screen.getByRole('button', { name: /Ny ursäkt/i }));
+  fireEvent.click(screen.getByRole('button', { name: /Ny vinkel/i }));
 
   expect(handleReroll).toHaveBeenCalledTimes(1);
 });
@@ -406,24 +406,19 @@ test('renders an upcoming official holiday note when one lands later that week',
 test('renders upcoming notable dates with major celebrations ahead of random filler', async () => {
   await renderAppAt(new Date(2026, 3, 27));
 
-  expect(screen.getByRole('button', { name: /På gång/i })).toBeInTheDocument();
+  expect(screen.queryByRole('button', { name: /På gång/i })).not.toBeInTheDocument();
+  expect(screen.getByText(/Näst på tur/i)).toBeInTheDocument();
   expect(screen.getByText(/^Valborg$/i)).toBeInTheDocument();
   expect(screen.getAllByText(/^Första maj$/i).length).toBeGreaterThan(0);
   expect(screen.getAllByText(/Om 3 dagar/i).length).toBeGreaterThan(0);
 });
 
-test('allows collapsing the upcoming panel', async () => {
+test('keeps only one featured upcoming moment in view', async () => {
   await renderAppAt(new Date(2026, 3, 27));
 
-  expect(screen.getAllByText(/Kristi himmelsfärdsdag/i).length).toBeGreaterThan(0);
-
-  fireEvent.click(screen.getByRole('button', { name: /På gång/i }));
-
-  expect(screen.queryAllByText(/Kristi himmelsfärdsdag/i)).toHaveLength(0);
-
-  fireEvent.click(screen.getByRole('button', { name: /På gång/i }));
-
-  expect(screen.getAllByText(/Kristi himmelsfärdsdag/i).length).toBeGreaterThan(0);
+  expect(screen.getByText(/Näst på tur/i)).toBeInTheDocument();
+  expect(screen.getByText(/^Valborg$/i)).toBeInTheDocument();
+  expect(screen.queryByText(/Kristi himmelsfärdsdag/i)).not.toBeInTheDocument();
 });
 
 test('allows collapsing the ordinary theme-day panel from its own heading', async () => {
@@ -492,7 +487,7 @@ test('renders kräftskivesäsong as a seasonal sidebar note during late summer',
   ).toBeInTheDocument();
 });
 
-test('rerolls the excuse when clicking Ny ursäkt', async () => {
+test('rerolls the excuse when clicking Ny vinkel', async () => {
   const handleReroll = vi.fn();
   mockedUseAiContent.mockImplementationOnce(() =>
     buildMockAiContent({
@@ -508,7 +503,7 @@ test('rerolls the excuse when clicking Ny ursäkt', async () => {
     screen.getByText(/Veckan är över\. Nu återstår bara att låtsas vara klar med allt\./i)
   ).toBeInTheDocument();
 
-  fireEvent.click(screen.getByRole('button', { name: /Ny ursäkt/i }));
+  fireEvent.click(screen.getByRole('button', { name: /Ny vinkel/i }));
 
   expect(handleReroll).toHaveBeenCalledTimes(1);
 });
@@ -556,7 +551,7 @@ test('hides fallback blurbs until the ai request resolves', async () => {
       /Det här ska inte synas ännu\./i
     )
   ).not.toBeInTheDocument();
-  expect(screen.queryByRole('button', { name: /Ny ursäkt/i })).not.toBeInTheDocument();
+  expect(screen.queryByRole('button', { name: /Ny vinkel/i })).not.toBeInTheDocument();
 });
 
 test('hides the previous ai blurb while a new date request is loading', async () => {
@@ -608,7 +603,7 @@ test('only asks for another ai variant when reroll is clicked', async () => {
 
   await renderAppAt(new Date(2026, 2, 14));
 
-  fireEvent.click(screen.getByRole('button', { name: /Ny ursäkt/i }));
+  fireEvent.click(screen.getByRole('button', { name: /Ny vinkel/i }));
 
   expect(handleReroll).toHaveBeenCalledTimes(1);
 });

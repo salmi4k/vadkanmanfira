@@ -129,6 +129,7 @@ function writeBrowserBranding(contentPack) {
   const manifest = {
     short_name: branding.shortName,
     name: branding.appName,
+    description: branding.appDescription,
     icons: [
       {
         src: 'favicon.svg',
@@ -150,6 +151,20 @@ function writeBrowserBranding(contentPack) {
     display: 'standalone',
     theme_color: branding.themeColor,
     background_color: branding.backgroundColor,
+    shortcuts: [
+      {
+        name: 'Today',
+        short_name: 'Today',
+        url: '/?today=1',
+        description: 'Open today’s verdict',
+      },
+      {
+        name: 'Surprise me',
+        short_name: 'Surprise',
+        url: '/?surprise=1',
+        description: 'Jump to a date worth the trouble',
+      },
+    ],
   };
 
   const indexHtml = [

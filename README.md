@@ -80,6 +80,8 @@ flowchart TD
   Detailed application flow and API/cache behavior.
 - [docs/text-surface-audit.md](docs/text-surface-audit.md)
   Editorial vs stable UI text boundary for mood-aware copy.
+- [docs/release-notes.md](docs/release-notes.md)
+  Developer-owned release log that can be published outward as changelog copy.
 - [docs/custom-domain-plan.md](docs/custom-domain-plan.md)
   Deferred branding and custom-domain planning notes.
 - [docs/cra-migration-plan.md](docs/cra-migration-plan.md)
@@ -140,6 +142,7 @@ npm test
 npm run test:watch
 npm run test:visual
 npm run build
+npm run release-notes:export
 ```
 
 ## Deployment

@@ -7,6 +7,7 @@ import {
   isMatchingCelebrationDate,
 } from '../celebrations/celebrationDefinitions';
 import { CelebrationContent } from '../celebrations/celebrations';
+import { pickSurpriseDate } from '../engagement/engagement';
 import { ShareCatalogEntry, getDayTypeFromShareSlug, getShareCatalogEntry } from './shareCatalog';
 
 const DEFAULT_SITE_ORIGIN = 'http://localhost:3000';
@@ -71,6 +72,14 @@ export function resolveInitialDateFromUrl(
   anchorDate = new Date()
 ): Date | null {
   const params = new URLSearchParams(search);
+  if (params.get('today') === '1') {
+    return new Date(anchorDate);
+  }
+
+  if (params.get('surprise') === '1') {
+    return pickSurpriseDate(anchorDate, contentPack, 0.42).date;
+  }
+
   const explicitDate = params.get('date');
   if (explicitDate && /^\d{4}-\d{2}-\d{2}$/.test(explicitDate)) {
     return new Date(`${explicitDate}T12:00:00`);

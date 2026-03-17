@@ -105,6 +105,10 @@ module.exports = async function blurbHandler(context, req) {
 
     context.res = json(200, {
       source: responseSource,
+      headline: selectedVariant.bundle.headline,
+      editorialAngle: selectedVariant.bundle.editorialAngle,
+      shareCaption: selectedVariant.bundle.shareCaption,
+      integrationSummary: selectedVariant.bundle.integrationSummary,
       titleEndings: selectedVariant.bundle.titleEndings,
       cardNotes: selectedVariant.bundle.cardNotes,
       blurbs: selectedVariant.bundle.blurbs,
@@ -128,6 +132,10 @@ module.exports = async function blurbHandler(context, req) {
           await saveCacheState(request, updatedCacheState);
           context.res = json(200, {
             source: 'cache',
+            headline: selectedVariant.bundle.headline,
+            editorialAngle: selectedVariant.bundle.editorialAngle,
+            shareCaption: selectedVariant.bundle.shareCaption,
+            integrationSummary: selectedVariant.bundle.integrationSummary,
             titleEndings: selectedVariant.bundle.titleEndings,
             cardNotes: selectedVariant.bundle.cardNotes,
             blurbs: selectedVariant.bundle.blurbs,
@@ -143,6 +151,10 @@ module.exports = async function blurbHandler(context, req) {
     context.res = json(200, {
       source: 'fallback',
       error: 'ai_unavailable',
+      headline: '',
+      editorialAngle: '',
+      shareCaption: '',
+      integrationSummary: '',
       titleEndings: [],
       cardNotes: [],
       blurbs: [],

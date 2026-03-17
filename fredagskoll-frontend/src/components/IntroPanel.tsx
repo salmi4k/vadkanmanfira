@@ -57,14 +57,6 @@ export function IntroPanel({
   const text = appText[locale];
   const supportItems: Array<{ label: string; title: string; note: string }> = [];
 
-  if (nameDayState === 'ready' && nameDays.length > 0) {
-    supportItems.push({
-      label: text.nameday,
-      title: joinWithConjunction(nameDays, locale),
-      note: humanDate,
-    });
-  }
-
   if (upcomingHolidayName && upcomingHolidayDate && daysUntilHoliday !== null) {
     supportItems.push({
       label: text.weeklyHoliday,
@@ -80,6 +72,16 @@ export function IntroPanel({
       note: seasonalNotes[0].note,
     });
   }
+
+  if (nameDayState === 'ready' && nameDays.length > 0) {
+    supportItems.push({
+      label: text.nameday,
+      title: joinWithConjunction(nameDays, locale),
+      note: humanDate,
+    });
+  }
+
+  const visibleSupportItems = supportItems.slice(0, 2);
 
   return (
     <header className="app-panel app-panel--intro">
@@ -140,35 +142,38 @@ export function IntroPanel({
         </div>
       </div>
 
-      <label htmlFor="date-picker" className="picker-label">
-        {text.pickDate}
-      </label>
-      <div className="picker-shell">
-        <input
-          id="date-picker"
-          type="date"
-          value={selectedDate}
-          onChange={(event) => onDateChange(event.target.value)}
-          onBlur={onDateCommit}
-          className="date-picker"
-        />
-        <div className="picker-meta">
-          <span>{humanDate}</span>
-          <span>{dateLabel}</span>
+      <div className="picker-actions">
+        <div className="picker-field">
+          <label htmlFor="date-picker" className="picker-label">
+            {text.pickDate}
+          </label>
+          <div className="picker-shell">
+            <input
+              id="date-picker"
+              type="date"
+              value={selectedDate}
+              onChange={(event) => onDateChange(event.target.value)}
+              onBlur={onDateCommit}
+              className="date-picker"
+            />
+            <div className="picker-meta">
+              <span>{humanDate}</span>
+              <span>{dateLabel}</span>
+            </div>
+          </div>
         </div>
+        <button type="button" className="surprise-button" onClick={onSurpriseDate}>
+          {text.surpriseAction}
+        </button>
       </div>
-      <button type="button" className="surprise-button" onClick={onSurpriseDate}>
-        {text.surpriseAction}
-      </button>
-      <p className="surprise-hint">{text.surpriseHint}</p>
 
       <section className="support-strip" aria-label={text.upcoming}>
         {nameDayState === 'loading' ? <p className="support-strip-empty">{text.namedayLoading}</p> : null}
         {nameDayState === 'error' ? <p className="support-strip-empty">{text.namedayError}</p> : null}
-        {nameDayState === 'ready' && supportItems.length === 0 ? (
+        {nameDayState === 'ready' && visibleSupportItems.length === 0 ? (
           <p className="support-strip-empty">{text.namedayNone}</p>
         ) : null}
-        {supportItems.map((item) => (
+        {visibleSupportItems.map((item) => (
           <article key={`${item.label}-${item.title}`} className="support-fact">
             <p className="support-fact-label">{item.label}</p>
             <p className="support-fact-title">{item.title}</p>

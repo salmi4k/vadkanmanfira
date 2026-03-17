@@ -36,8 +36,9 @@ function buildThemeCollisionGuidance(request) {
   return [
     `There are ${allThemeDays.length} theme-day angles in play: ${allThemeDays.join(', ')}.`,
     'Do not treat them as a list.',
-    'Turn the collision between them into the joke, the social situation, or the excuse.',
-    'At least 4 blurbs should combine two or more of them into one believable scene, ritual, workplace behavior, or domestic compromise.',
+    'Choose one dominant angle and, at most, one supporting contrast.',
+    'Turn the collision between them into one believable scene, ritual, workplace behavior, or domestic compromise.',
+    'At least 4 blurbs should combine two or more of them into one plausible social truth instead of enumerating observances.',
   ].join(' ');
 }
 
@@ -85,9 +86,11 @@ function buildSystemPrompt() {
     'Keep the language natural and idiomatic for the requested locale.',
     'Do not directly translate Swedish phrases into awkward English or Portuguese.',
     'Prefer concrete social detail, mild surprise, and one clean point of view per line.',
+    'Each blurb should capture one dominant social truth about the date and make that truth feel inevitable.',
     'The best lines should feel quotable, slightly dangerous, and immediately shareable.',
     'Avoid openings like "Today is..." or "This day celebrates..." unless there is a very strong reason.',
     'Do not sound like fallback copy, placeholder copy, or generic content writing.',
+    'Never write list-shaped humor, calendar recap copy, or cheerful filler that could fit any date.',
   ].join(' ');
 }
 
@@ -153,6 +156,7 @@ function buildUserPrompt(request) {
   lines.push('Treat the date itself as an editorial constraint: the copy should sound socially plausible for that exact moment in the year.');
   lines.push('Use actual lived details when useful: weather, office behavior, fika logic, family chat energy, travel plans, seasonal food, after-work rituals, and mild social bargaining.');
   lines.push('The humor should come from recognition, contrast, or ceremonial overstatement, not randomness.');
+  lines.push('When several plausible angles exist, commit to the sharpest one instead of trying to cover the whole calendar.');
   lines.push('At least a few blurbs should feel good enough to screenshot and send to a friend or a team chat.');
   lines.push(buildEditorialExamples());
 
@@ -166,14 +170,20 @@ function buildUserPrompt(request) {
     lines.push('Return empty arrays for titleEndings and cardNotes.');
   }
 
+  lines.push('Also generate one short headline, one editorialAngle sentence explaining the chosen point of view, one shareCaption, and one integrationSummary.');
+  lines.push('headline should feel like a premium one-line verdict for the date.');
+  lines.push('editorialAngle should explain the social observation in one concise sentence.');
+  lines.push('shareCaption should be compact and screenshot-worthy.');
+  lines.push('integrationSummary should be a clean, channel-safe sentence for Slack, Teams, email, or widgets.');
   lines.push('Blurb requirements: 1-2 sentences each, witty, specific, office-aware, emotionally real, and not repetitive.');
   lines.push('Each blurb should feel like it was written for this exact date, not a reusable calendar fragment.');
   lines.push('Across the 10 blurbs, vary the angle: some observational, some ceremonial, some social, some slightly petty, some warmly accurate.');
   lines.push('For official holidays or named celebrations, anchor the copy in recognizable rituals or behaviors instead of generic praise.');
   lines.push('When several theme days coexist, mine their contradiction, overlap, or accidental harmony for comedy.');
+  lines.push('Silently reject any blurb that could be summarized as "today is X so people do X".');
   lines.push('Prefer lines that begin inside the scene, not before it.');
   lines.push('Do not mention being an AI, do not explain the joke, and do not use hashtags.');
-  lines.push('Return JSON in this shape: {"titleEndings":["..."],"cardNotes":["..."],"blurbs":["..."]}');
+  lines.push('Return JSON in this shape: {"headline":"...","editorialAngle":"...","shareCaption":"...","integrationSummary":"...","titleEndings":["..."],"cardNotes":["..."],"blurbs":["..."]}');
 
   return lines.join('\n');
 }

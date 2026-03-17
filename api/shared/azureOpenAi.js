@@ -35,6 +35,16 @@ function parseJsonResponse(text) {
 
 function sanitizeBundle(bundle, request) {
   const sourceBundle = bundle && typeof bundle === 'object' ? bundle : {};
+  const headline =
+    typeof sourceBundle.headline === 'string' ? sourceBundle.headline.trim() : '';
+  const editorialAngle =
+    typeof sourceBundle.editorialAngle === 'string' ? sourceBundle.editorialAngle.trim() : '';
+  const shareCaption =
+    typeof sourceBundle.shareCaption === 'string' ? sourceBundle.shareCaption.trim() : '';
+  const integrationSummary =
+    typeof sourceBundle.integrationSummary === 'string'
+      ? sourceBundle.integrationSummary.trim()
+      : '';
   const titleEndings = Array.isArray(sourceBundle.titleEndings)
     ? sourceBundle.titleEndings.filter((value) => typeof value === 'string' && value.trim().length > 0)
     : [];
@@ -46,6 +56,10 @@ function sanitizeBundle(bundle, request) {
     : [];
 
   return {
+    headline,
+    editorialAngle,
+    shareCaption,
+    integrationSummary,
     titleEndings:
       request.kind === 'themeDay' ? titleEndings.slice(0, 8) : [],
     cardNotes:

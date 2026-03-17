@@ -1,5 +1,6 @@
 const {
   buildCelebrationLinks,
+  buildDigestObject,
   buildChatText,
   getCelebrationDateEntry,
   getTodayCelebrationEntry,
@@ -19,8 +20,9 @@ function json(status, body) {
 }
 
 function buildSlackBlocks(entry, locale, dataset) {
-  const text = buildChatText(entry, locale, dataset);
-  const links = buildCelebrationLinks(entry);
+  const digest = buildDigestObject(entry, locale, dataset);
+  const text = [digest.headline, ...digest.lines].filter(Boolean).join('\n');
+  const links = digest.links;
 
   const blocks = [
     {
@@ -70,13 +72,14 @@ function buildSlackBlocks(entry, locale, dataset) {
     dataset,
     text,
     blocks,
+    digest,
   };
 }
 
 function buildTeamsCard(entry, locale, dataset) {
-  const text = buildChatText(entry, locale, dataset);
-  const lines = text.split('\n');
-  const links = buildCelebrationLinks(entry);
+  const digest = buildDigestObject(entry, locale, dataset);
+  const lines = [digest.headline, ...digest.lines].filter(Boolean);
+  const links = digest.links;
 
   return {
     type: 'message',
@@ -122,6 +125,7 @@ function buildTeamsCard(entry, locale, dataset) {
         },
       },
     ],
+    digest,
   };
 }
 
@@ -164,9 +168,19 @@ module.exports = async function integrationsChatCelebrateHandler(context, req) {
     return;
   }
 
+  if (platform === 'digest' || platform === 'json-card') {
+    context.res = json(200, {
+      dataset,
+      locale,
+      digest: buildDigestObject(entry, locale, dataset),
+    });
+    return;
+  }
+
   context.res = json(200, {
     text,
     dataset,
     links: buildCelebrationLinks(entry),
+    digest: buildDigestObject(entry, locale, dataset),
   });
 };

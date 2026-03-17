@@ -26,6 +26,17 @@ test('resolves a share slug into a date for the app', () => {
   expect(resolved?.toISOString().slice(0, 10)).toBe('2026-04-30');
 });
 
+test('resolves a surprise shortcut into a high-signal date', () => {
+  const resolved = resolveInitialDateFromUrl(
+    '?surprise=1',
+    'public',
+    new Date('2026-01-10T12:00:00')
+  );
+
+  expect(resolved).not.toBeNull();
+  expect(resolved?.toISOString().slice(0, 4)).toBe('2026');
+});
+
 test('does not resolve team-only share slugs on the public pack', () => {
   const resolved = resolveInitialDateFromUrl(
     '?share=fisktorsdag',

@@ -161,6 +161,53 @@ function buildCelebrationLinks(entry) {
   };
 }
 
+function buildDigestObject(entry, locale = 'sv', datasetId = 'sv-SE') {
+  if (!entry || !entry.celebrations || entry.celebrations.length === 0) {
+    return {
+      date: null,
+      locale,
+      datasetId,
+      cacheTtlSeconds: 300,
+      headline: getLocalizedNoCelebrationText(locale),
+      lines: [],
+      links: null,
+      nextNotable: null,
+    };
+  }
+
+  const localized = localizeEntry(entry, locale, datasetId);
+  const lines = buildChatText(entry, locale, datasetId).split('\n');
+  const nextNotable = getUpcomingCelebrationEntries(entry.date, 2, datasetId)[1] || null;
+
+  return {
+    date: localized.date,
+    locale,
+    datasetId,
+    cacheTtlSeconds: 300,
+    headline: lines[0],
+    lines: lines.slice(1),
+    links: buildCelebrationLinks(localized),
+    primaryCelebration: {
+      dayType: localized.celebrations[0].dayType,
+      title: localized.celebrations[0].copy.title,
+      subtitle: localized.celebrations[0].copy.subtitle,
+      kicker: localized.celebrations[0].copy.kicker,
+      scoreLabel: localized.celebrations[0].scoreLabel,
+      categoryLabel: localized.celebrations[0].categoryLabel,
+    },
+    themeDays: localized.themeDays.slice(0, 3),
+    nextNotable: nextNotable
+      ? {
+          date: nextNotable.date,
+          title: nextNotable.celebrations[0]?.copy[datasetId === 'en-US' && locale === 'sv' ? 'en' : normalizeLocale(locale)]?.title ||
+            nextNotable.celebrations[0]?.copy?.sv?.title ||
+            null,
+          links: buildCelebrationLinks(nextNotable),
+        }
+      : null,
+  };
+}
+
 module.exports = {
   loadPublicCelebrationsDataset,
   getCelebrationDateEntry,
@@ -169,6 +216,7 @@ module.exports = {
   localizeEntry,
   buildChatText,
   buildCelebrationLinks,
+  buildDigestObject,
   normalizeDatasetId,
   normalizeLocale,
 };

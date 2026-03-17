@@ -102,6 +102,10 @@ function parseJsonArray(value) {
   }
 }
 
+function coerceString(value) {
+  return typeof value === 'string' ? value.trim() : '';
+}
+
 function coerceBundle(value) {
   const source = value && typeof value === 'object' ? value : {};
 
@@ -109,6 +113,10 @@ function coerceBundle(value) {
     titleEndings: Array.isArray(source.titleEndings) ? source.titleEndings : [],
     cardNotes: Array.isArray(source.cardNotes) ? source.cardNotes : [],
     blurbs: Array.isArray(source.blurbs) ? source.blurbs : [],
+    headline: coerceString(source.headline),
+    editorialAngle: coerceString(source.editorialAngle),
+    shareCaption: coerceString(source.shareCaption),
+    integrationSummary: coerceString(source.integrationSummary),
   };
 }
 
@@ -181,6 +189,10 @@ function buildBundleEntity(requestHash, variant) {
     titleEndingsJson: JSON.stringify(variant.bundle.titleEndings || []),
     cardNotesJson: JSON.stringify(variant.bundle.cardNotes || []),
     blurbsJson: JSON.stringify(variant.bundle.blurbs || []),
+    headline: variant.bundle.headline || null,
+    editorialAngle: variant.bundle.editorialAngle || null,
+    shareCaption: variant.bundle.shareCaption || null,
+    integrationSummary: variant.bundle.integrationSummary || null,
   };
 }
 
@@ -189,6 +201,10 @@ function normalizeBundleEntity(entity, requestHash) {
     titleEndings: parseJsonArray(entity.titleEndingsJson),
     cardNotes: parseJsonArray(entity.cardNotesJson),
     blurbs: parseJsonArray(entity.blurbsJson),
+    headline: entity.headline,
+    editorialAngle: entity.editorialAngle,
+    shareCaption: entity.shareCaption,
+    integrationSummary: entity.integrationSummary,
   });
 
   if (

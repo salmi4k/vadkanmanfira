@@ -88,6 +88,7 @@ export const appText: Record<
     weeklyHoliday: string;
     nowCard: string;
     upcoming: string;
+    nextWorthCaringAbout: string;
     collapseShow: string;
     collapseHide: string;
     mobileWeeklyHolidaySummary: string;
@@ -173,6 +174,7 @@ export const appText: Record<
     weeklyHoliday: 'Veckans helgdag',
     nowCard: 'Säsongen pågår',
     upcoming: 'På gång',
+    nextWorthCaringAbout: 'Näst på tur',
     collapseShow: 'Visa',
     collapseHide: 'Dölj',
     mobileWeeklyHolidaySummary: 'Veckans helgdag',
@@ -210,7 +212,7 @@ export const appText: Record<
     celebrationStatsTopDates: 'Toppdatum',
     previousDay: 'Föregående dag',
     nextDay: 'Nästa dag',
-    reroll: 'Ny ursäkt',
+    reroll: 'Ny vinkel',
     blurbLoading: 'Hämtar dagens text.',
     unofficialThemeDay: 'Inofficiell temadag',
     unofficialThemeDays: (count: number) => `Inofficiella temadagar x${count}`,
@@ -266,6 +268,7 @@ export const appText: Record<
     weeklyHoliday: "This week's holiday",
     nowCard: 'Season in progress',
     upcoming: 'Coming up',
+    nextWorthCaringAbout: 'Next worth caring about',
     collapseShow: 'Show',
     collapseHide: 'Hide',
     mobileWeeklyHolidaySummary: "This week's holiday",
@@ -304,7 +307,7 @@ export const appText: Record<
     celebrationStatsTopDates: 'Top dates',
     previousDay: 'Previous day',
     nextDay: 'Next day',
-    reroll: 'New excuse',
+    reroll: 'Another angle',
     blurbLoading: "Fetching today's copy.",
     unofficialThemeDay: 'Unofficial theme day',
     unofficialThemeDays: (count: number) => `Unofficial theme days x${count}`,
@@ -360,6 +363,7 @@ export const appText: Record<
     weeklyHoliday: 'Feriado da semana',
     nowCard: 'Temporada em curso',
     upcoming: 'A caminho',
+    nextWorthCaringAbout: 'O próximo que importa',
     collapseShow: 'Mostrar',
     collapseHide: 'Ocultar',
     mobileWeeklyHolidaySummary: 'Feriado da semana',
@@ -398,7 +402,7 @@ export const appText: Record<
     celebrationStatsTopDates: 'Datas em destaque',
     previousDay: 'Dia anterior',
     nextDay: 'Próximo dia',
-    reroll: 'Nova desculpa',
+    reroll: 'Outro ângulo',
     blurbLoading: 'Buscando o texto do dia.',
     unofficialThemeDay: 'Data temática não oficial',
     unofficialThemeDays: (count: number) => `Datas temáticas não oficiais x${count}`,

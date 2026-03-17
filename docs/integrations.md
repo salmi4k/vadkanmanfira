@@ -42,11 +42,16 @@ Supported params:
 - `date=YYYY-MM-DD`
 - `locale=sv|en|pt-BR`
 - `dataset=sv-SE|en-US`
-- `platform=text|slack|slack-blocks|teams|discord`
+- `platform=text|digest|json-card|slack|slack-blocks|teams|discord`
 
 Response shapes:
 - `platform=text`
   - `{ "text": "...", "links": { "appUrl": "...", "shareUrl": "...", "shareCardUrl": "..." } }`
+- `platform=digest`
+  - canonical low-cost daily object for automation
+  - includes headline, detail lines, primary celebration metadata, links, and next notable date
+- `platform=json-card`
+  - alias for `digest` when the consuming system expects a machine-facing card object rather than prose
 - `platform=slack`
   - `{ "response_type": "in_channel", "text": "..." }`
 - `platform=slack-blocks`
@@ -65,6 +70,12 @@ The product stance should stay opinionated across every surface:
 - one deep link back to the exact day
 
 That matters more than shipping a long list of integration toggles.
+
+Recommended free-tier usage:
+
+- use `platform=digest` for scheduled jobs, email, widgets, or external automation
+- use `platform=slack-blocks` and `platform=teams` at the final presentation edge
+- avoid calling the AI path from every integration request; prefer cached AI plus generated celebration data
 
 ## Calendar export
 

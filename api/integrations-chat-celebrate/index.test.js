@@ -85,4 +85,47 @@ test('returns teams adaptive card payload', async () => {
   assert.equal(payload.type, 'message');
   assert.equal(payload.dataset, 'en-US');
   assert.equal(payload.attachments[0].content.type, 'AdaptiveCard');
+  assert.ok(payload.digest);
+});
+
+test('returns digest payload for scheduled automation', async () => {
+  const context = {
+    res: null,
+  };
+
+  await handler(context, {
+    query: {
+      platform: 'digest',
+      locale: 'sv',
+      date: '2026-04-30',
+    },
+    body: null,
+  });
+
+  assert.equal(context.res.status, 200);
+  const payload = JSON.parse(context.res.body);
+  assert.equal(payload.dataset, 'sv-SE');
+  assert.equal(payload.digest.date, '2026-04-30');
+  assert.match(payload.digest.headline, /Valborg/);
+  assert.ok(payload.digest.nextNotable);
+});
+
+test('returns json-card alias for machine-facing consumers', async () => {
+  const context = {
+    res: null,
+  };
+
+  await handler(context, {
+    query: {
+      platform: 'json-card',
+      locale: 'sv',
+      date: '2026-04-30',
+    },
+    body: null,
+  });
+
+  assert.equal(context.res.status, 200);
+  const payload = JSON.parse(context.res.body);
+  assert.equal(payload.digest.datasetId, 'sv-SE');
+  assert.equal(payload.digest.locale, 'sv');
 });

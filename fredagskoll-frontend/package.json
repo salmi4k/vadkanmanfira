@@ -21,6 +21,7 @@
     "prebuild": "node scripts/write-build-info.js && tsx scripts/generate-share-assets.ts && tsx scripts/generate-integration-assets.ts",
     "build": "vite build",
     "preview": "vite preview",
+    "release-notes:export": "tsx scripts/export-release-notes.ts",
     "test": "vitest --run",
     "test:visual": "playwright test",
     "test:watch": "vitest"
