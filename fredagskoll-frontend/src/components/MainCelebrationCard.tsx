@@ -18,13 +18,12 @@ import { joinWithAnd } from '../features/theme-days/themeDayBlurbs';
 import { MobileSectionKey } from '../appTypes';
 import { NationalDayPanel } from '../features/national-days/nationalDays';
 import { UpcomingNotable } from '../features/upcoming/upcomingNotables';
-import { formatShortSwedishDate } from '../dateUtils';
 import { Mood } from '../mood';
 
 type MainCelebrationCardProps = {
-  categoryLabel: string | null;
   centerDate: string;
   celebration: CelebrationContent | null;
+  canReroll: boolean;
   compactPrimaryMedia: boolean;
   currentBlurbs: string[] | null;
   extraDisplayThemeDays: string[];
@@ -36,8 +35,6 @@ type MainCelebrationCardProps = {
   locale: Locale;
   mainCardRef: React.RefObject<HTMLElement | null>;
   mainTitle: string;
-  mood: Mood;
-  scoreLabel: string;
   nationalDayPanel: NationalDayPanel | null;
   onReroll: () => void;
   onStepDate: (days: number) => void;
@@ -49,14 +46,13 @@ type MainCelebrationCardProps = {
   upcomingNotables: UpcomingNotable[];
   visibleBlurb: string;
   displayThemeDays: string[];
-  moodLabel: string;
   kicker: string;
 };
 
 export function MainCelebrationCard({
-  categoryLabel,
   centerDate,
   celebration,
+  canReroll,
   compactPrimaryMedia,
   currentBlurbs,
   displayThemeDays,
@@ -70,9 +66,6 @@ export function MainCelebrationCard({
   locale,
   mainCardRef,
   mainTitle,
-  mood,
-  moodLabel,
-  scoreLabel,
   nationalDayPanel,
   onReroll,
   onStepDate,
@@ -86,9 +79,15 @@ export function MainCelebrationCard({
 }: MainCelebrationCardProps) {
   const hasLongWordTitle = hasLongTitleWord(themeDayDisplayTitle ?? mainTitle);
   const celebrationSubtitle = celebration?.subtitle ?? null;
+  const mood: Mood = 'warm';
+  const featuredUpcoming = upcomingNotables[0] ?? null;
+  const hasCeremonialDay = celebration !== null;
 
   return (
-    <main ref={mainCardRef} className="app-panel celebration-card">
+    <main
+      ref={mainCardRef}
+      className={`app-panel celebration-card${hasCeremonialDay ? ' celebration-card--ceremonial' : ''}`}
+    >
       <div className="card-nav" aria-label={text.dateNavigationAria}>
         <button
           type="button"
@@ -109,11 +108,6 @@ export function MainCelebrationCard({
 
       <div className="card-kicker-row">
         <p className="eyebrow">{kicker}</p>
-        <div className="card-kicker-metrics">
-          {categoryLabel ? <span className="mood-pill mood-pill--category">{categoryLabel}</span> : null}
-          <span className="mood-pill mood-pill--score">{scoreLabel}</span>
-          <span className="mood-pill">{moodLabel}</span>
-        </div>
       </div>
 
       {themeDayDisplayTitle && !celebration ? (
@@ -154,7 +148,7 @@ export function MainCelebrationCard({
         ) : (
           <p className="celebration-blurb">{visibleBlurb}</p>
         )}
-        {currentBlurbs && !isAiBundleLoading ? (
+        {canReroll && currentBlurbs && !isAiBundleLoading ? (
           <button
             type="button"
             className="reroll-button"
@@ -281,33 +275,17 @@ export function MainCelebrationCard({
         </DisclosurePanel>
       ) : null}
 
-      {upcomingNotables.length > 0 ? (
-        <DisclosurePanel
-          className="upcoming-card"
-          isOpen={expandedSections.upcoming}
-          onToggle={() => onToggleMobileSection('upcoming')}
-          title={text.upcoming}
-        >
-          <div className="upcoming-list">
-            {upcomingNotables.map((item) => (
-              <article key={item.dateLabel} className="upcoming-item">
-                <div className="upcoming-item-top">
-                  <span className="upcoming-label">{item.label}</span>
-                  <span className="upcoming-days">
-                    {item.daysUntil === 1
-                      ? text.upcomingTomorrow
-                      : text.upcomingInDays(item.daysUntil)}
-                  </span>
-                </div>
-                <p className="upcoming-title">{item.title}</p>
-                <p className="upcoming-date">
-                  {formatShortSwedishDate(item.date, locale)}
-                </p>
-                <p className="upcoming-note">{item.note}</p>
-              </article>
-            ))}
-          </div>
-        </DisclosurePanel>
+      {featuredUpcoming ? (
+        <section className="featured-upcoming-card">
+          <p className="eyebrow">{text.nextWorthCaringAbout}</p>
+          <p className="featured-upcoming-label">
+            {featuredUpcoming.daysUntil === 1
+              ? text.upcomingTomorrow
+              : text.upcomingInDays(featuredUpcoming.daysUntil)}
+          </p>
+          <h3 className="featured-upcoming-title">{featuredUpcoming.title}</h3>
+          <p className="featured-upcoming-note">{featuredUpcoming.note}</p>
+        </section>
       ) : null}
     </main>
   );

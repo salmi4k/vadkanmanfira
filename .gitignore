@@ -34,3 +34,4 @@ tmp/
 fredagskoll-frontend/output/
 fredagskoll-frontend/public/fisktorsdag-clean*
 api/local.settings.json
+api/shared/generated/

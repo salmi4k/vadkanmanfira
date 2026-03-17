@@ -1,7 +1,6 @@
 import { RefObject, useEffect, useRef, useState } from 'react';
 import { formatForInput } from '../dateUtils';
 import { getInitialMobileLayout } from '../appHelpers';
-import { getInitialDarkMode, getInitialMood, persistDarkMode, persistMood, Mood } from '../mood';
 import { getInitialLocale, Locale, persistLocale } from '../locale';
 import { MobileSectionKey } from '../appTypes';
 
@@ -20,12 +19,10 @@ type UseAppShellStateArgs = {
 
 export function useAppShellState({ initialDate }: UseAppShellStateArgs) {
   const [locale, setLocale] = useState<Locale>(getInitialLocale);
-  const [darkMode, setDarkMode] = useState(getInitialDarkMode);
   const [showLanguageMenu, setShowLanguageMenu] = useState(false);
   const [showImageCredits, setShowImageCredits] = useState(false);
   const [showReleaseNotes, setShowReleaseNotes] = useState(false);
   const [isMobileLayout, setIsMobileLayout] = useState(getInitialMobileLayout);
-  const [mood, setMood] = useState<Mood>(getInitialMood);
   const [expandedSections, setExpandedSections] = useState(initialExpandedSections);
   const [selectedDate, setSelectedDate] = useState(formatForInput(initialDate));
   const shouldScrollAfterDateCommitRef = useRef(false);
@@ -48,14 +45,6 @@ export function useAppShellState({ initialDate }: UseAppShellStateArgs) {
   useEffect(() => {
     persistLocale(locale);
   }, [locale]);
-
-  useEffect(() => {
-    persistMood(mood);
-  }, [mood]);
-
-  useEffect(() => {
-    persistDarkMode(darkMode);
-  }, [darkMode]);
 
   useEffect(() => {
     setShowLanguageMenu(false);
@@ -111,15 +100,11 @@ export function useAppShellState({ initialDate }: UseAppShellStateArgs) {
   }
 
   return {
-    darkMode,
     expandedSections,
     isMobileLayout,
     locale,
-    mood,
     selectedDate,
-    setDarkMode,
     setLocale,
-    setMood,
     showImageCredits,
     setShowImageCredits,
     showLanguageMenu,

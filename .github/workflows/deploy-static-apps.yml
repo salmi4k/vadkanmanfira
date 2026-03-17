@@ -16,6 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       VITE_CONTENT_PACK: public
+      VITE_SITE_ORIGIN: https://thankful-bush-0d8565003.1.azurestaticapps.net
       GITHUB_SHA: ${{ github.sha }}
       GITHUB_RUN_NUMBER: ${{ github.run_number }}
     steps:
@@ -40,6 +41,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       VITE_CONTENT_PACK: team
+      VITE_SITE_ORIGIN: https://delightful-ground-0b3aa2b03.4.azurestaticapps.net
       GITHUB_SHA: ${{ github.sha }}
       GITHUB_RUN_NUMBER: ${{ github.run_number }}
     steps:

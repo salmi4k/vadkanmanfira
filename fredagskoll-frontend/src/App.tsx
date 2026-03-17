@@ -4,7 +4,6 @@ import { appText } from './appText';
 import { IntroPanel } from './components/IntroPanel';
 import { AppDialogs } from './components/AppDialogs';
 import { AppMainColumn } from './components/AppMainColumn';
-import { formatBuildStamp } from './appHelpers';
 import {
   usesCompactPrimaryMedia,
 } from './features/celebrations/celebrationPresentation';
@@ -25,7 +24,7 @@ import { getDayStatus, getUpcomingOfficialHolidayInWeek } from './dayLogic';
 import { translateOfficialHolidayName, translateThemeDayName } from './locale';
 import { getNationalDayPanel } from './features/national-days/nationalDays';
 import { getSeasonalNotes } from './features/upcoming/seasonalNotes';
-import { getMoodLabel } from './mood';
+import { Mood } from './mood';
 import {
   buildThemeDayBlurbs,
   filterThemeDays,
@@ -36,11 +35,11 @@ import { useAiContent } from './features/ai/useAiContent';
 import { useNameDays } from './features/name-days/useNameDays';
 import {
   getCategoryLabel,
-  getDailyFikaSuggestion,
   getEngagementScoreLabel,
   pickSurpriseDate,
   scoreEngagementSnapshot,
 } from './features/engagement/engagement';
+import { buildShareableCelebration } from './features/shareability/shareability';
 import {
   buildAiRequest,
   buildMainCardViewModel,
@@ -58,18 +57,14 @@ function App({
   contentPack = getActiveContentPack(),
 }: AppProps) {
   const mainCardRef = useRef<HTMLElement | null>(null);
+  const mood: Mood = 'warm';
   const {
-    darkMode,
     expandedSections,
     handleDateChange,
     handleDateCommit,
-    isMobileLayout,
     locale,
-    mood,
     selectedDate,
-    setDarkMode,
     setLocale,
-    setMood,
     setShowImageCredits,
     setShowLanguageMenu,
     setShowReleaseNotes,
@@ -81,7 +76,6 @@ function App({
   } = useAppShellState({ initialDate });
 
   const text = appText[locale];
-  const buildStamp = useMemo(() => formatBuildStamp(locale), [locale]);
   const celebrations = useMemo(
     () => getCelebrations(locale, contentPack, mood),
     [contentPack, locale, mood]
@@ -204,6 +198,7 @@ function App({
   const { nameDays, nameDayState } = useNameDays(dayStatus.dateLabel);
   const {
     blurb,
+    canReroll,
     currentBlurbs,
     handleReroll,
     isAiBundleLoading,
@@ -223,26 +218,20 @@ function App({
     hasThemeDays,
     themeDayDisplayTitle,
   });
-  const fikaSuggestion = useMemo(
-    () =>
-      getDailyFikaSuggestion({
-        celebration:
-          dayStatus.dayType === 'ordinary' ? null : dayStatus.dayType,
-        category: engagementSnapshot.category,
-        themeDays: displayThemeDays,
-        locale,
-        mood,
-        score: engagementSnapshot.score,
-      }),
-    [
-      dayStatus.dayType,
-      displayThemeDays,
-      engagementSnapshot.category,
-      engagementSnapshot.score,
+  const shareableCelebration = useMemo(() => {
+    if (!celebration || dayStatus.dayType === 'ordinary') {
+      return null;
+    }
+
+    return buildShareableCelebration({
+      celebration,
+      date: selectedDateObject,
       locale,
-      mood,
-    ]
-  );
+      dayType: dayStatus.dayType,
+      categoryLabel,
+      scoreLabel,
+    });
+  }, [categoryLabel, celebration, dayStatus.dayType, locale, scoreLabel, selectedDateObject]);
 
   const mainTitle = celebration
     ? celebration.title
@@ -261,16 +250,14 @@ function App({
 
   return (
     <div
-      className={`App ${darkMode ? 'dark' : ''} theme-${theme} locale-${locale}`}
+      className={`App theme-${theme} locale-${locale}`}
       data-mood={mood}
     >
       <div className="app-backdrop" aria-hidden="true" />
       <div className="app-grid">
         <IntroPanel
           locale={locale}
-          darkMode={darkMode}
           contentPack={contentPack}
-          mood={mood}
           selectedDate={selectedDate}
           humanDate={humanDate}
           dateLabel={dayStatus.dateLabel}
@@ -280,24 +267,18 @@ function App({
           upcomingHolidayDate={upcomingHoliday?.date}
           daysUntilHoliday={daysUntilHoliday}
           seasonalNotes={seasonalNotes}
-          isMobileLayout={isMobileLayout}
           showLanguageMenu={showLanguageMenu}
-          expandedSections={expandedSections}
           onToggleLanguageMenu={() => setShowLanguageMenu((current) => !current)}
-          onToggleDarkMode={() => setDarkMode((current) => !current)}
           onSelectLocale={setLocale}
-          onSelectMood={setMood}
           onDateChange={handleDateChange}
           onDateCommit={() => handleDateCommit(mainCardRef)}
           onSurpriseDate={handleSurpriseDate}
-          onToggleMobileSection={toggleMobileSection}
         />
 
         <AppMainColumn
-          buildStamp={buildStamp}
-          categoryLabel={categoryLabel}
           centerDate={centerDate}
           celebration={celebration}
+          canReroll={canReroll}
           compactPrimaryMedia={compactPrimaryMedia}
           currentBlurbs={currentBlurbs}
           displayThemeDays={displayThemeDays}
@@ -311,9 +292,6 @@ function App({
           locale={locale}
           mainCardRef={mainCardRef}
           mainTitle={mainTitle}
-          mood={mood}
-          moodLabel={getMoodLabel(mood, locale)}
-          fikaSuggestion={fikaSuggestion}
           nationalDayPanel={nationalDayPanel}
           onOpenImageCredits={() => setShowImageCredits(true)}
           onOpenReleaseNotes={() => setShowReleaseNotes(true)}
@@ -328,7 +306,7 @@ function App({
           themeDayTitleEnding={themeDayTitleEnding}
           upcomingNotables={upcomingNotables}
           visibleBlurb={blurb}
-          scoreLabel={scoreLabel}
+          shareable={shareableCelebration}
         />
       </div>
 

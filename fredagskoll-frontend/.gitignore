@@ -11,6 +11,9 @@
 # production
 /build
 /dist
+/public/generated/
+/public/share/
+/public/exports/
 
 # misc
 .playwright-cli/

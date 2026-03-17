@@ -35,6 +35,16 @@ function parseJsonResponse(text) {
 
 function sanitizeBundle(bundle, request) {
   const sourceBundle = bundle && typeof bundle === 'object' ? bundle : {};
+  const headline =
+    typeof sourceBundle.headline === 'string' ? sourceBundle.headline.trim() : '';
+  const editorialAngle =
+    typeof sourceBundle.editorialAngle === 'string' ? sourceBundle.editorialAngle.trim() : '';
+  const shareCaption =
+    typeof sourceBundle.shareCaption === 'string' ? sourceBundle.shareCaption.trim() : '';
+  const integrationSummary =
+    typeof sourceBundle.integrationSummary === 'string'
+      ? sourceBundle.integrationSummary.trim()
+      : '';
   const titleEndings = Array.isArray(sourceBundle.titleEndings)
     ? sourceBundle.titleEndings.filter((value) => typeof value === 'string' && value.trim().length > 0)
     : [];
@@ -46,11 +56,15 @@ function sanitizeBundle(bundle, request) {
     : [];
 
   return {
+    headline,
+    editorialAngle,
+    shareCaption,
+    integrationSummary,
     titleEndings:
-      request.kind === 'themeDay' ? titleEndings.slice(0, 6) : [],
+      request.kind === 'themeDay' ? titleEndings.slice(0, 8) : [],
     cardNotes:
-      request.kind === 'themeDay' ? cardNotes.slice(0, 6) : [],
-    blurbs: blurbs.slice(0, 8),
+      request.kind === 'themeDay' ? cardNotes.slice(0, 8) : [],
+    blurbs: blurbs.slice(0, 10),
   };
 }
 
@@ -79,8 +93,8 @@ async function generateBlurbBundle(request) {
         { role: 'system', content: buildSystemPrompt() },
         { role: 'user', content: buildUserPrompt(request) },
       ],
-      temperature: 0.95,
-      max_tokens: 900,
+      temperature: 0.9,
+      max_tokens: 1200,
       response_format: { type: 'json_object' },
     }),
   });

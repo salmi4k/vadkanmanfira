@@ -6,9 +6,6 @@ import { ContentPack, showsTeamBranding } from '../contentPack';
 import { formatShortSwedishDate } from '../dateUtils';
 import { formatDaysUntilLabel, getUpcomingHolidayBlurb } from '../holidayPresentation';
 import { joinWithConjunction, Locale, localeOptions } from '../locale';
-import { getMoodLabel, getMoodNote, Mood, moodOptions } from '../mood';
-import { MobileSectionKey } from '../appTypes';
-import { MobileSection } from './MobileSection';
 
 type SeasonalNote = {
   id: string;
@@ -20,9 +17,7 @@ type SeasonalNote = {
 
 type IntroPanelProps = {
   locale: Locale;
-  darkMode: boolean;
   contentPack: ContentPack;
-  mood: Mood;
   selectedDate: string;
   humanDate: string;
   dateLabel: string;
@@ -32,24 +27,17 @@ type IntroPanelProps = {
   upcomingHolidayDate?: Date;
   daysUntilHoliday: number | null;
   seasonalNotes: SeasonalNote[];
-  isMobileLayout: boolean;
   showLanguageMenu: boolean;
-  expandedSections: Record<MobileSectionKey, boolean>;
   onToggleLanguageMenu: () => void;
-  onToggleDarkMode: () => void;
   onSelectLocale: (locale: Locale) => void;
-  onSelectMood: (mood: Mood) => void;
   onDateChange: (date: string) => void;
   onDateCommit: () => void;
   onSurpriseDate: () => void;
-  onToggleMobileSection: (section: MobileSectionKey) => void;
 };
 
 export function IntroPanel({
   locale,
-  darkMode,
   contentPack,
-  mood,
   selectedDate,
   humanDate,
   dateLabel,
@@ -59,19 +47,41 @@ export function IntroPanel({
   upcomingHolidayDate,
   daysUntilHoliday,
   seasonalNotes,
-  isMobileLayout,
   showLanguageMenu,
-  expandedSections,
   onToggleLanguageMenu,
-  onToggleDarkMode,
   onSelectLocale,
-  onSelectMood,
   onDateChange,
   onDateCommit,
   onSurpriseDate,
-  onToggleMobileSection,
 }: IntroPanelProps) {
   const text = appText[locale];
+  const supportItems: Array<{ label: string; title: string; note: string }> = [];
+
+  if (upcomingHolidayName && upcomingHolidayDate && daysUntilHoliday !== null) {
+    supportItems.push({
+      label: text.weeklyHoliday,
+      title: upcomingHolidayName,
+      note: `${formatDaysUntilLabel(daysUntilHoliday, locale)} ${text.untilLabel} ${formatShortSwedishDate(upcomingHolidayDate, locale)}.`,
+    });
+  }
+
+  if (seasonalNotes.length > 0) {
+    supportItems.push({
+      label: text.nowCard,
+      title: seasonalNotes[0].title,
+      note: seasonalNotes[0].note,
+    });
+  }
+
+  if (nameDayState === 'ready' && nameDays.length > 0) {
+    supportItems.push({
+      label: text.nameday,
+      title: joinWithConjunction(nameDays, locale),
+      note: humanDate,
+    });
+  }
+
+  const visibleSupportItems = supportItems.slice(0, 2);
 
   return (
     <header className="app-panel app-panel--intro">
@@ -114,9 +124,6 @@ export function IntroPanel({
             </div>
           ) : null}
         </div>
-        <button type="button" className="theme-toggle" onClick={onToggleDarkMode}>
-          {darkMode ? text.lightMode : text.darkMode}
-        </button>
       </div>
 
       <div className={`brand-block${showsTeamBranding(contentPack) ? '' : ' brand-block--text-only'}`}>
@@ -135,104 +142,49 @@ export function IntroPanel({
         </div>
       </div>
 
-      <label htmlFor="date-picker" className="picker-label">
-        {text.pickDate}
-      </label>
-      <div className="picker-shell">
-        <input
-          id="date-picker"
-          type="date"
-          value={selectedDate}
-          onChange={(event) => onDateChange(event.target.value)}
-          onBlur={onDateCommit}
-          className="date-picker"
-        />
-        <div className="picker-meta">
-          <span>{humanDate}</span>
-          <span>{dateLabel}</span>
-        </div>
-      </div>
-      <button type="button" className="surprise-button" onClick={onSurpriseDate}>
-        {text.surpriseAction}
-      </button>
-      <p className="surprise-hint">{text.surpriseHint}</p>
-
-      <label htmlFor="mood-picker" className="picker-label">
-        {text.moodLabel}
-      </label>
-      <div className="picker-shell picker-shell--mood">
-        <select
-          id="mood-picker"
-          value={mood}
-          onChange={(event) => onSelectMood(event.target.value as Mood)}
-          className="date-picker mood-picker"
-        >
-          {moodOptions.map((option) => (
-            <option key={option.value} value={option.value}>
-              {getMoodLabel(option.value, locale)}
-            </option>
-          ))}
-        </select>
-        <p className="mood-note">{getMoodNote(mood, locale)}</p>
-      </div>
-
-      <div className="nameday-card">
-        <p className="eyebrow">{text.nameday}</p>
-        {nameDayState === 'loading' ? <p className="nameday-text">{text.namedayLoading}</p> : null}
-        {nameDayState === 'error' ? <p className="nameday-text">{text.namedayError}</p> : null}
-        {nameDayState === 'ready' && nameDays.length > 0 ? (
-          <p className="nameday-text">{joinWithConjunction(nameDays, locale)}</p>
-        ) : null}
-        {nameDayState === 'ready' && nameDays.length === 0 ? (
-          <p className="nameday-text">{text.namedayNone}</p>
-        ) : null}
-      </div>
-
-      {upcomingHolidayName && upcomingHolidayDate && daysUntilHoliday !== null ? (
-        <MobileSection
-          isMobile={isMobileLayout}
-          expanded={expandedSections.holiday}
-          onToggle={() => onToggleMobileSection('holiday')}
-          summary={text.mobileWeeklyHolidaySummary}
-        >
-          <div className="holiday-card">
-            <p className="eyebrow">{text.weeklyHoliday}</p>
-            <p className="holiday-title">{upcomingHolidayName}</p>
-            <p className="nameday-text">
-              {getUpcomingHolidayBlurb(upcomingHolidayName, daysUntilHoliday, locale)}
-            </p>
-            <p className="holiday-meta">
-              {formatDaysUntilLabel(daysUntilHoliday, locale)} {text.untilLabel}{' '}
-              {formatShortSwedishDate(upcomingHolidayDate, locale)}.
-            </p>
-          </div>
-        </MobileSection>
-      ) : null}
-
-      {seasonalNotes.length > 0 ? (
-        <MobileSection
-          isMobile={isMobileLayout}
-          expanded={expandedSections.season}
-          onToggle={() => onToggleMobileSection('season')}
-          summary={text.mobileSeasonSummary(seasonalNotes.length)}
-        >
-          <div className="season-card">
-            <p className="eyebrow">{text.nowCard}</p>
-            <div className="season-list">
-              {seasonalNotes.map((item) => (
-                <article key={item.id} className="season-item">
-                  <div className="season-item-top">
-                    <span className="season-label">{item.label}</span>
-                    <span className="season-meta">{item.meta}</span>
-                  </div>
-                  <p className="season-title">{item.title}</p>
-                  <p className="nameday-text">{item.note}</p>
-                </article>
-              ))}
+      <div className="picker-actions">
+        <div className="picker-field">
+          <label htmlFor="date-picker" className="picker-label">
+            {text.pickDate}
+          </label>
+          <div className="picker-shell">
+            <input
+              id="date-picker"
+              type="date"
+              value={selectedDate}
+              onChange={(event) => onDateChange(event.target.value)}
+              onBlur={onDateCommit}
+              className="date-picker"
+            />
+            <div className="picker-meta">
+              <span>{humanDate}</span>
+              <span>{dateLabel}</span>
             </div>
           </div>
-        </MobileSection>
-      ) : null}
+        </div>
+        <button type="button" className="surprise-button" onClick={onSurpriseDate}>
+          {text.surpriseAction}
+        </button>
+      </div>
+
+      <section className="support-strip" aria-label={text.upcoming}>
+        {nameDayState === 'loading' ? <p className="support-strip-empty">{text.namedayLoading}</p> : null}
+        {nameDayState === 'error' ? <p className="support-strip-empty">{text.namedayError}</p> : null}
+        {nameDayState === 'ready' && visibleSupportItems.length === 0 ? (
+          <p className="support-strip-empty">{text.namedayNone}</p>
+        ) : null}
+        {visibleSupportItems.map((item) => (
+          <article key={`${item.label}-${item.title}`} className="support-fact">
+            <p className="support-fact-label">{item.label}</p>
+            <p className="support-fact-title">{item.title}</p>
+            <p className="support-fact-note">
+              {item.label === text.weeklyHoliday && upcomingHolidayName && daysUntilHoliday !== null
+                ? getUpcomingHolidayBlurb(upcomingHolidayName, daysUntilHoliday, locale)
+                : item.note}
+            </p>
+          </article>
+        ))}
+      </section>
 
     </header>
   );

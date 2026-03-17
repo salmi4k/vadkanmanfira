@@ -78,6 +78,8 @@ export const appText: Record<
     pickDate: string;
     surpriseAction: string;
     surpriseHint: string;
+    installApp: string;
+    installHint: string;
     moodLabel: string;
     nameday: string;
     namedayLoading: string;
@@ -86,6 +88,7 @@ export const appText: Record<
     weeklyHoliday: string;
     nowCard: string;
     upcoming: string;
+    nextWorthCaringAbout: string;
     collapseShow: string;
     collapseHide: string;
     mobileWeeklyHolidaySummary: string;
@@ -103,6 +106,20 @@ export const appText: Record<
     imageCredits: string;
     themeDaySource: string;
     namedaySource: string;
+    publicApiLink: string;
+    calendarExportLink: string;
+    shareLabel: string;
+    shareLead: string;
+    shareOpen: string;
+    shareCopy: string;
+    shareCard: string;
+    shareCopied: string;
+    celebrationStatsLabel: string;
+    celebrationStatsTitle: string;
+    celebrationStatsBusiestMonth: (month: string, count: number) => string;
+    celebrationStatsTopCategory: (category: string, count: number) => string;
+    celebrationStatsTotalDays: (count: number) => string;
+    celebrationStatsTopDates: string;
     previousDay: string;
     nextDay: string;
     reroll: string;
@@ -145,7 +162,9 @@ export const appText: Record<
       'Välj ett datum och låt appen avgöra om dagen förtjänar flaggor, bakverk, högtidston eller bara ett torrt konstaterande av kalenderns begränsningar.',
     pickDate: 'Välj datum',
     surpriseAction: 'Överraska mig',
-    surpriseHint: 'Hoppa till ett datum som faktiskt verkar värt att fira.',
+    surpriseHint: 'Hoppa till nästa datum som faktiskt bär sig med lite självförtroende.',
+    installApp: 'Installera appen',
+    installHint: 'Spara Vad kan man fira? på hemskärmen för snabbare vardagsbruk.',
     moodLabel: 'Ton',
     nameday: 'Dagens namnsdag',
     namedayLoading: 'Laddar namnsdag från öppet API.',
@@ -155,6 +174,7 @@ export const appText: Record<
     weeklyHoliday: 'Veckans helgdag',
     nowCard: 'Säsongen pågår',
     upcoming: 'På gång',
+    nextWorthCaringAbout: 'Näst på tur',
     collapseShow: 'Visa',
     collapseHide: 'Dölj',
     mobileWeeklyHolidaySummary: 'Veckans helgdag',
@@ -174,9 +194,25 @@ export const appText: Record<
     imageCredits: 'Bildkällor',
     themeDaySource: 'Temadagar inspirerade av temadagar.se',
     namedaySource: 'Namnsdagar via sholiday.faboul.se',
+    publicApiLink: 'Publikt API',
+    calendarExportLink: 'Kalenderexport (.ics)',
+    shareLabel: 'Dela vidare',
+    shareLead: 'Skicka vidare dagens dom med en länk som ser ut att mena allvar.',
+    shareOpen: 'Skicka vidare',
+    shareCopy: 'Kopiera länk',
+    shareCard: 'Öppna delkort',
+    shareCopied: 'Länk kopierad.',
+    celebrationStatsLabel: 'Året i korthet',
+    celebrationStatsTitle: 'Firarstatistik',
+    celebrationStatsBusiestMonth: (month: string, count: number) =>
+      `${month} bär mest med ${count} firardagar.`,
+    celebrationStatsTopCategory: (category: string, count: number) =>
+      `${category} leder med ${count} dagar.`,
+    celebrationStatsTotalDays: (count: number) => `${count} dagar i år har egen firardag.`,
+    celebrationStatsTopDates: 'Toppdatum',
     previousDay: 'Föregående dag',
     nextDay: 'Nästa dag',
-    reroll: 'Ny ursäkt',
+    reroll: 'Ny vinkel',
     blurbLoading: 'Hämtar dagens text.',
     unofficialThemeDay: 'Inofficiell temadag',
     unofficialThemeDays: (count: number) => `Inofficiella temadagar x${count}`,
@@ -220,7 +256,9 @@ export const appText: Record<
       'Pick a date and let the app decide whether it calls for flags, pastries, ceremonial energy, or just a dry acknowledgement of the calendar’s limitations.',
     pickDate: 'Choose date',
     surpriseAction: 'Surprise me',
-    surpriseHint: 'Jump to a date that actually seems worth celebrating.',
+    surpriseHint: 'Jump to the next date that carries itself with some confidence.',
+    installApp: 'Install app',
+    installHint: 'Add What can one celebrate? to your home screen for quicker daily use.',
     moodLabel: 'Tone',
     nameday: "Today's name day",
     namedayLoading: 'Loading name day from the open API.',
@@ -230,6 +268,7 @@ export const appText: Record<
     weeklyHoliday: "This week's holiday",
     nowCard: 'Season in progress',
     upcoming: 'Coming up',
+    nextWorthCaringAbout: 'Next worth caring about',
     collapseShow: 'Show',
     collapseHide: 'Hide',
     mobileWeeklyHolidaySummary: "This week's holiday",
@@ -249,9 +288,26 @@ export const appText: Record<
     imageCredits: 'Image credits',
     themeDaySource: 'Theme days inspired by temadagar.se',
     namedaySource: 'Name days via sholiday.faboul.se',
+    publicApiLink: 'Public API',
+    calendarExportLink: 'Calendar export (.ics)',
+    shareLabel: 'Share it onward',
+    shareLead: 'Send the verdict onward with a share link that feels like it means it.',
+    shareOpen: 'Send it on',
+    shareCopy: 'Copy link',
+    shareCard: 'Open share card',
+    shareCopied: 'Link copied.',
+    celebrationStatsLabel: 'Year at a glance',
+    celebrationStatsTitle: 'Celebration stats',
+    celebrationStatsBusiestMonth: (month: string, count: number) =>
+      `${month} carries the most weight with ${count} celebration days.`,
+    celebrationStatsTopCategory: (category: string, count: number) =>
+      `${category} leads with ${count} days.`,
+    celebrationStatsTotalDays: (count: number) =>
+      `${count} days this year have their own celebration.`,
+    celebrationStatsTopDates: 'Top dates',
     previousDay: 'Previous day',
     nextDay: 'Next day',
-    reroll: 'New excuse',
+    reroll: 'Another angle',
     blurbLoading: "Fetching today's copy.",
     unofficialThemeDay: 'Unofficial theme day',
     unofficialThemeDays: (count: number) => `Unofficial theme days x${count}`,
@@ -295,7 +351,9 @@ export const appText: Record<
       'Escolha uma data e deixe o app decidir se o dia merece bandeiras, doces, solenidade ou apenas um comentário seco sobre as limitações do calendário.',
     pickDate: 'Escolher data',
     surpriseAction: 'Me surpreenda',
-    surpriseHint: 'Pule para uma data que realmente pareça valer a comemoração.',
+    surpriseHint: 'Vá para a próxima data que consiga se sustentar com alguma convicção.',
+    installApp: 'Instalar app',
+    installHint: 'Adicione o app à tela inicial para consultar o calendário com menos fricção.',
     moodLabel: 'Tom',
     nameday: 'Nome do dia',
     namedayLoading: 'Carregando nome do dia pela API aberta.',
@@ -305,6 +363,7 @@ export const appText: Record<
     weeklyHoliday: 'Feriado da semana',
     nowCard: 'Temporada em curso',
     upcoming: 'A caminho',
+    nextWorthCaringAbout: 'O próximo que importa',
     collapseShow: 'Mostrar',
     collapseHide: 'Ocultar',
     mobileWeeklyHolidaySummary: 'Feriado da semana',
@@ -324,9 +383,26 @@ export const appText: Record<
     imageCredits: 'Créditos das imagens',
     themeDaySource: 'Datas temáticas inspiradas em temadagar.se',
     namedaySource: 'Nomes do dia via sholiday.faboul.se',
+    publicApiLink: 'API pública',
+    calendarExportLink: 'Exportar calendário (.ics)',
+    shareLabel: 'Compartilhar',
+    shareLead: 'Envie o veredito do dia com um link que pareça ter sido feito de propósito.',
+    shareOpen: 'Enviar adiante',
+    shareCopy: 'Copiar link',
+    shareCard: 'Abrir cartão',
+    shareCopied: 'Link copiado.',
+    celebrationStatsLabel: 'O ano em resumo',
+    celebrationStatsTitle: 'Estatísticas de celebração',
+    celebrationStatsBusiestMonth: (month: string, count: number) =>
+      `${month} carrega mais peso com ${count} dias de celebração.`,
+    celebrationStatsTopCategory: (category: string, count: number) =>
+      `${category} lidera com ${count} dias.`,
+    celebrationStatsTotalDays: (count: number) =>
+      `${count} dias deste ano têm sua própria celebração.`,
+    celebrationStatsTopDates: 'Datas em destaque',
     previousDay: 'Dia anterior',
     nextDay: 'Próximo dia',
-    reroll: 'Nova desculpa',
+    reroll: 'Outro ângulo',
     blurbLoading: 'Buscando o texto do dia.',
     unofficialThemeDay: 'Data temática não oficial',
     unofficialThemeDays: (count: number) => `Datas temáticas não oficiais x${count}`,

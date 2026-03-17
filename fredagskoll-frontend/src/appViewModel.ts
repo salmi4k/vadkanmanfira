@@ -132,10 +132,17 @@ export function buildAiRequest({
   const fallbackBlurbs = celebration
     ? celebration.blurbs
     : themeDayBlurbs
-      ? themeDayBlurbs
+    ? themeDayBlurbs
       : dayType === 'ordinary'
         ? getOrdinaryDayBlurbs(locale, isWeekend, mood)
         : [];
+  const seasonalContext = seasonalNotes.map(
+    (item) => `${item.label}: ${item.title}. ${item.note}`
+  );
+  const upcomingContext = upcomingNotables.map((item) => {
+    const timing = item.daysUntil === 1 ? 'Tomorrow' : `In ${item.daysUntil} days`;
+    return `${timing}: ${item.title}. ${item.note}`;
+  });
 
   return {
     locale,
@@ -154,8 +161,8 @@ export function buildAiRequest({
     fallbackBlurbs,
     themeDays: displayThemeDays,
     extraThemeDays: extraDisplayThemeDays,
-    seasonalTitles: seasonalNotes.map((item) => item.title),
-    upcomingTitles: upcomingNotables.map((item) => item.title),
+    seasonalTitles: seasonalContext,
+    upcomingTitles: upcomingContext,
     upcomingHolidayName: upcomingHolidayName ?? undefined,
     nationalDaySummary: nationalDayPanel?.summary,
     allowHumor: true,

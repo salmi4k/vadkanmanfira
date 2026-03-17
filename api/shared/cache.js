@@ -2,9 +2,9 @@ const crypto = require('crypto');
 
 const CACHE_TABLE_NAME = 'blurbcache';
 const LIBRARY_TABLE_NAME = 'blurblibrary';
-const CACHE_MAX_AGE_MS = 15 * 60 * 1000;
-const GENERATION_COOLDOWN_MS = 15 * 60 * 1000;
-const MAX_VARIANTS_PER_KEY = 3;
+const CACHE_MAX_AGE_MS = 24 * 60 * 60 * 1000;
+const GENERATION_COOLDOWN_MS = 5 * 60 * 1000;
+const MAX_VARIANTS_PER_KEY = 5;
 
 function loadTableClient() {
   try {
@@ -102,6 +102,10 @@ function parseJsonArray(value) {
   }
 }
 
+function coerceString(value) {
+  return typeof value === 'string' ? value.trim() : '';
+}
+
 function coerceBundle(value) {
   const source = value && typeof value === 'object' ? value : {};
 
@@ -109,6 +113,10 @@ function coerceBundle(value) {
     titleEndings: Array.isArray(source.titleEndings) ? source.titleEndings : [],
     cardNotes: Array.isArray(source.cardNotes) ? source.cardNotes : [],
     blurbs: Array.isArray(source.blurbs) ? source.blurbs : [],
+    headline: coerceString(source.headline),
+    editorialAngle: coerceString(source.editorialAngle),
+    shareCaption: coerceString(source.shareCaption),
+    integrationSummary: coerceString(source.integrationSummary),
   };
 }
 
@@ -148,6 +156,17 @@ function chooseVariant(variants, lastBundleId) {
   return pool[Math.floor(Math.random() * pool.length)];
 }
 
+function choosePreferredVariant(state) {
+  if (!state) {
+    return null;
+  }
+
+  return (
+    chooseVariant(state.freshVariants, state.lastBundleId) ||
+    chooseVariant(state.variants, state.lastBundleId)
+  );
+}
+
 function buildBundleEntity(requestHash, variant) {
   return {
     partitionKey: requestHash,
@@ -170,6 +189,10 @@ function buildBundleEntity(requestHash, variant) {
     titleEndingsJson: JSON.stringify(variant.bundle.titleEndings || []),
     cardNotesJson: JSON.stringify(variant.bundle.cardNotes || []),
     blurbsJson: JSON.stringify(variant.bundle.blurbs || []),
+    headline: variant.bundle.headline || null,
+    editorialAngle: variant.bundle.editorialAngle || null,
+    shareCaption: variant.bundle.shareCaption || null,
+    integrationSummary: variant.bundle.integrationSummary || null,
   };
 }
 
@@ -178,6 +201,10 @@ function normalizeBundleEntity(entity, requestHash) {
     titleEndings: parseJsonArray(entity.titleEndingsJson),
     cardNotes: parseJsonArray(entity.cardNotesJson),
     blurbs: parseJsonArray(entity.blurbsJson),
+    headline: entity.headline,
+    editorialAngle: entity.editorialAngle,
+    shareCaption: entity.shareCaption,
+    integrationSummary: entity.integrationSummary,
   });
 
   if (
@@ -507,6 +534,7 @@ module.exports = {
   buildRequestHash,
   canGenerateVariant,
   chooseVariant,
+  choosePreferredVariant,
   createVariant,
   getCacheState,
   recordVariantUsage,
