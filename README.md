@@ -148,14 +148,27 @@ npm run build
 - `.github/workflows/deploy-static-apps.yml` builds the app twice:
   - `VITE_CONTENT_PACK=public` deploys to `vadkanmanfira`
   - `VITE_CONTENT_PACK=team` deploys to `fredagskoll`
+- The same workflow also deploys a separate testing app from the `testing`
+  branch:
+  - `VITE_CONTENT_PACK=public` deploys to the dedicated testing Static Web App
 - Both deployments include the managed API from `api/`
 - Required GitHub Actions secrets:
   - `AZURE_STATIC_WEB_APPS_API_TOKEN_THANKFUL_BUSH_0D8565003_1`
   - `AZURE_STATIC_WEB_APPS_API_TOKEN_DELIGHTFUL_GROUND_0B3AA2B03`
+  - `AZURE_STATIC_WEB_APPS_API_TOKEN_TESTING`
+- Required GitHub Actions variables:
+  - `VITE_SITE_ORIGIN_TESTING`
 - Azure Static Web Apps hosts both variants
 - The frontend calls the same-origin managed API at `/api/blurbs`
 - SPA routing fallback lives in
   `fredagskoll-frontend/public/staticwebapp.config.json`
+
+Testing-environment setup notes:
+
+- create a third Azure Static Web App resource for the testing environment
+- set its deployment token as `AZURE_STATIC_WEB_APPS_API_TOKEN_TESTING`
+- set `VITE_SITE_ORIGIN_TESTING` to that app's public URL
+- push the branch you want hosted to `testing`
 
 ## Optional AI blurbs
 
