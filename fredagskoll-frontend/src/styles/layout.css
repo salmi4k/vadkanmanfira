@@ -339,6 +339,19 @@
     transform 220ms ease;
 }
 
+.reroll-actions {
+  display: grid;
+  gap: 0.35rem;
+  justify-items: start;
+}
+
+.reroll-status {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: color-mix(in srgb, var(--muted) 80%, var(--tone-accent) 20%);
+}
+
 .reroll-button:hover {
   filter: brightness(0.98) saturate(1.06);
   transform: translateY(-1px) rotate(var(--mood-button-hover-rotate));

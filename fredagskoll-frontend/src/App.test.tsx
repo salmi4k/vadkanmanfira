@@ -537,6 +537,23 @@ test('rerolls the excuse when clicking Ny ursäkt', async () => {
   expect(handleReroll).toHaveBeenCalledTimes(1);
 });
 
+test('shows that a new excuse is being fetched after reroll is clicked', async () => {
+  mockedUseAiContent.mockImplementationOnce(() =>
+    buildMockAiContent({
+      blurb: 'Veckan bär sig knappt men den bär sig.',
+      currentBlurbs: ['Veckan bär sig knappt men den bär sig.'],
+      isAiRerolling: true,
+    })
+  );
+
+  await renderAppAt(new Date(2026, 2, 13), 'team');
+
+  expect(
+    screen.getByRole('button', { name: /Hämtar ny ursäkt/i })
+  ).toBeDisabled();
+  expect(screen.getByText(/Ny ursäkt hämtas nu\./i)).toBeInTheDocument();
+});
+
 test('steps between days from the center navigation buttons', async () => {
   await renderAppAt(new Date(2026, 2, 25));
 
