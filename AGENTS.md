@@ -33,6 +33,8 @@
   `App.tsx` when practical.
 - Keep frontend tests aligned with the day classification rules. The current
   tests inject fixed dates through the `initialDate` prop.
+- For user-visible frontend work, follow `docs/design-philosophy.md`. Favor
+  fewer, stronger UI decisions over extra controls or explanatory chrome.
 
 ## Change discipline
 

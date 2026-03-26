@@ -84,6 +84,8 @@ flowchart TD
   Developer-owned release log that can be published outward as changelog copy.
 - [docs/custom-domain-plan.md](docs/custom-domain-plan.md)
   Deferred branding and custom-domain planning notes.
+- [docs/design-philosophy.md](docs/design-philosophy.md)
+  Product and interface principles for keeping the app intentional, opinionated, and calm.
 - [docs/cra-migration-plan.md](docs/cra-migration-plan.md)
   Historical notes from the completed CRA-to-Vite migration.
 - [docs/theme-day-priority-suggestions.json](docs/theme-day-priority-suggestions.json)
