@@ -145,14 +145,22 @@ export function MainCelebrationCard({
           <p className="celebration-blurb">{visibleBlurb}</p>
         )}
         {canReroll && currentBlurbs && !isAiBundleLoading ? (
-          <button
-            type="button"
-            className="reroll-button"
-            onClick={onReroll}
-            disabled={isAiRerolling}
-          >
-            {text.reroll}
-          </button>
+          <div className="reroll-actions">
+            <button
+              type="button"
+              className="reroll-button"
+              onClick={onReroll}
+              disabled={isAiRerolling}
+              aria-describedby={isAiRerolling ? 'reroll-status' : undefined}
+            >
+              {isAiRerolling ? text.rerollLoading : text.reroll}
+            </button>
+            {isAiRerolling ? (
+              <p id="reroll-status" className="reroll-status" aria-live="polite">
+                {text.rerollStatus}
+              </p>
+            ) : null}
+          </div>
         ) : null}
       </div>
 
