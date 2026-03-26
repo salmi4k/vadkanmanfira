@@ -1145,6 +1145,21 @@ export function getCelebrationThemeAliases(
   return aliases[dayType] ?? [];
 }
 
+export function getReservedCelebrationThemeAliases(
+  contentPack: ContentPack = getActiveContentPack()
+): string[] {
+  const aliases = contentPack === 'team'
+    ? { ...sharedAliasesSv, ...teamAliasesSv }
+    : sharedAliasesSv;
+
+  return Array.from(
+    new Set(
+      Object.values(aliases)
+        .flatMap((value) => value ?? [])
+    )
+  );
+}
+
 export function getCelebrations(
   locale: Locale,
   contentPack: ContentPack = getActiveContentPack(),

@@ -1,21 +1,18 @@
 import React from 'react';
 import { MainCelebrationCard } from './MainCelebrationCard';
 import { MainFooterMeta } from './MainFooterMeta';
-import { EngagementPanel } from './EngagementPanel';
+import { SharePanel } from './SharePanel';
 import { Locale } from '../locale';
-import { Mood } from '../mood';
 import { appText } from '../appText';
 import { CelebrationContent } from '../features/celebrations/celebrations';
 import { MobileSectionKey } from '../appTypes';
 import { NationalDayPanel } from '../features/national-days/nationalDays';
-import { UpcomingNotable } from '../features/upcoming/upcomingNotables';
-import { FikaSuggestion } from '../features/engagement/engagement';
+import { ShareableCelebration } from '../features/shareability/shareability';
 
 type AppMainColumnProps = {
-  buildStamp: string;
-  categoryLabel: string | null;
   centerDate: string;
   celebration: CelebrationContent | null;
+  canReroll: boolean;
   compactPrimaryMedia: boolean;
   currentBlurbs: string[] | null;
   displayThemeDays: string[];
@@ -29,9 +26,6 @@ type AppMainColumnProps = {
   locale: Locale;
   mainCardRef: React.RefObject<HTMLElement | null>;
   mainTitle: string;
-  mood: Mood;
-  moodLabel: string;
-  fikaSuggestion: FikaSuggestion;
   nationalDayPanel: NationalDayPanel | null;
   onOpenImageCredits: () => void;
   onOpenReleaseNotes: () => void;
@@ -42,16 +36,14 @@ type AppMainColumnProps = {
   themeDayCardNote: string;
   themeDayDisplayTitle: string | null;
   themeDayTitleEnding: string;
-  upcomingNotables: UpcomingNotable[];
   visibleBlurb: string;
-  scoreLabel: string;
+  shareable: ShareableCelebration | null;
 };
 
 export function AppMainColumn({
-  buildStamp,
-  categoryLabel,
   centerDate,
   celebration,
+  canReroll,
   compactPrimaryMedia,
   currentBlurbs,
   displayThemeDays,
@@ -65,9 +57,6 @@ export function AppMainColumn({
   locale,
   mainCardRef,
   mainTitle,
-  mood,
-  moodLabel,
-  fikaSuggestion,
   nationalDayPanel,
   onOpenImageCredits,
   onOpenReleaseNotes,
@@ -78,16 +67,16 @@ export function AppMainColumn({
   themeDayCardNote,
   themeDayDisplayTitle,
   themeDayTitleEnding,
-  upcomingNotables,
   visibleBlurb,
-  scoreLabel,
+  shareable,
 }: AppMainColumnProps) {
   return (
     <div className="app-main-column">
       <MainCelebrationCard
-        categoryLabel={categoryLabel}
+        key={centerDate}
         centerDate={centerDate}
         celebration={celebration}
+        canReroll={canReroll}
         compactPrimaryMedia={compactPrimaryMedia}
         currentBlurbs={currentBlurbs}
         displayThemeDays={displayThemeDays}
@@ -101,9 +90,6 @@ export function AppMainColumn({
         locale={locale}
         mainCardRef={mainCardRef}
         mainTitle={mainTitle}
-        mood={mood}
-        moodLabel={moodLabel}
-        scoreLabel={scoreLabel}
         nationalDayPanel={nationalDayPanel}
         onReroll={onReroll}
         onStepDate={onStepDate}
@@ -112,18 +98,12 @@ export function AppMainColumn({
         themeDayCardNote={themeDayCardNote}
         themeDayDisplayTitle={themeDayDisplayTitle}
         themeDayTitleEnding={themeDayTitleEnding}
-        upcomingNotables={upcomingNotables}
         visibleBlurb={visibleBlurb}
       />
 
-      <EngagementPanel
-        categoryLabel={categoryLabel}
-        fikaSuggestion={fikaSuggestion}
-        scoreLabel={scoreLabel}
-      />
+      <SharePanel locale={locale} shareable={shareable} />
 
       <MainFooterMeta
-        buildStamp={buildStamp}
         locale={locale}
         onOpenImageCredits={onOpenImageCredits}
         onOpenReleaseNotes={onOpenReleaseNotes}

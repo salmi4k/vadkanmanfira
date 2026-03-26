@@ -94,7 +94,6 @@ export function AppDialogs({
           </section>
         </div>
       ) : null}
-
       {showReleaseNotes ? (
         <div
           className="credits-overlay"

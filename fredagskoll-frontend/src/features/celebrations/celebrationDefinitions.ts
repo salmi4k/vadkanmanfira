@@ -298,30 +298,45 @@ export function isMatchingCelebrationDate(
   definition: CelebrationDefinition,
   date: Date
 ): boolean {
+  if (definition.dateType === 'recurring-weekday') {
+    return date.getDay() === definition.weekday;
+  }
+
+  const targetDate = getCelebrationDateForYear(definition, date.getFullYear());
+  return targetDate !== null && isSameLocalDate(date, targetDate);
+}
+
+export function getCelebrationDateForYear(
+  definition: CelebrationDefinition,
+  year: number
+): Date | null {
   switch (definition.dateType) {
     case 'fixed':
-      return (
-        date.getMonth() === definition.monthIndex &&
-        date.getDate() === definition.dayOfMonth
-      );
+      return new Date(year, definition.monthIndex, definition.dayOfMonth);
     case 'easter-relative': {
-      const targetDate = new Date(getEasterSunday(date.getFullYear()));
+      const targetDate = new Date(getEasterSunday(year));
       targetDate.setDate(targetDate.getDate() + definition.offsetDays);
-      return isSameLocalDate(date, targetDate);
+      return targetDate;
     }
-    case 'month-weekday-window':
-      return (
-        date.getMonth() === definition.monthIndex &&
-        date.getDay() === definition.weekday &&
-        date.getDate() >= definition.dayOfMonthStart &&
-        date.getDate() <= definition.dayOfMonthEnd
-      );
+    case 'month-weekday-window': {
+      for (
+        let dayOfMonth = definition.dayOfMonthStart;
+        dayOfMonth <= definition.dayOfMonthEnd;
+        dayOfMonth += 1
+      ) {
+        const candidate = new Date(year, definition.monthIndex, dayOfMonth);
+        if (candidate.getDay() === definition.weekday) {
+          return candidate;
+        }
+      }
+      return null;
+    }
     case 'computed':
-      return isSameLocalDate(date, definition.getDate(date.getFullYear()));
+      return definition.getDate(year);
     case 'recurring-weekday':
-      return date.getDay() === definition.weekday;
+      return null;
     default:
-      return false;
+      return null;
   }
 }
 

@@ -57,6 +57,11 @@ export function useAiContent({
   const aiRequestKey = useMemo(() => JSON.stringify(aiRequest), [aiRequest]);
   const isAiBundleLoading =
     aiBundleState === 'loading' || resolvedAiRequestKey !== aiRequestKey;
+  const canReroll =
+    aiBundle !== null &&
+    resolvedAiRequestKey === aiRequestKey &&
+    aiBundleState === 'ready' &&
+    aiBundle.blurbs.length > 0;
 
   const currentBlurbs = useMemo(() => {
     if (resolvedAiRequestKey === aiRequestKey && aiBundle?.blurbs.length) {
@@ -173,12 +178,7 @@ export function useAiContent({
       return;
     }
 
-    const canAskAiForAnotherVariant =
-      aiBundle !== null &&
-      resolvedAiRequestKey === aiRequestKey &&
-      aiBundleState === 'ready';
-
-    if (!canAskAiForAnotherVariant) {
+    if (!canReroll) {
       setBlurb((currentBlurb) => getRandomItem(currentBlurbs, ordinaryBlurb, currentBlurb));
       return;
     }
@@ -215,6 +215,7 @@ export function useAiContent({
     aiBundleState,
     aiRequest,
     aiRequestKey,
+    canReroll,
     currentBlurbs,
     ordinaryBlurb,
     resolvedAiRequestKey,
@@ -222,6 +223,7 @@ export function useAiContent({
 
   return {
     blurb,
+    canReroll,
     currentBlurbs,
     handleReroll,
     isAiBundleLoading,

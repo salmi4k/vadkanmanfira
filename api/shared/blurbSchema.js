@@ -61,8 +61,7 @@ function normalizeRequestBody(body) {
 function isValidRequest(request) {
   return (
     request.date.length > 0 &&
-    request.title.length > 0 &&
-    request.fallbackBlurbs.length > 0
+    request.title.length > 0
   );
 }
 

@@ -1,6 +1,7 @@
 {
   "short_name": "VKMF",
   "name": "Vad kan man fira?",
+  "description": "Vad kan man fira? avgör om dagen förtjänar flaggor, bakverk, högtidston eller bara ett torrt konstaterande av kalenderns begränsningar.",
   "icons": [
     {
       "src": "favicon.svg",
@@ -21,5 +22,19 @@
   "start_url": ".",
   "display": "standalone",
   "theme_color": "#9d4b17",
-  "background_color": "#f2ecda"
+  "background_color": "#f2ecda",
+  "shortcuts": [
+    {
+      "name": "Today",
+      "short_name": "Today",
+      "url": "/?today=1",
+      "description": "Open today’s verdict"
+    },
+    {
+      "name": "Surprise me",
+      "short_name": "Surprise",
+      "url": "/?surprise=1",
+      "description": "Jump to a date worth the trouble"
+    }
+  ]
 }
