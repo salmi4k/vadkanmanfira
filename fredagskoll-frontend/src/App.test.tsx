@@ -353,6 +353,23 @@ test('renders filtered temadagar for an otherwise ordinary date', async () => {
   randomSpy.mockRestore();
 });
 
+test('uses ai-provided theme-day copy visibly on the start page', async () => {
+  mockedUseAiContent.mockImplementationOnce(() =>
+    buildMockAiContent({
+      blurb: 'AI-ursäkten syns direkt i huvudkortet.',
+      currentBlurbs: ['AI-ursäkten syns direkt i huvudkortet.'],
+      themeDayTitleEnding: 'AI-vinkeln ligger i rubriken.',
+      themeDayCardNote: 'AI-notisen styr texten i dagens temadagar.',
+    })
+  );
+
+  await renderAppAt(new Date(2027, 2, 23));
+
+  expect(screen.getByText(/AI-ursäkten syns direkt i huvudkortet\./i)).toBeInTheDocument();
+  expect(screen.getByText(/AI-vinkeln ligger i rubriken\./i)).toBeInTheDocument();
+  expect(screen.getByText(/AI-notisen styr texten i dagens temadagar\./i)).toBeInTheDocument();
+});
+
 test('does not treat reserved celebration names as ordinary theme days on the wrong date', async () => {
   await renderAppAt(new Date(2026, 2, 27));
 

@@ -15,6 +15,10 @@ type CelebrationLike = {
   blurbs: string[];
 };
 
+function hasUsableBlurbs(bundle: AiBlurbBundle | null): bundle is AiBlurbBundle {
+  return Boolean(bundle?.blurbs.length);
+}
+
 type UseAiContentArgs = {
   aiRequest: AiBlurbRequest;
   ordinaryBlurb: string;
@@ -60,11 +64,10 @@ export function useAiContent({
   const canReroll =
     aiBundle !== null &&
     resolvedAiRequestKey === aiRequestKey &&
-    aiBundleState === 'ready' &&
-    aiBundle.blurbs.length > 0;
+    aiBundleState === 'ready';
 
   const currentBlurbs = useMemo(() => {
-    if (resolvedAiRequestKey === aiRequestKey && aiBundle?.blurbs.length) {
+    if (resolvedAiRequestKey === aiRequestKey && hasUsableBlurbs(aiBundle)) {
       return aiBundle.blurbs;
     }
 
@@ -194,13 +197,25 @@ export function useAiContent({
         undefined
       );
 
-      if (rerolledBundle?.blurbs.length) {
-        setAiBundle(rerolledBundle);
+      if (rerolledBundle) {
+        const nextBlurbs = hasUsableBlurbs(rerolledBundle)
+          ? rerolledBundle.blurbs
+          : hasUsableBlurbs(aiBundle)
+            ? aiBundle.blurbs
+            : currentBlurbs;
+        const nextBundle = nextBlurbs
+          ? {
+              ...rerolledBundle,
+              blurbs: nextBlurbs,
+            }
+          : rerolledBundle;
+
+        setAiBundle(nextBundle);
         setResolvedAiRequestKey(aiRequestKey);
         setAiBundleState('ready');
-        setBlurb((currentBlurb) =>
-          getRandomItem(rerolledBundle.blurbs, ordinaryBlurb, currentBlurb)
-        );
+        if (nextBlurbs) {
+          setBlurb((currentBlurb) => getRandomItem(nextBlurbs, ordinaryBlurb, currentBlurb));
+        }
         return;
       }
     } catch {
