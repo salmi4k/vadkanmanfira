@@ -10,6 +10,7 @@ import {
 import {
   getCelebrations,
   getCelebrationThemeAliases,
+  getReservedCelebrationThemeAliases,
   getOrdinaryBlurb,
 } from './features/celebrations/celebrations';
 import { ContentPack, getActiveContentPack } from './contentPack';
@@ -85,16 +86,22 @@ function App({
   const dayStatus = getDayStatus(selectedDateObject, contentPack);
   const celebration = getCurrentCelebration(dayStatus.dayType, celebrations);
   const themeDays = useMemo(() => getThemeDaysForDate(selectedDateObject), [selectedDateObject]);
+  const reservedCelebrationThemeAliases = useMemo(
+    () => getReservedCelebrationThemeAliases(contentPack),
+    [contentPack]
+  );
   const visibleThemeDays = useMemo(() => {
+    const filteredThemeDays = filterThemeDays(themeDays, reservedCelebrationThemeAliases);
+
     if (!celebration || dayStatus.dayType === 'ordinary') {
-      return themeDays;
+      return filteredThemeDays;
     }
 
     return filterThemeDays(
-      themeDays,
+      filteredThemeDays,
       getCelebrationThemeAliases(dayStatus.dayType, locale, contentPack)
     );
-  }, [celebration, contentPack, dayStatus.dayType, locale, themeDays]);
+  }, [celebration, contentPack, dayStatus.dayType, locale, reservedCelebrationThemeAliases, themeDays]);
   const displayThemeDays = useMemo(
     () => visibleThemeDays.map((themeDay) => translateThemeDayName(themeDay, locale)),
     [locale, visibleThemeDays]

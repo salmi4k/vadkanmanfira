@@ -353,6 +353,18 @@ test('renders filtered temadagar for an otherwise ordinary date', async () => {
   randomSpy.mockRestore();
 });
 
+test('does not treat reserved celebration names as ordinary theme days on the wrong date', async () => {
+  await renderAppAt(new Date(2026, 2, 27));
+
+  expect(
+    screen.queryByRole('heading', { level: 2, name: /^Påskafton/i })
+  ).not.toBeInTheDocument();
+  expect(screen.queryByText(/^Påskafton$/i)).not.toBeInTheDocument();
+  expect(
+    screen.getByRole('heading', { level: 2, name: /Världsteaterdagen/i })
+  ).toBeInTheDocument();
+});
+
 test('picks the more meaningful March 21 theme day instead of blindly using source order', async () => {
   const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0);
   const leadThemeDay = getThemeDaysForDate(new Date(2026, 2, 21))[0];
