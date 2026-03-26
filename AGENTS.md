@@ -33,11 +33,17 @@
   `App.tsx` when practical.
 - Keep frontend tests aligned with the day classification rules. The current
   tests inject fixed dates through the `initialDate` prop.
+- For user-visible frontend work, follow `docs/design-philosophy.md`. Favor
+  fewer, stronger UI decisions over extra controls or explanatory chrome.
 
 ## Change discipline
 
 - Favor small, explicit changes. This project is simple enough that extra
   abstraction usually adds more maintenance cost than value.
+- For substantial multi-part work such as design passes, broad frontend audits,
+  or larger feature updates, prefer splitting the work across multiple
+  sub-agents in parallel when the tasks can be cleanly separated. Use distinct
+  ownership areas, then integrate the results into one coherent final change.
 - Review your own diff critically before committing or pushing. Check for
   broken text encoding, obvious UI regressions, naming drift, and copy that
   does not actually read the way it is intended to in the app.

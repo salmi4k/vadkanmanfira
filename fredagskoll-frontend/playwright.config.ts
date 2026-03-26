@@ -12,7 +12,7 @@ export default defineConfig({
   snapshotPathTemplate:
     '{testDir}/__screenshots__/{testFilePath}/{arg}{ext}',
   use: {
-    baseURL: 'http://127.0.0.1:3000',
+    baseURL: 'http://localhost:3000',
     trace: 'retain-on-failure',
   },
   projects: [
@@ -26,7 +26,7 @@ export default defineConfig({
   ],
   webServer: {
     command: 'npm start',
-    url: 'http://127.0.0.1:3000',
+    url: 'http://localhost:3000',
     reuseExistingServer: true,
     stdout: 'ignore',
     stderr: 'pipe',

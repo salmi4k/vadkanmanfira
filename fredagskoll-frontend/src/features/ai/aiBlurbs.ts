@@ -28,6 +28,10 @@ export type AiBlurbRequest = {
 
 export type AiBlurbBundle = {
   source: 'cache' | 'azure-openai' | 'fallback';
+  headline?: string;
+  editorialAngle?: string;
+  shareCaption?: string;
+  integrationSummary?: string;
   titleEndings: string[];
   cardNotes: string[];
   blurbs: string[];

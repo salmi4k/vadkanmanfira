@@ -80,8 +80,12 @@ flowchart TD
   Detailed application flow and API/cache behavior.
 - [docs/text-surface-audit.md](docs/text-surface-audit.md)
   Editorial vs stable UI text boundary for mood-aware copy.
+- [docs/release-notes.md](docs/release-notes.md)
+  Developer-owned release log that can be published outward as changelog copy.
 - [docs/custom-domain-plan.md](docs/custom-domain-plan.md)
   Deferred branding and custom-domain planning notes.
+- [docs/design-philosophy.md](docs/design-philosophy.md)
+  Product and interface principles for keeping the app intentional, opinionated, and calm.
 - [docs/cra-migration-plan.md](docs/cra-migration-plan.md)
   Historical notes from the completed CRA-to-Vite migration.
 - [docs/theme-day-priority-suggestions.json](docs/theme-day-priority-suggestions.json)
@@ -140,6 +144,7 @@ npm test
 npm run test:watch
 npm run test:visual
 npm run build
+npm run release-notes:export
 ```
 
 ## Deployment
@@ -148,14 +153,27 @@ npm run build
 - `.github/workflows/deploy-static-apps.yml` builds the app twice:
   - `VITE_CONTENT_PACK=public` deploys to `vadkanmanfira`
   - `VITE_CONTENT_PACK=team` deploys to `fredagskoll`
+- The same workflow also deploys a separate testing app from the `testing`
+  branch:
+  - `VITE_CONTENT_PACK=public` deploys to the dedicated testing Static Web App
 - Both deployments include the managed API from `api/`
 - Required GitHub Actions secrets:
   - `AZURE_STATIC_WEB_APPS_API_TOKEN_THANKFUL_BUSH_0D8565003_1`
   - `AZURE_STATIC_WEB_APPS_API_TOKEN_DELIGHTFUL_GROUND_0B3AA2B03`
+  - `AZURE_STATIC_WEB_APPS_API_TOKEN_TESTING`
+- Required GitHub Actions variables:
+  - `VITE_SITE_ORIGIN_TESTING`
 - Azure Static Web Apps hosts both variants
 - The frontend calls the same-origin managed API at `/api/blurbs`
 - SPA routing fallback lives in
   `fredagskoll-frontend/public/staticwebapp.config.json`
+
+Testing-environment setup notes:
+
+- create a third Azure Static Web App resource for the testing environment
+- set its deployment token as `AZURE_STATIC_WEB_APPS_API_TOKEN_TESTING`
+- set `VITE_SITE_ORIGIN_TESTING` to that app's public URL
+- push the branch you want hosted to `testing`
 
 ## Optional AI blurbs
 
@@ -174,7 +192,7 @@ What the managed API does:
 - computes a deterministic request hash
 - checks a hot cache row in Azure Table Storage first
 - auto-generates one AI bundle for a new request key and serves cache after that
-- can store up to 3 variants for the same request key, but only creates extra variants on explicit reroll
+- can store up to 5 variants for the same request key, but only creates extra variants on explicit reroll
 - enforces a real generation cooldown per request key before Azure OpenAI is called again
 - rotates between cached variants when more than one already exists
 - stores generated bundles in a separate bundle library table for reuse and tracking
@@ -200,6 +218,12 @@ Required Azure app settings for each Static Web App managed API:
 - `AZURE_OPENAI_DEPLOYMENT`
 - `AZURE_OPENAI_API_VERSION`
 - `AZURE_TABLES_CONNECTION_STRING`
+
+Free-tier guidance:
+
+- the app is intentionally built to reuse cached AI bundles aggressively
+- richer prompt/context work is preferred over extra Azure round-trips
+- integrations should reuse existing generated data and share assets where possible
 
 Local sample config lives in:
 

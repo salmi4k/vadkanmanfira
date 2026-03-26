@@ -15,6 +15,10 @@ type CelebrationLike = {
   blurbs: string[];
 };
 
+function hasUsableBlurbs(bundle: AiBlurbBundle | null): bundle is AiBlurbBundle {
+  return Boolean(bundle?.blurbs.length);
+}
+
 type UseAiContentArgs = {
   aiRequest: AiBlurbRequest;
   ordinaryBlurb: string;
@@ -57,9 +61,13 @@ export function useAiContent({
   const aiRequestKey = useMemo(() => JSON.stringify(aiRequest), [aiRequest]);
   const isAiBundleLoading =
     aiBundleState === 'loading' || resolvedAiRequestKey !== aiRequestKey;
+  const canReroll =
+    aiBundle !== null &&
+    resolvedAiRequestKey === aiRequestKey &&
+    aiBundleState === 'ready';
 
   const currentBlurbs = useMemo(() => {
-    if (resolvedAiRequestKey === aiRequestKey && aiBundle?.blurbs.length) {
+    if (resolvedAiRequestKey === aiRequestKey && hasUsableBlurbs(aiBundle)) {
       return aiBundle.blurbs;
     }
 
@@ -173,12 +181,7 @@ export function useAiContent({
       return;
     }
 
-    const canAskAiForAnotherVariant =
-      aiBundle !== null &&
-      resolvedAiRequestKey === aiRequestKey &&
-      aiBundleState === 'ready';
-
-    if (!canAskAiForAnotherVariant) {
+    if (!canReroll) {
       setBlurb((currentBlurb) => getRandomItem(currentBlurbs, ordinaryBlurb, currentBlurb));
       return;
     }
@@ -194,13 +197,25 @@ export function useAiContent({
         undefined
       );
 
-      if (rerolledBundle?.blurbs.length) {
-        setAiBundle(rerolledBundle);
+      if (rerolledBundle) {
+        const nextBlurbs = hasUsableBlurbs(rerolledBundle)
+          ? rerolledBundle.blurbs
+          : hasUsableBlurbs(aiBundle)
+            ? aiBundle.blurbs
+            : currentBlurbs;
+        const nextBundle = nextBlurbs
+          ? {
+              ...rerolledBundle,
+              blurbs: nextBlurbs,
+            }
+          : rerolledBundle;
+
+        setAiBundle(nextBundle);
         setResolvedAiRequestKey(aiRequestKey);
         setAiBundleState('ready');
-        setBlurb((currentBlurb) =>
-          getRandomItem(rerolledBundle.blurbs, ordinaryBlurb, currentBlurb)
-        );
+        if (nextBlurbs) {
+          setBlurb((currentBlurb) => getRandomItem(nextBlurbs, ordinaryBlurb, currentBlurb));
+        }
         return;
       }
     } catch {
@@ -215,6 +230,7 @@ export function useAiContent({
     aiBundleState,
     aiRequest,
     aiRequestKey,
+    canReroll,
     currentBlurbs,
     ordinaryBlurb,
     resolvedAiRequestKey,
@@ -222,6 +238,7 @@ export function useAiContent({
 
   return {
     blurb,
+    canReroll,
     currentBlurbs,
     handleReroll,
     isAiBundleLoading,
