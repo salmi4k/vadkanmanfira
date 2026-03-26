@@ -403,21 +403,21 @@ test('renders an upcoming official holiday note when one lands later that week',
   expect(screen.getByText(/ligger senare i veckan/i)).toBeInTheDocument();
 });
 
-test('renders upcoming notable dates with major celebrations ahead of random filler', async () => {
+test('surfaces one curated upcoming note instead of a separate upcoming card', async () => {
   await renderAppAt(new Date(2026, 3, 27));
 
   expect(screen.queryByRole('button', { name: /På gång/i })).not.toBeInTheDocument();
-  expect(screen.getByText(/Näst på tur/i)).toBeInTheDocument();
-  expect(screen.getByText(/^Valborg$/i)).toBeInTheDocument();
+  expect(screen.queryByText(/Näst på tur/i)).not.toBeInTheDocument();
   expect(screen.getAllByText(/^Första maj$/i).length).toBeGreaterThan(0);
-  expect(screen.getAllByText(/Om 3 dagar/i).length).toBeGreaterThan(0);
+  expect(screen.getByText(/ligger senare i veckan/i)).toBeInTheDocument();
 });
 
-test('keeps only one featured upcoming moment in view', async () => {
+test('keeps only one upcoming moment in view', async () => {
   await renderAppAt(new Date(2026, 3, 27));
 
-  expect(screen.getByText(/Näst på tur/i)).toBeInTheDocument();
-  expect(screen.getByText(/^Valborg$/i)).toBeInTheDocument();
+  expect(screen.queryByText(/Näst på tur/i)).not.toBeInTheDocument();
+  expect(screen.queryByText(/^Valborg$/i)).not.toBeInTheDocument();
+  expect(screen.getAllByText(/^Första maj$/i).length).toBeGreaterThan(0);
   expect(screen.queryByText(/Kristi himmelsfärdsdag/i)).not.toBeInTheDocument();
 });
 

@@ -304,7 +304,6 @@ function App({
           themeDayCardNote={themeDayCardNote}
           themeDayDisplayTitle={themeDayDisplayTitle}
           themeDayTitleEnding={themeDayTitleEnding}
-          upcomingNotables={upcomingNotables}
           visibleBlurb={blurb}
           shareable={shareableCelebration}
         />

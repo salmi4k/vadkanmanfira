@@ -16,7 +16,7 @@ export function MainFooterMeta({
   const text = appText[locale];
 
   return (
-    <footer className="app-panel main-footer-meta">
+    <footer className="main-footer-meta">
       <p className="main-footer-copy">{text.creditsLead}</p>
       <div className="main-footer-actions">
         <button

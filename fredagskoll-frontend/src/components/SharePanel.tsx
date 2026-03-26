@@ -36,7 +36,7 @@ export function SharePanel({ locale, shareable }: SharePanelProps) {
   }
 
   return (
-    <section className="share-panel app-panel" aria-label={text.shareLabel}>
+    <section className="share-panel" aria-label={text.shareLabel}>
       <p className="share-lead">
         {copyState === 'copied' ? text.shareCopied : text.shareLead}
       </p>

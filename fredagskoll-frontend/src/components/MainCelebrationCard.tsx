@@ -17,7 +17,6 @@ import {
 import { joinWithAnd } from '../features/theme-days/themeDayBlurbs';
 import { MobileSectionKey } from '../appTypes';
 import { NationalDayPanel } from '../features/national-days/nationalDays';
-import { UpcomingNotable } from '../features/upcoming/upcomingNotables';
 import { Mood } from '../mood';
 
 type MainCelebrationCardProps = {
@@ -43,7 +42,6 @@ type MainCelebrationCardProps = {
   themeDayCardNote: string;
   themeDayDisplayTitle: string | null;
   themeDayTitleEnding: string;
-  upcomingNotables: UpcomingNotable[];
   visibleBlurb: string;
   displayThemeDays: string[];
   kicker: string;
@@ -74,13 +72,11 @@ export function MainCelebrationCard({
   themeDayCardNote,
   themeDayDisplayTitle,
   themeDayTitleEnding,
-  upcomingNotables,
   visibleBlurb,
 }: MainCelebrationCardProps) {
   const hasLongWordTitle = hasLongTitleWord(themeDayDisplayTitle ?? mainTitle);
   const celebrationSubtitle = celebration?.subtitle ?? null;
   const mood: Mood = 'warm';
-  const featuredUpcoming = upcomingNotables[0] ?? null;
   const hasCeremonialDay = celebration !== null;
 
   return (
@@ -275,18 +271,6 @@ export function MainCelebrationCard({
         </DisclosurePanel>
       ) : null}
 
-      {featuredUpcoming ? (
-        <section className="featured-upcoming-card">
-          <p className="eyebrow">{text.nextWorthCaringAbout}</p>
-          <p className="featured-upcoming-label">
-            {featuredUpcoming.daysUntil === 1
-              ? text.upcomingTomorrow
-              : text.upcomingInDays(featuredUpcoming.daysUntil)}
-          </p>
-          <h3 className="featured-upcoming-title">{featuredUpcoming.title}</h3>
-          <p className="featured-upcoming-note">{featuredUpcoming.note}</p>
-        </section>
-      ) : null}
     </main>
   );
 }

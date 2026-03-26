@@ -7,7 +7,6 @@ import { appText } from '../appText';
 import { CelebrationContent } from '../features/celebrations/celebrations';
 import { MobileSectionKey } from '../appTypes';
 import { NationalDayPanel } from '../features/national-days/nationalDays';
-import { UpcomingNotable } from '../features/upcoming/upcomingNotables';
 import { ShareableCelebration } from '../features/shareability/shareability';
 
 type AppMainColumnProps = {
@@ -37,7 +36,6 @@ type AppMainColumnProps = {
   themeDayCardNote: string;
   themeDayDisplayTitle: string | null;
   themeDayTitleEnding: string;
-  upcomingNotables: UpcomingNotable[];
   visibleBlurb: string;
   shareable: ShareableCelebration | null;
 };
@@ -69,7 +67,6 @@ export function AppMainColumn({
   themeDayCardNote,
   themeDayDisplayTitle,
   themeDayTitleEnding,
-  upcomingNotables,
   visibleBlurb,
   shareable,
 }: AppMainColumnProps) {
@@ -101,7 +98,6 @@ export function AppMainColumn({
         themeDayCardNote={themeDayCardNote}
         themeDayDisplayTitle={themeDayDisplayTitle}
         themeDayTitleEnding={themeDayTitleEnding}
-        upcomingNotables={upcomingNotables}
         visibleBlurb={visibleBlurb}
       />
 

@@ -81,7 +81,7 @@ export function IntroPanel({
     });
   }
 
-  const visibleSupportItems = supportItems.slice(0, 2);
+  const visibleSupportItems = supportItems.slice(0, 1);
 
   return (
     <header className="app-panel app-panel--intro">
