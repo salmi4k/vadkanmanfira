@@ -8,6 +8,7 @@ import { CelebrationContent } from '../features/celebrations/celebrations';
 import { MobileSectionKey } from '../appTypes';
 import { NationalDayPanel } from '../features/national-days/nationalDays';
 import { ShareableCelebration } from '../features/shareability/shareability';
+import { AiObservabilityState } from '../features/ai/aiObservability';
 
 type AppMainColumnProps = {
   centerDate: string;
@@ -27,6 +28,7 @@ type AppMainColumnProps = {
   mainCardRef: React.RefObject<HTMLElement | null>;
   mainTitle: string;
   nationalDayPanel: NationalDayPanel | null;
+  observability: AiObservabilityState | null;
   onOpenImageCredits: () => void;
   onOpenReleaseNotes: () => void;
   onReroll: () => void;
@@ -58,6 +60,7 @@ export function AppMainColumn({
   mainCardRef,
   mainTitle,
   nationalDayPanel,
+  observability,
   onOpenImageCredits,
   onOpenReleaseNotes,
   onReroll,
@@ -91,6 +94,7 @@ export function AppMainColumn({
         mainCardRef={mainCardRef}
         mainTitle={mainTitle}
         nationalDayPanel={nationalDayPanel}
+        observability={observability}
         onReroll={onReroll}
         onStepDate={onStepDate}
         onToggleMobileSection={onToggleMobileSection}

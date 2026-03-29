@@ -18,6 +18,7 @@ import { joinWithAnd } from '../features/theme-days/themeDayBlurbs';
 import { MobileSectionKey } from '../appTypes';
 import { NationalDayPanel } from '../features/national-days/nationalDays';
 import { Mood } from '../mood';
+import { AiObservabilityState } from '../features/ai/aiObservability';
 
 type MainCelebrationCardProps = {
   centerDate: string;
@@ -35,6 +36,7 @@ type MainCelebrationCardProps = {
   mainCardRef: React.RefObject<HTMLElement | null>;
   mainTitle: string;
   nationalDayPanel: NationalDayPanel | null;
+  observability: AiObservabilityState | null;
   onReroll: () => void;
   onStepDate: (days: number) => void;
   onToggleMobileSection: (section: MobileSectionKey) => void;
@@ -65,6 +67,7 @@ export function MainCelebrationCard({
   mainCardRef,
   mainTitle,
   nationalDayPanel,
+  observability,
   onReroll,
   onStepDate,
   onToggleMobileSection,
@@ -78,6 +81,26 @@ export function MainCelebrationCard({
   const celebrationSubtitle = celebration?.subtitle ?? null;
   const mood: Mood = 'warm';
   const hasCeremonialDay = celebration !== null;
+  const resolvedSourceLabel =
+    !observability || observability.resolvedSource.status === 'loading'
+      ? text.aiObservabilitySourceLoading
+      : observability.resolvedSource.source === 'azure-openai'
+        ? text.aiObservabilitySourceAI
+        : observability.resolvedSource.source === 'cache'
+          ? text.aiObservabilitySourceCache
+          : observability.resolvedSource.source === 'fallback'
+            ? text.aiObservabilitySourceFallback
+            : text.aiObservabilitySourceUnknown;
+  const rerollOutcomeLabel =
+    !observability || observability.rerollOutcome.status === 'idle'
+      ? text.aiObservabilityRerollUnknown
+      : observability.rerollOutcome.status === 'loading'
+        ? text.aiObservabilityRerollLoading
+        : observability.rerollOutcome.status === 'fresh-ai'
+          ? text.aiObservabilityRerollFresh
+          : observability.rerollOutcome.status === 'reused-ai'
+            ? text.aiObservabilityRerollReused
+            : text.aiObservabilityRerollFallback;
 
   return (
     <main
@@ -163,6 +186,22 @@ export function MainCelebrationCard({
           </div>
         ) : null}
       </div>
+
+      {observability ? (
+        <aside className="ai-observability" aria-label={text.aiObservabilityTitle}>
+          <p className="ai-observability-line">
+            <span className="ai-observability-label">{text.aiObservabilitySourceLabel}</span>
+            <strong className="ai-observability-value">{resolvedSourceLabel}</strong>
+          </p>
+          <p
+            className="ai-observability-line ai-observability-line--outcome"
+            aria-live="polite"
+          >
+            <span className="ai-observability-label">{text.aiObservabilityRerollLabel}</span>
+            <strong className="ai-observability-value">{rerollOutcomeLabel}</strong>
+          </p>
+        </aside>
+      ) : null}
 
       {celebration ? (
         <>

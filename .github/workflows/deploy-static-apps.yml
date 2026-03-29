@@ -19,6 +19,7 @@ jobs:
     env:
       VITE_CONTENT_PACK: public
       VITE_SITE_ORIGIN: https://thankful-bush-0d8565003.1.azurestaticapps.net
+      VITE_ENABLE_AI_OBSERVABILITY: "false"
       GITHUB_SHA: ${{ github.sha }}
       GITHUB_RUN_NUMBER: ${{ github.run_number }}
     steps:
@@ -45,6 +46,7 @@ jobs:
     env:
       VITE_CONTENT_PACK: team
       VITE_SITE_ORIGIN: https://delightful-ground-0b3aa2b03.4.azurestaticapps.net
+      VITE_ENABLE_AI_OBSERVABILITY: "false"
       GITHUB_SHA: ${{ github.sha }}
       GITHUB_RUN_NUMBER: ${{ github.run_number }}
     steps:
@@ -71,6 +73,7 @@ jobs:
     env:
       VITE_CONTENT_PACK: public
       VITE_SITE_ORIGIN: ${{ vars.VITE_SITE_ORIGIN_TESTING }}
+      VITE_ENABLE_AI_OBSERVABILITY: "true"
       GITHUB_SHA: ${{ github.sha }}
       GITHUB_RUN_NUMBER: ${{ github.run_number }}
     steps:

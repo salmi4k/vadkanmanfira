@@ -39,6 +39,15 @@ function buildMockAiContent(
     handleReroll: vi.fn(),
     isAiBundleLoading: false,
     isAiRerolling: false,
+    observability: {
+      resolvedSource: {
+        status: 'resolved',
+        source: 'azure-openai',
+      },
+      rerollOutcome: {
+        status: 'idle',
+      },
+    },
     themeDayCardNote: 'Standardnotis.',
     themeDayTitleEnding: 'Det får väl bära dagen då.',
     ...overrides,
@@ -47,6 +56,7 @@ function buildMockAiContent(
 
 beforeEach(() => {
   window.localStorage.clear();
+  vi.stubEnv('VITE_ENABLE_AI_OBSERVABILITY', 'false');
   mockedUseAiContent.mockReset();
   mockedUseNameDays.mockReset();
 
@@ -89,6 +99,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
+  vi.unstubAllEnvs();
   vi.restoreAllMocks();
 });
 
@@ -552,6 +563,51 @@ test('shows that a new excuse is being fetched after reroll is clicked', async (
     screen.getByRole('button', { name: /Hämtar ny ursäkt/i })
   ).toBeDisabled();
   expect(screen.getByText(/Ny ursäkt hämtas nu\./i)).toBeInTheDocument();
+});
+
+test('shows ai observability metadata in the testing environment', async () => {
+  vi.stubEnv('VITE_ENABLE_AI_OBSERVABILITY', 'true');
+  mockedUseAiContent.mockImplementationOnce(() =>
+    buildMockAiContent({
+      observability: {
+        resolvedSource: {
+          status: 'resolved',
+          source: 'cache',
+        },
+        rerollOutcome: {
+          status: 'reused-ai',
+        },
+      },
+    })
+  );
+
+  await renderAppAt(new Date(2026, 2, 13));
+
+  expect(screen.getByText(/^Källa$/i)).toBeInTheDocument();
+  expect(screen.getByText(/^Cache$/i)).toBeInTheDocument();
+  expect(screen.getByText(/Återanvände tidigare AI-blurbs/i)).toBeInTheDocument();
+});
+
+test('hides ai observability metadata outside the testing environment', async () => {
+  mockedUseAiContent.mockImplementationOnce(() =>
+    buildMockAiContent({
+      observability: {
+        resolvedSource: {
+          status: 'resolved',
+          source: 'azure-openai',
+        },
+        rerollOutcome: {
+          status: 'fresh-ai',
+        },
+      },
+    })
+  );
+
+  await renderAppAt(new Date(2026, 2, 13));
+
+  expect(screen.queryByText(/^Källa$/i)).not.toBeInTheDocument();
+  expect(screen.queryByText(/^Live AI$/i)).not.toBeInTheDocument();
+  expect(screen.queryByText(/Färsk AI-text/i)).not.toBeInTheDocument();
 });
 
 test('steps between days from the center navigation buttons', async () => {

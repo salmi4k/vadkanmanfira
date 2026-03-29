@@ -40,25 +40,8 @@ function buildBundle(overrides: Partial<AiBlurbBundle> = {}): AiBlurbBundle {
   };
 }
 
-afterEach(() => {
-  vi.restoreAllMocks();
-  mockedFetchAiBlurbBundle.mockReset();
-});
-
-test('keeps using ai content when reroll returns metadata but no new blurbs', async () => {
-  mockedFetchAiBlurbBundle
-    .mockResolvedValueOnce(buildBundle())
-    .mockResolvedValueOnce(
-      buildBundle({
-        titleEndings: ['Ny AI-vinkel.'],
-        cardNotes: ['Ny AI-notis.'],
-        blurbs: [],
-      })
-    );
-
-  const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0);
-
-  const { result } = renderHook(() =>
+function renderAiContent() {
+  return renderHook(() =>
     useAiContent({
       aiRequest: baseRequest,
       ordinaryBlurb: 'Lokal reservtext.',
@@ -73,15 +56,63 @@ test('keeps using ai content when reroll returns metadata but no new blurbs', as
       themeDayDisplayTitle: 'Världsteaterdagen',
     })
   );
+}
+
+afterEach(() => {
+  vi.restoreAllMocks();
+  mockedFetchAiBlurbBundle.mockReset();
+});
+
+test('reports loading and idle before the first ai bundle resolves', async () => {
+  let resolveBundle: (value: AiBlurbBundle | null) => void = () => undefined;
+  const pendingBundle = new Promise<AiBlurbBundle | null>((resolve) => {
+    resolveBundle = resolve;
+  });
+  mockedFetchAiBlurbBundle.mockReturnValueOnce(pendingBundle);
+
+  const { result } = renderAiContent();
+
+  expect(result.current.isAiBundleLoading).toBe(true);
+  expect(result.current.observability.resolvedSource).toEqual({
+    status: 'loading',
+    source: 'unknown',
+  });
+  expect(result.current.observability.rerollOutcome).toEqual({
+    status: 'idle',
+  });
+
+  resolveBundle(buildBundle());
 
   await waitFor(() => expect(result.current.isAiBundleLoading).toBe(false));
 
-  expect(result.current.blurb).toBe('AI-ursäkt ett.');
-  expect(result.current.themeDayTitleEnding).toBe('AI-slutrad.');
-  expect(result.current.themeDayCardNote).toBe('AI-notis.');
-  expect(result.current.canReroll).toBe(true);
+  expect(result.current.observability.resolvedSource).toEqual({
+    status: 'resolved',
+    source: 'azure-openai',
+  });
+  expect(result.current.observability.rerollOutcome).toEqual({
+    status: 'idle',
+  });
+});
 
-  randomSpy.mockReturnValue(0.99);
+test('reports fresh-ai after reroll returns a new azure-openai bundle', async () => {
+  mockedFetchAiBlurbBundle
+    .mockResolvedValueOnce(buildBundle())
+    .mockResolvedValueOnce(
+      buildBundle({
+        titleEndings: ['Ny AI-vinkel.'],
+        cardNotes: ['Ny AI-notis.'],
+        blurbs: ['Ny AI-ursäkt.'],
+      })
+    );
+
+  const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0);
+  const { result } = renderAiContent();
+
+  await waitFor(() => expect(result.current.isAiBundleLoading).toBe(false));
+  expect(result.current.observability.resolvedSource).toEqual({
+    status: 'resolved',
+    source: 'azure-openai',
+  });
 
   await act(async () => {
     await result.current.handleReroll();
@@ -91,9 +122,73 @@ test('keeps using ai content when reroll returns metadata but no new blurbs', as
     expect.objectContaining({ requestMode: 'reroll' }),
     undefined
   );
+  expect(result.current.observability.rerollOutcome).toEqual({
+    status: 'fresh-ai',
+  });
+  expect(result.current.blurb).toBe('Ny AI-ursäkt.');
   expect(result.current.themeDayTitleEnding).toBe('Ny AI-vinkel.');
   expect(result.current.themeDayCardNote).toBe('Ny AI-notis.');
-  expect(result.current.currentBlurbs).toEqual(['AI-ursäkt ett.', 'AI-ursäkt två.']);
+
+  randomSpy.mockRestore();
+});
+
+test('reports reused-ai when reroll returns cached content without fresh blurbs', async () => {
+  mockedFetchAiBlurbBundle
+    .mockResolvedValueOnce(buildBundle())
+    .mockResolvedValueOnce(
+      buildBundle({
+        source: 'cache',
+        titleEndings: ['Cache-vinkel.'],
+        cardNotes: ['Cache-notis.'],
+        blurbs: [],
+      })
+    );
+
+  const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0.99);
+  const { result } = renderAiContent();
+
+  await waitFor(() => expect(result.current.isAiBundleLoading).toBe(false));
+
+  await act(async () => {
+    await result.current.handleReroll();
+  });
+
+  expect(result.current.observability.rerollOutcome).toEqual({
+    status: 'reused-ai',
+  });
+  expect(result.current.observability.resolvedSource).toEqual({
+    status: 'resolved',
+    source: 'cache',
+  });
+  expect(result.current.themeDayTitleEnding).toBe('Cache-vinkel.');
+  expect(result.current.themeDayCardNote).toBe('Cache-notis.');
+  expect(result.current.blurb).toBe('AI-ursäkt ett.');
+
+  randomSpy.mockRestore();
+});
+
+test('reports local-fallback when reroll cannot produce a usable bundle', async () => {
+  mockedFetchAiBlurbBundle
+    .mockResolvedValueOnce(buildBundle())
+    .mockResolvedValueOnce(null);
+
+  const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0);
+  const { result } = renderAiContent();
+
+  await waitFor(() => expect(result.current.isAiBundleLoading).toBe(false));
+
+  await act(async () => {
+    await result.current.handleReroll();
+  });
+
+  expect(result.current.observability.rerollOutcome).toEqual({
+    status: 'local-fallback',
+  });
+  expect(result.current.observability.resolvedSource).toEqual({
+    status: 'resolved',
+    source: 'azure-openai',
+  });
   expect(result.current.blurb).toBe('AI-ursäkt två.');
-  expect(result.current.blurb).not.toBe('Lokal reservtext.');
+
+  randomSpy.mockRestore();
 });
