@@ -47,6 +47,7 @@ import {
   getCurrentCelebration,
 } from './appViewModel';
 import { useAppShellState } from './hooks/useAppShellState';
+import { isAiObservabilityEnabled } from './environment';
 
 type AppProps = {
   initialDate?: Date;
@@ -210,6 +211,7 @@ function App({
     handleReroll,
     isAiBundleLoading,
     isAiRerolling,
+    observability,
     themeDayCardNote,
     themeDayTitleEnding,
   } = useAiContent({
@@ -245,6 +247,7 @@ function App({
     : hasThemeDays
       ? `${themeDayDisplayTitle}. ${themeDayTitleEnding}`
       : aiRequest.title;
+  const aiObservability = isAiObservabilityEnabled() ? observability : null;
 
   function stepSelectedDate(days: number): void {
     handleDateChange(formatForInput(addDays(selectedDateObject, days)));
@@ -300,6 +303,7 @@ function App({
           mainCardRef={mainCardRef}
           mainTitle={mainTitle}
           nationalDayPanel={nationalDayPanel}
+          observability={aiObservability}
           onOpenImageCredits={() => setShowImageCredits(true)}
           onOpenReleaseNotes={() => setShowReleaseNotes(true)}
           onReroll={() => {

@@ -125,6 +125,19 @@ export const appText: Record<
     reroll: string;
     rerollLoading: string;
     rerollStatus: string;
+    aiObservabilityTitle: string;
+    aiObservabilitySourceLabel: string;
+    aiObservabilityRerollLabel: string;
+    aiObservabilitySourceLoading: string;
+    aiObservabilitySourceUnknown: string;
+    aiObservabilitySourceAI: string;
+    aiObservabilitySourceCache: string;
+    aiObservabilitySourceFallback: string;
+    aiObservabilityRerollLoading: string;
+    aiObservabilityRerollFresh: string;
+    aiObservabilityRerollReused: string;
+    aiObservabilityRerollFallback: string;
+    aiObservabilityRerollUnknown: string;
     blurbLoading: string;
     unofficialThemeDay: string;
     unofficialThemeDays: (count: number) => string;
@@ -217,6 +230,19 @@ export const appText: Record<
     reroll: 'Ny ursäkt',
     rerollLoading: 'Hämtar ny ursäkt...',
     rerollStatus: 'Ny ursäkt hämtas nu.',
+    aiObservabilityTitle: 'AI-spår',
+    aiObservabilitySourceLabel: 'Källa',
+    aiObservabilityRerollLabel: 'Ny ursäkt',
+    aiObservabilitySourceLoading: 'Hämtar källa...',
+    aiObservabilitySourceUnknown: 'Okänt',
+    aiObservabilitySourceAI: 'Live AI',
+    aiObservabilitySourceCache: 'Cache',
+    aiObservabilitySourceFallback: 'Lokal fallback',
+    aiObservabilityRerollLoading: 'Hämtar ny ursäkt...',
+    aiObservabilityRerollFresh: 'Färsk AI-text',
+    aiObservabilityRerollReused: 'Återanvände tidigare AI-blurbs',
+    aiObservabilityRerollFallback: 'Lokal fallback',
+    aiObservabilityRerollUnknown: 'Okänt',
     blurbLoading: 'Hämtar dagens text.',
     unofficialThemeDay: 'Inofficiell temadag',
     unofficialThemeDays: (count: number) => `Inofficiella temadagar x${count}`,
@@ -314,6 +340,19 @@ export const appText: Record<
     reroll: 'Another excuse',
     rerollLoading: 'Fetching another excuse...',
     rerollStatus: 'A new excuse is loading now.',
+    aiObservabilityTitle: 'AI trace',
+    aiObservabilitySourceLabel: 'Source',
+    aiObservabilityRerollLabel: 'Another excuse',
+    aiObservabilitySourceLoading: 'Fetching source...',
+    aiObservabilitySourceUnknown: 'Unknown',
+    aiObservabilitySourceAI: 'Live AI',
+    aiObservabilitySourceCache: 'Cache',
+    aiObservabilitySourceFallback: 'Local fallback',
+    aiObservabilityRerollLoading: 'Fetching another excuse...',
+    aiObservabilityRerollFresh: 'Fresh AI text',
+    aiObservabilityRerollReused: 'Reused prior AI blurbs',
+    aiObservabilityRerollFallback: 'Local fallback',
+    aiObservabilityRerollUnknown: 'Unknown',
     blurbLoading: "Fetching today's copy.",
     unofficialThemeDay: 'Unofficial theme day',
     unofficialThemeDays: (count: number) => `Unofficial theme days x${count}`,
@@ -411,6 +450,19 @@ export const appText: Record<
     reroll: 'Outra desculpa',
     rerollLoading: 'Buscando outra desculpa...',
     rerollStatus: 'Uma nova desculpa está sendo buscada agora.',
+    aiObservabilityTitle: 'Traço de IA',
+    aiObservabilitySourceLabel: 'Fonte',
+    aiObservabilityRerollLabel: 'Outra desculpa',
+    aiObservabilitySourceLoading: 'Buscando fonte...',
+    aiObservabilitySourceUnknown: 'Desconhecida',
+    aiObservabilitySourceAI: 'IA ao vivo',
+    aiObservabilitySourceCache: 'Cache',
+    aiObservabilitySourceFallback: 'Fallback local',
+    aiObservabilityRerollLoading: 'Buscando outra desculpa...',
+    aiObservabilityRerollFresh: 'Texto novo de IA',
+    aiObservabilityRerollReused: 'Reaproveitou blurbs anteriores de IA',
+    aiObservabilityRerollFallback: 'Fallback local',
+    aiObservabilityRerollUnknown: 'Desconhecida',
     blurbLoading: 'Buscando o texto do dia.',
     unofficialThemeDay: 'Data temática não oficial',
     unofficialThemeDays: (count: number) => `Datas temáticas não oficiais x${count}`,

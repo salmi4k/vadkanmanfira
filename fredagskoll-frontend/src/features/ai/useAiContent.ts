@@ -8,6 +8,15 @@ import {
 import { Locale } from '../../locale';
 import { Mood } from '../../mood';
 import { getRandomItem } from '../../appHelpers';
+import {
+  classifyRerollOutcome,
+  getIdleRerollOutcomeState,
+  getLoadingRerollOutcomeState,
+  getResolvedSourceState,
+  type AiObservabilityState,
+  type AiRerollOutcomeState,
+  type AiResolvedSourceState,
+} from './aiObservability';
 
 type AiBundleState = 'loading' | 'ready' | 'fallback';
 
@@ -33,6 +42,18 @@ type UseAiContentArgs = {
   themeDayDisplayTitle: string | null;
 };
 
+export type UseAiContentResult = {
+  blurb: string;
+  canReroll: boolean;
+  currentBlurbs: string[] | null;
+  handleReroll: () => Promise<void>;
+  isAiBundleLoading: boolean;
+  isAiRerolling: boolean;
+  observability?: AiObservabilityState;
+  themeDayCardNote: string;
+  themeDayTitleEnding: string;
+};
+
 export function useAiContent({
   aiRequest,
   ordinaryBlurb,
@@ -45,11 +66,14 @@ export function useAiContent({
   isWeekend,
   hasThemeDays,
   themeDayDisplayTitle,
-}: UseAiContentArgs) {
+}: UseAiContentArgs): UseAiContentResult {
   const [aiBundle, setAiBundle] = useState<AiBlurbBundle | null>(null);
   const [aiBundleState, setAiBundleState] = useState<AiBundleState>('loading');
   const [resolvedAiRequestKey, setResolvedAiRequestKey] = useState<string | null>(null);
   const [isAiRerolling, setIsAiRerolling] = useState(false);
+  const [rerollOutcome, setRerollOutcome] = useState<AiRerollOutcomeState>(
+    getIdleRerollOutcomeState()
+  );
   const [blurb, setBlurb] = useState(ordinaryBlurb);
   const [themeDayTitleEnding, setThemeDayTitleEnding] = useState(
     getOrdinaryThemeDayTitleEndings(locale, mood)[0]
@@ -65,6 +89,14 @@ export function useAiContent({
     aiBundle !== null &&
     resolvedAiRequestKey === aiRequestKey &&
     aiBundleState === 'ready';
+  const resolvedSourceState: AiResolvedSourceState = getResolvedSourceState({
+    aiBundle: resolvedAiRequestKey === aiRequestKey ? aiBundle : null,
+    isLoading: isAiBundleLoading,
+  });
+  const observability: AiObservabilityState = {
+    resolvedSource: resolvedSourceState,
+    rerollOutcome,
+  };
 
   const currentBlurbs = useMemo(() => {
     if (resolvedAiRequestKey === aiRequestKey && hasUsableBlurbs(aiBundle)) {
@@ -106,6 +138,7 @@ export function useAiContent({
     setAiBundle(null);
     setAiBundleState('loading');
     setResolvedAiRequestKey(null);
+    setRerollOutcome(getIdleRerollOutcomeState());
 
     Promise.resolve(fetchAiBlurbBundle(aiRequest, controller.signal))
       .then((bundle) => {
@@ -187,6 +220,7 @@ export function useAiContent({
     }
 
     setIsAiRerolling(true);
+    setRerollOutcome(getLoadingRerollOutcomeState());
 
     try {
       const rerolledBundle = await fetchAiBlurbBundle(
@@ -209,10 +243,15 @@ export function useAiContent({
               blurbs: nextBlurbs,
             }
           : rerolledBundle;
+        const nextRerollOutcome = classifyRerollOutcome({
+          rerolledBundle,
+          previousAiBundle: aiBundle,
+        });
 
         setAiBundle(nextBundle);
         setResolvedAiRequestKey(aiRequestKey);
         setAiBundleState('ready');
+        setRerollOutcome(nextRerollOutcome);
         if (nextBlurbs) {
           setBlurb((currentBlurb) => getRandomItem(nextBlurbs, ordinaryBlurb, currentBlurb));
         }
@@ -224,6 +263,9 @@ export function useAiContent({
       setIsAiRerolling(false);
     }
 
+    setRerollOutcome({
+      status: 'local-fallback',
+    });
     setBlurb((currentBlurb) => getRandomItem(currentBlurbs, ordinaryBlurb, currentBlurb));
   }, [
     aiBundle,
@@ -243,6 +285,7 @@ export function useAiContent({
     handleReroll,
     isAiBundleLoading,
     isAiRerolling,
+    observability,
     themeDayCardNote,
     themeDayTitleEnding,
   };
